@@ -1,3 +1,5 @@
+from datetime import datetime, UTC
+
 from flask import Blueprint, jsonify, make_response, request
 
 from models.post import Post
@@ -19,7 +21,12 @@ def list_controller():
         if limit > 50:
             return make_response(jsonify({'error': 'Limit cannot exceed 50'}), 400)
 
-        query = Post.query.filter(Post.published_at.isnot(None)).order_by(Post.published_at.desc())
+        now = datetime.now(UTC)
+        query = Post.query.filter(
+            Post.published_at.isnot(None),
+            Post.published_at <= now
+        ).order_by(Post.published_at.desc())
+
         paginated_posts = query.paginate(page=page, per_page=limit)
 
         results_list = ResultsList(

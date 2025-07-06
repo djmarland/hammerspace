@@ -1,5 +1,3 @@
-import { DisplayDate } from "@/models/DisplayDate";
-
 export type PostSummaryResponse = {
 	id: string;
 	url_key: string;
@@ -7,34 +5,30 @@ export type PostSummaryResponse = {
 	published_at: string | null;
 };
 
-export class PostSummary {
+export type PostSummaryItem = {
 	id: string;
 	urlKey: string;
 	title: string;
-	publishedDate: DisplayDate | null;
+	publishedDate: string | null; // ISO 8601
+	url: string;
+};
 
-	constructor(data: PostSummaryResponse) {
-		this.id = data.id;
-		this.urlKey = data.url_key;
-		this.title = data.title;
-		this.publishedDate = data.published_at
-			? DisplayDate.fromISO(data.published_at)
-			: null;
+export class PostSummary {
+	static isPublished(post: PostSummaryItem): boolean {
+		return post.publishedDate !== null;
 	}
 
-	get isPublished(): boolean {
-		return this.publishedDate !== null;
+	static fromJSON(json: PostSummaryResponse): PostSummaryItem {
+		return {
+			id: json.id,
+			urlKey: json.url_key,
+			title: json.title,
+			publishedDate: json.published_at,
+			url: `/posts/${json.url_key}`,
+		};
 	}
 
-	get url(): string {
-		return `/posts/${this.urlKey}`;
-	}
-
-	static fromJSON(json: PostSummaryResponse): PostSummary {
-		return new PostSummary(json);
-	}
-
-	static fromJSONList(jsonList: PostSummaryResponse[]): PostSummary[] {
+	static fromJSONList(jsonList: PostSummaryResponse[]): PostSummaryItem[] {
 		return jsonList.map(PostSummary.fromJSON);
 	}
 }

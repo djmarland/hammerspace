@@ -8,9 +8,11 @@ def init_cms(app):
     from .create import cms_create_post_bp
     from .posts import cms_posts_bp
     from .edit import cms_edit_bp
+    from .publish import cms_publish_bp
 
     # Register blueprints
     app.register_blueprint(cms_create_post_bp)
     app.register_blueprint(cms_posts_bp)
     app.register_blueprint(cms_edit_bp)
+    app.register_blueprint(cms_publish_bp)
     app.register_blueprint(cms)

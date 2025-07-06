@@ -2,7 +2,7 @@ export type Results<T> = {
 	items: T[];
 	total: number;
 	pages: number;
-	current_page: number;
+	currentPage: number;
 };
 
 export const resultsFromResponse = <T>(
@@ -13,6 +13,6 @@ export const resultsFromResponse = <T>(
 		items: resultMap(response.items),
 		total: response.total,
 		pages: response.pages,
-		current_page: response.page,
+		currentPage: response.page,
 	};
 };

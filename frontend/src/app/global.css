@@ -1,33 +1,48 @@
+@layer global {
+    body {
+        color: var(--color-body-text);
+        background: var(--color-body-background);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Links */
+    a {
+        color: inherit;
+        text-decoration: underline;
+        text-decoration-color: var(--theme-color);
+    }
+
+    a:hover {
+        color: var(--theme-color);
+    }
+
+    /* Inputs */
+    input[type="text"],
+    textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid var(--color-lines-mid);
+        border-radius: 0;
+
+        &:focus {
+            border-color: var(--theme-color);
+            outline: none;
+        }
+    }
+
+    textarea {
+        field-sizing: content;
+    }
+}
+
+/* Theme */
 :root {
     color-scheme: light dark;
-    --background: light-dark(#ffffff, #0a0a0a);
-    --foreground: light-dark(#171717, #ededed);
-}
+    --color-body-background: light-dark(#ededed, #333);
+    --color-body-text: light-dark(#111111, #ffffff);
 
-body {
-    color: var(--foreground);
-    background: var(--background);
-    font-family: Arial, Helvetica, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
+    --color-lines-mid: light-dark(#e0e0e0, #333333);
 
-* {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-}
-
-a {
-    color: inherit;
-    text-decoration: none;
-}
-
-input, textarea {
-    width: 100%;
-    border-radius: 0;
-}
-
-textarea {
-    resize: vertical;
+    --theme-color: light-dark(#ffd42d, #ffd42d);
 }

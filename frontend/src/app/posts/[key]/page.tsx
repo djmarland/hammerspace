@@ -3,6 +3,8 @@ import { PostNavigation } from "@/components/organisms/PostNavigation/PostNaviga
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import styles from "./page.module.css";
+import { DisplayDate } from "@/models/DisplayDate";
+import { notFound } from "next/navigation";
 
 export const revalidate = 3600;
 
@@ -13,13 +15,16 @@ export default async function Page({
 }) {
 	const { key } = await params;
 	const post = await getPost(key);
+	if (!post) {
+		notFound();
+	}
 
 	return (
 		<article className={styles.post}>
 			<h1 className={styles.title}>{post.title}</h1>
 			{post.publishedDate && (
 				<div className={styles.publishedDate}>
-					Published on {post.publishedDate.toString()}
+					Published on {DisplayDate.format(post.publishedDate)}
 				</div>
 			)}
 			<div className={styles.content}>

@@ -1,11 +1,11 @@
-import { revalidatePath } from "next/cache";
-import { apiClient } from "@/lib/ApiClient";
-import { EditPostFields } from "@/components/forms/EditPostForm/EditPostForm";
 import { getPostForEditing } from "@/services/posts";
-import Link from "next/link";
+import { PublishPostForm } from "@/components/forms/PublishPostForm/PublishPostForm";
+import styles from "@/app/cms/new/page.module.css";
+import { apiClient } from "@/lib/ApiClient";
+import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 
-export default async function EditPostPage({
+export default async function PublishPostPage({
 	params,
 	searchParams,
 }: {
@@ -19,15 +19,15 @@ export default async function EditPostPage({
 		return notFound();
 	}
 
-	async function editPostAction(formData: FormData) {
+	async function publishPostAction(formData: FormData) {
 		"use server";
 
 		if (!post) {
 			throw new Error("Post not found");
 		}
 
-		await apiClient.put(
-			`/cms/posts/${post.id}`,
+		await apiClient.post(
+			`/cms/posts/${post.id}/publish`,
 			Object.fromEntries(formData.entries()),
 		);
 
@@ -37,18 +37,12 @@ export default async function EditPostPage({
 
 	return (
 		<div>
-			<div style={{ marginTop: "2rem" }}>
-				<Link href={`/cms/${id}/publish`}>
-					<span className="button">Publish</span>
-				</Link>
-			</div>
-
-			<h1>Edit Post</h1>
+			<h1>Publish Post: {post.title}</h1>
 			{message && <div className={"success"}>{message}</div>}
 			{error && <div className={"error"}>{error}</div>}
-			<form action={editPostAction}>
-				<EditPostFields post={post} />
-				<button type="submit">Update Post</button>
+
+			<form action={publishPostAction} className={styles.form}>
+				<PublishPostForm post={post} />
 			</form>
 		</div>
 	);

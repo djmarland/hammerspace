@@ -1,22 +1,26 @@
-import { PostSummary, PostSummaryResponse } from "@/models/PostSummary";
+import {
+	PostSummary,
+	PostSummaryItem,
+	PostSummaryResponse,
+} from "@/models/PostSummary";
 
 export type PostResponse = PostSummaryResponse & {
 	content: string;
 };
 
-export class Post extends PostSummary {
+export type PostItem = PostSummaryItem & {
 	content: string;
+};
 
-	constructor(data: PostResponse) {
-		super(data);
-		this.content = data.content;
+export class Post {
+	static fromJSON(json: PostResponse): PostItem {
+		return {
+			...PostSummary.fromJSON(json),
+			content: json.content,
+		};
 	}
 
-	static fromJSON(json: PostResponse): Post {
-		return new Post(json);
-	}
-
-	static fromJSONList(jsonList: PostResponse[]): Post[] {
+	static fromJSONList(jsonList: PostResponse[]): PostItem[] {
 		return jsonList.map(Post.fromJSON);
 	}
 }

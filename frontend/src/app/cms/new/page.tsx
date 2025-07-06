@@ -1,26 +1,18 @@
 import { redirect } from "next/navigation";
 import styles from "./page.module.css";
-import { PostSummary } from "@/models/PostSummary";
+import { PostSummaryItem } from "@/models/PostSummary";
 import { apiClient } from "@/lib/ApiClient";
-import { EditPostFields } from "../[id]/EditPostForm";
+import { EditPostFields } from "@/components/forms/EditPostForm/EditPostForm";
 
 async function createPost(formData: FormData) {
 	"use server";
 
-	let post: PostSummary;
-	try {
-		post = await apiClient.post("/cms/create", {
-			title: formData.get("title"),
-			content: formData.get("content"),
-		});
-	} catch (error) {
-		const errorMessage = error instanceof Error ? error.message : String(error);
-		return redirect(
-			"/cms/new?error=" +
-				encodeURIComponent(
-					`An error occurred while creating the post: ${errorMessage}`,
-				),
-		);
+	const post: PostSummaryItem = await apiClient.post(
+		"/cms/create",
+		Object.fromEntries(formData.entries()),
+	);
+	if (!post) {
+		throw new Error("Failed to create post");
 	}
 	return redirect(`/cms/${post.id}`);
 }
@@ -40,7 +32,7 @@ export default async function NewPost({
 			<h1>Create New Post</h1>
 			{error && <div className={styles.error}>{error}</div>}
 			<form action={createPost} className={styles.form}>
-				<EditPostFields id="" title="" content="" />
+				<EditPostFields />
 				<div className={styles.buttons}>
 					<button type="submit">Create Post</button>
 				</div>

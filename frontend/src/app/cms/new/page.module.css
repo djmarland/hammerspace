@@ -13,23 +13,6 @@
     font-weight: 500;
 }
 
-.formGroup input[type="text"],
-.formGroup textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-.formGroup textarea {
-    field-sizing: content;
-}
-
-.checkbox {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
 
 .buttons {
     display: flex;

@@ -9,7 +9,6 @@ posts = Blueprint('posts', __name__)
 # Register all post-related blueprints
 blueprints = [
     posts_list_bp,
-    # posts_create_bp,
     posts_details_bp,
     posts_navigation_bp
 ]

@@ -25,9 +25,13 @@ export class ApiClient {
 		return responseData;
 	}
 
-	async get<T>(path: string): Promise<T> {
+	async get<T>(path: string): Promise<T | null> {
 		const response = await fetch(`${this.baseUrl}${path}`);
 		const data = await response.json();
+
+		if (response.status === 404) {
+			return null;
+		}
 
 		if (!response.ok) {
 			throw new Error(data.error || "API request failed");
