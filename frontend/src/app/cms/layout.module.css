@@ -1,0 +1,5 @@
+.layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    padding: 16px;
+}

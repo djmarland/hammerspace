@@ -1,0 +1,12 @@
+# This folder will contain database migration scripts.
+
+# You can use Flask-Migrate or Alembic to manage migrations.
+
+# Example usage with Flask-Migrate:
+
+# flask db init
+
+# flask db migrate -m "Initial migration."
+
+# flask db upgrade
+
