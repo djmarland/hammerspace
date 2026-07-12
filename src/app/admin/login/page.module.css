@@ -1,0 +1,138 @@
+.container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	background-color: #f5f5f5;
+}
+
+.form {
+	background: white;
+	padding: 40px;
+	border-radius: 8px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	width: 100%;
+	max-width: 400px;
+}
+
+.form h1 {
+	margin-bottom: 30px;
+	text-align: center;
+	color: #1a1a1a;
+}
+
+.field {
+	margin-bottom: 20px;
+}
+
+.field label {
+	display: block;
+	margin-bottom: 5px;
+	color: #333;
+	font-weight: 500;
+}
+
+.field input {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 1rem;
+	box-sizing: border-box;
+}
+
+.field input:focus {
+	outline: none;
+	border-color: #0066cc;
+	box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+}
+
+.button {
+	width: 100%;
+	padding: 12px;
+	background-color: #0066cc;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	font-size: 1rem;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+	box-sizing: border-box;
+}
+
+.button:hover:not(:disabled) {
+	background-color: #0052a3;
+}
+
+.button:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.passkeyButton {
+	width: 100%;
+	padding: 12px;
+	background-color: #10b981;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	font-size: 1rem;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+	margin-top: 16px;
+	box-sizing: border-box;
+}
+
+.passkeyButton:hover:not(:disabled) {
+	background-color: #059669;
+}
+
+.passkeyButton:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.divider {
+	text-align: center;
+	margin: 20px 0;
+	color: #999;
+	position: relative;
+}
+
+.divider::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 100%;
+	height: 1px;
+	background-color: #ddd;
+}
+
+.divider {
+	position: relative;
+	z-index: 1;
+}
+
+.divider::after {
+	content: "OR";
+	background-color: white;
+	padding: 0 8px;
+	position: relative;
+	z-index: 2;
+}
+
+.error {
+	background-color: #fee;
+	color: #c00;
+	padding: 10px;
+	border-radius: 4px;
+	margin-bottom: 20px;
+}
+
+.demo {
+	margin-top: 20px;
+	text-align: center;
+	font-size: 0.9rem;
+	color: #666;
+}

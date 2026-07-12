@@ -1,0 +1,123 @@
+@layer piko {
+	@layer tokens {
+		/* Raw colours - rarely used directly */
+		@layer core {
+			:root {
+				--piko-unit: 16px;
+				--piko-unit-half: calc(var(--piko-unit) / 2);
+				--piko-unit-quarter: calc(var(--piko-unit) / 4);
+				--piko-unit-double: calc(var(--piko-unit) * 2);
+
+				--piko-font--2: clamp(0.7813rem, 0.7736rem + 0.0341vw, 0.8rem);
+				--piko-font--1: clamp(0.9375rem, 0.9119rem + 0.1136vw, 1rem);
+				--piko-font-base: clamp(1.125rem, 1.0739rem + 0.2273vw, 1.25rem);
+				--piko-font-1: clamp(1.35rem, 1.2631rem + 0.3864vw, 1.5625rem);
+				--piko-font-2: clamp(1.62rem, 1.4837rem + 0.6057vw, 1.9531rem);
+				--piko-font-3: clamp(1.944rem, 1.7405rem + 0.9044vw, 2.4414rem);
+				--piko-font-4: clamp(2.3328rem, 2.0387rem + 1.3072vw, 3.0518rem);
+				--piko-font-5: clamp(2.7994rem, 2.384rem + 1.8461vw, 3.8147rem);
+
+				--piko-palette-white: #fff;
+
+				--piko-palette-dynamic-hue: 40;
+
+				--piko-palette-dynamic-0: oklch(98.0% 0.010 var(--piko-palette-dynamic-hue));
+				--piko-palette-dynamic-1: oklch(95.9% 0.021 var(--piko-palette-dynamic-hue));
+				--piko-palette-dynamic-2: oklch(92.6% 0.039 var(--piko-palette-dynamic-hue));
+				--piko-palette-dynamic-3: oklch(87.5% 0.069 var(--piko-palette-dynamic-hue));
+				--piko-palette-dynamic-4: oklch(80.1% 0.117 var(--piko-palette-dynamic-hue));
+				--piko-palette-dynamic-5: oklch(70.0% 0.197 var(--piko-palette-dynamic-hue));
+				--piko-palette-dynamic-6: oklch(56.9% 0.178 var(--piko-palette-dynamic-hue));
+				--piko-palette-dynamic-7: oklch(41.4% 0.129 var(--piko-palette-dynamic-hue));
+				--piko-palette-dynamic-8: oklch(25.2% 0.079 var(--piko-palette-dynamic-hue));
+				--piko-palette-dynamic-9: oklch(10.0% 0.031 var(--piko-palette-dynamic-hue));
+				@media (color-gamut: p3) {
+					--piko-palette-dynamic-0: oklch(98.0% 0.043 var(--piko-palette-dynamic-hue));
+					--piko-palette-dynamic-1: oklch(95.9% 0.089 var(--piko-palette-dynamic-hue));
+					--piko-palette-dynamic-2: oklch(92.6% 0.133 var(--piko-palette-dynamic-hue));
+					--piko-palette-dynamic-3: oklch(87.5% 0.171 var(--piko-palette-dynamic-hue));
+					--piko-palette-dynamic-4: oklch(80.1% 0.201 var(--piko-palette-dynamic-hue));
+					--piko-palette-dynamic-5: oklch(70.0% 0.224 var(--piko-palette-dynamic-hue));
+					--piko-palette-dynamic-6: oklch(56.9% 0.241 var(--piko-palette-dynamic-hue));
+					--piko-palette-dynamic-7: oklch(41.4% 0.252 var(--piko-palette-dynamic-hue));
+					--piko-palette-dynamic-8: oklch(25.2% 0.260 var(--piko-palette-dynamic-hue));
+					--piko-palette-dynamic-9: oklch(10.0% 0.264 var(--piko-palette-dynamic-hue));
+				}
+			}
+		}
+
+
+		@layer semantic {
+			:root {
+				--piko-color-background: light-dark(var(--piko-palette-white), #111);
+				--piko-color-text: light-dark(#111, var(--piko-palette-white));
+
+				--piko-page-max: 1440px;
+				--piko-page-gutter: var(--piko-unit-half);
+				@media (min-width: 50em) {
+					--piko-page-gutter: var(--piko-unit);
+				}
+				@media (min-width: 90em) {
+					--piko-page-gutter: var(--piko-unit-double);
+				}
+			}
+		}
+	}
+
+
+	@layer reset {
+
+	}
+
+
+	@layer base {
+
+		/*
+		todo
+		 	- fluid type
+			- a p3 palette
+			- dynamic colours (changes every day)
+		 */
+		body {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			color-scheme: light dark;
+			background-color: var(--piko-color-background);
+			color: var(--piko-color-text);
+			line-height: 1.6;
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+			"Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+		}
+
+		html {
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+			"Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+		}
+
+		a {
+			color: var(--piko-color-text);
+			text-decoration: none;
+		}
+
+		a:hover {
+			text-decoration: underline;
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		.container {
+			max-width: var(--piko-page-max);
+			margin: 0 auto;
+			padding: 0 var(--piko-page-gutter);
+		}
+
+	}
+
+}

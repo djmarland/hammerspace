@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                    String     @id @default(cuid())
+  isAdmin               Boolean    @default(false)
+  loginTokenHash        String?
+  name                  String?
+  webauthnChallenge     String?    // Temporary challenge for WebAuthn registration
+  webauthnChallengeExpiresAt DateTime? // Challenge expiration
+  createdAt             DateTime   @default(now())
+  updatedAt             DateTime   @updatedAt
+  posts                 Post[]
+  credentials           WebAuthnCredential[]
+}
+
+model WebAuthnCredential {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  credentialId     Bytes
+  credentialPublicKey Bytes
+  counter          Int
+  transports       String[] // e.g., ["usb", "nfc", "ble", "internal"]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@unique([userId, credentialId])
+  @@index([userId])
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  content   String
+  excerpt   String?
+  published Boolean  @default(false)
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([authorId])
+  @@index([published])
+  @@index([slug])
+}

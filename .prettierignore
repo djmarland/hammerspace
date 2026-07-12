@@ -1,0 +1,6 @@
+# Ignore artifacts:
+build
+coverage
+.next
+.pnpm-store
+node_modules

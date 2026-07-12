@@ -1,0 +1,5 @@
+.footer {
+	margin-top: var(--piko-unit-double);
+	background: pink;
+	padding: var(--piko-unit);
+}
