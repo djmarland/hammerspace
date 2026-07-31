@@ -38,23 +38,47 @@ export default async function Page() {
 		"--piko-type-small",
 		"--piko-type-caption",
 	] as const;
-	const spacingTokens = [
-		"--piko-space-1",
-		"--piko-space-2",
-		"--piko-space-3",
-		"--piko-space-4",
-		"--piko-space-5",
-		"--piko-space-6",
-		"--piko-space-7",
-		"--piko-space-8",
+	const coreSpacingTokens = [
+		{ label: "Unit", token: "--piko-unit" },
+		{ label: "Quarter unit", token: "--piko-unit-quarter" },
+		{ label: "Half unit", token: "--piko-unit-half" },
+		{ label: "Three-quarter unit", token: "--piko-unit-three-quarter" },
+		{ label: "Double unit", token: "--piko-unit-double" },
+		{ label: "Triple unit", token: "--piko-unit-triple" },
+		{ label: "Quad unit", token: "--piko-unit-quad" },
+	] as const;
+	const semanticSpacingTokens = [
+		{ label: "Grid gap", token: "--piko-space-grid-gap" },
+		{ label: "Stack gap", token: "--piko-space-stack-gap" },
+		{ label: "Cluster gap", token: "--piko-space-cluster-gap" },
+		{ label: "Section gap", token: "--piko-space-section-gap" },
+		{ label: "Card padding", token: "--piko-space-card-padding" },
+		{ label: "Control padding (x)", token: "--piko-space-control-padding-x" },
+		{ label: "Control padding (y)", token: "--piko-space-control-padding-y" },
+		{ label: "Page gutter", token: "--piko-space-page-gutter" },
 	] as const;
 	const states = ["primary", "success", "warning", "error"] as const;
-	const docsSections = [
-		{ id: "colour-palette", label: "Colour Palette" },
-		{ id: "typography", label: "Typography" },
-		{ id: "spacing-units", label: "Spacing Units" },
-		{ id: "states", label: "States" },
-		{ id: "html-kitchen-sink", label: "HTML Kitchen Sink" },
+	const docsNavGroups = [
+		{
+			title: "Core",
+			sections: [
+				{ id: "core-colours", label: "Colours" },
+				{ id: "core-spacing", label: "Spacing units" },
+			],
+		},
+		{
+			title: "Semantic",
+			sections: [
+				{ id: "semantic-colours", label: "Colours" },
+				{ id: "semantic-typography", label: "Typography" },
+				{ id: "semantic-spacing", label: "Spacing roles" },
+				{ id: "semantic-states", label: "States" },
+			],
+		},
+		{
+			title: "Reference",
+			sections: [{ id: "html-kitchen-sink", label: "HTML Kitchen Sink" }],
+		},
 	] as const;
 
 	return (
@@ -65,19 +89,28 @@ export default async function Page() {
 			<div className="piko-docs-layout">
 				<aside className="piko-docs-sidebar" aria-label="Section navigation">
 					<nav>
-						<ul className="piko-docs-nav">
-							{docsSections.map((section) => (
-								<li key={section.id}>
-									<a href={`#${section.id}`}>{section.label}</a>
-								</li>
+						<div className="piko-docs-nav-groups">
+							{docsNavGroups.map((group) => (
+								<div className="piko-docs-nav-group" key={group.title}>
+									<p className="piko-docs-nav-title">{group.title}</p>
+									<ul className="piko-docs-nav">
+										{group.sections.map((section) => (
+											<li key={section.id}>
+												<a href={`#${section.id}`}>{section.label}</a>
+											</li>
+										))}
+									</ul>
+								</div>
 							))}
-						</ul>
+						</div>
 					</nav>
 				</aside>
 
 				<div className="piko-docs-content">
-					<section className="piko-docs-section" id="colour-palette">
-						<h2>Colour Palette</h2>
+					<section className="piko-docs-section" id="core">
+						<h2>Core</h2>
+						<section id="core-colours">
+							<h3>Colours</h3>
 						<p>
 							Core ramps are colour-name based and semantic roles map onto those
 							ramps.
@@ -108,53 +141,98 @@ export default async function Page() {
 								</div>
 							))}
 						</div>
-						<h3>Semantic colour tokens</h3>
-						<div className="piko-token-grid">
-							{semanticColors.map((token) => (
-								<div className="piko-token-chip" key={token}>
-									<div
-										className="piko-swatch"
-										style={{
-											backgroundColor: `var(${token})`,
-										}}
-									/>
-									<PikoToken token={token} />
-								</div>
-							))}
-						</div>
+						</section>
+						<section id="core-spacing">
+							<h3>Spacing units</h3>
+							<table className="piko-space-table">
+								<thead>
+									<tr>
+										<th>Label</th>
+										<th>Token</th>
+										<th>Preview</th>
+									</tr>
+								</thead>
+								<tbody>
+									{coreSpacingTokens.map(({ label, token }) => (
+										<tr key={token}>
+											<td>{label}</td>
+											<td>
+												<PikoToken token={token} />
+											</td>
+											<td>
+												<div
+													className="piko-space-bar"
+													style={{ width: `max(var(${token}), 0.125rem)` }}
+												/>
+											</td>
+										</tr>
+									))}
+								</tbody>
+							</table>
+						</section>
 					</section>
 
-					<section className="piko-docs-section" id="typography">
-						<h2>Typography</h2>
-						<div className="piko-token-list">
-							{typographyTokens.map((token) => (
-								<div className="piko-token-chip" key={token}>
-									<p style={{ fontSize: `var(${token})` }}>
-										The quick brown fox jumps over the lazy dog.
-									</p>
-									<PikoToken token={token} />
-								</div>
-							))}
-						</div>
-					</section>
-
-					<section className="piko-docs-section" id="spacing-units">
-						<h2>Spacing Units</h2>
-						<div className="piko-space-demo">
-							{spacingTokens.map((token) => (
-								<div className="piko-space-row" key={token}>
-									<PikoToken token={token} />
-									<div
-										className="piko-space-bar"
-										style={{ width: `var(${token})` }}
-									/>
-								</div>
-							))}
-						</div>
-					</section>
-
-					<section className="piko-docs-section" id="states">
-						<h2>States</h2>
+					<section className="piko-docs-section" id="semantic">
+						<h2>Semantic</h2>
+						<section id="semantic-colours">
+							<h3>Colours</h3>
+							<div className="piko-token-grid">
+								{semanticColors.map((token) => (
+									<div className="piko-token-chip" key={token}>
+										<div
+											className="piko-swatch"
+											style={{
+												backgroundColor: `var(${token})`,
+											}}
+										/>
+										<PikoToken token={token} />
+									</div>
+								))}
+							</div>
+						</section>
+						<section id="semantic-typography">
+							<h3>Typography</h3>
+							<div className="piko-token-list">
+								{typographyTokens.map((token) => (
+									<div className="piko-token-chip" key={token}>
+										<p style={{ fontSize: `var(${token})` }}>
+											The quick brown fox jumps over the lazy dog.
+										</p>
+										<PikoToken token={token} />
+									</div>
+								))}
+							</div>
+						</section>
+						<section id="semantic-spacing">
+							<h3>Spacing roles</h3>
+							<table className="piko-space-table">
+								<thead>
+									<tr>
+										<th>Label</th>
+										<th>Token</th>
+										<th>Preview</th>
+									</tr>
+								</thead>
+								<tbody>
+									{semanticSpacingTokens.map(({ label, token }) => (
+										<tr key={token}>
+											<td>{label}</td>
+											<td>
+												<PikoToken token={token} />
+											</td>
+											<td>
+												<div
+													className="piko-space-bar"
+													style={{ width: `max(var(${token}), 0.125rem)` }}
+												/>
+											</td>
+										</tr>
+									))}
+								</tbody>
+							</table>
+						</section>
+						<section id="semantic-states">
+							<h3>States</h3>
 						<div className="piko-token-list">
 							{states.map((state) => (
 								<div key={state}>
@@ -169,6 +247,7 @@ export default async function Page() {
 								</div>
 							))}
 						</div>
+						</section>
 					</section>
 
 					<section className="piko-docs-section" id="html-kitchen-sink">
