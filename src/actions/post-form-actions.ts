@@ -1,15 +1,23 @@
 "use server";
 
+import type { Prisma } from "@/generated/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getAdminSessionUser } from "@/lib/admin-auth";
+import { isPostPublic } from "@/lib/blog";
 import { prisma } from "@/lib/db";
 import {
 	initialPostFormState,
 	type PostFieldName,
 	type PostFormState,
 	type PostFormValues,
+	type PostStatus,
 } from "@/lib/post-form";
+import {
+	CMS_TIME_ZONE,
+	isValidDateTimeLocal,
+	parseDateTimeLocalAsDate,
+} from "@/lib/temporal";
 
 interface ValidatedPostPayload {
 	values: PostFormValues;
@@ -29,8 +37,22 @@ function parsePostFormData(formData: FormData): PostFormValues {
 		slug: normalizeWhitespace(formData.get("slug")).toLowerCase(),
 		excerpt: normalizeWhitespace(formData.get("excerpt")),
 		content: normalizeWhitespace(formData.get("content")),
-		published: formData.get("published") === "on",
+		status: normalizeWhitespace(formData.get("status")) as PostStatus,
+		scheduledFor: normalizeWhitespace(formData.get("scheduledFor")),
+		coverImageUrl: normalizeWhitespace(formData.get("coverImageUrl")),
+		coverImageAlt: normalizeWhitespace(formData.get("coverImageAlt")),
+		tagIds: formData.getAll("tagIds").filter((value): value is string => typeof value === "string"),
 	};
+}
+
+function parseOptionalUrl(value: string): boolean {
+	if (!value) return true;
+	try {
+		const url = new URL(value);
+		return url.protocol === "https:" || url.protocol === "http:";
+	} catch {
+		return false;
+	}
 }
 
 function validatePostValues(values: PostFormValues): ValidatedPostPayload {
@@ -51,8 +73,59 @@ function validatePostValues(values: PostFormValues): ValidatedPostPayload {
 	if (!values.content) {
 		fieldErrors.content = "Content is required.";
 	}
-
+	if (!["DRAFT", "SCHEDULED", "PUBLISHED", "ARCHIVED"].includes(values.status)) {
+		fieldErrors.status = "Choose a valid publishing status.";
+	}
+	if (values.status === "SCHEDULED" && !values.scheduledFor) {
+		fieldErrors.scheduledFor = "A scheduled post needs a publication date.";
+	} else if (values.scheduledFor && !isValidDateTimeLocal(values.scheduledFor)) {
+		fieldErrors.scheduledFor = `Enter a valid publication date in ${CMS_TIME_ZONE}.`;
+	}
+	if (!parseOptionalUrl(values.coverImageUrl)) {
+		fieldErrors.coverImageUrl = "Use an absolute http or https URL.";
+	} else if (values.coverImageUrl && !values.coverImageAlt) {
+		fieldErrors.coverImageAlt = "Describe the cover image for screen readers.";
+	}
 	return { values, fieldErrors };
+}
+
+function buildPostWriteData(
+	values: PostFormValues,
+	existingPost?: { publishedAt: Date | null },
+) {
+	const now = new Date();
+	const scheduledFor = values.status === "SCHEDULED" ? parseDateTimeLocalAsDate(values.scheduledFor) : null;
+	const nextIsPublic = isPostPublic(values.status, scheduledFor, now);
+	const publishedAt =
+		existingPost?.publishedAt ||
+		(nextIsPublic
+			? values.status === "SCHEDULED" && scheduledFor
+				? scheduledFor
+				: now
+			: null);
+
+	return {
+		title: values.title,
+		slug: values.slug,
+		excerpt: values.excerpt || null,
+		content: values.content,
+		status: values.status,
+		published: nextIsPublic,
+		publishedAt,
+		scheduledFor,
+		coverImageUrl: values.coverImageUrl || null,
+		coverImageAlt: values.coverImageAlt || null,
+	};
+}
+
+async function validateTagIds(tagIds: string[]) {
+	if (tagIds.length === 0) return true;
+	const count = await prisma.tag.count({ where: { id: { in: tagIds } } });
+	return count === new Set(tagIds).size;
+}
+
+function tagRelations(tagIds: string[]) {
+	return { create: [...new Set(tagIds)].map((tagId) => ({ tagId })) };
 }
 
 async function ensureAdminSession() {
@@ -89,6 +162,42 @@ function buildErrorState(
 	};
 }
 
+function collectTagSlugs(tagRelations: { tag: { slug: string } }[]) {
+	return tagRelations.map(({ tag }) => tag.slug);
+}
+
+async function revalidatePostSurfaces({
+	slug,
+	previousSlug,
+	tagSlugs,
+}: {
+	slug: string;
+	previousSlug?: string;
+	tagSlugs: string[];
+}) {
+	revalidatePath("/");
+	revalidatePath("/blog");
+	revalidatePath("/search");
+	revalidatePath("/feed.xml");
+	revalidatePath("/sitemap.xml");
+	revalidatePath(`/blog/${slug}`);
+	if (previousSlug && previousSlug !== slug) {
+		revalidatePath(`/blog/${previousSlug}`);
+	}
+
+	for (const tagSlug of new Set(tagSlugs)) {
+		revalidatePath(`/tags/${tagSlug}`);
+	}
+}
+
+function sanitizeReturnTo(value: FormDataEntryValue | null) {
+	if (typeof value !== "string") {
+		return "/admin/posts";
+	}
+
+	return value.startsWith("/admin") ? value : "/admin/posts";
+}
+
 export async function createPostAction(
 	_prevState: PostFormState | undefined,
 	formData: FormData,
@@ -109,23 +218,26 @@ export async function createPostAction(
 			slug: "This slug is already in use.",
 		});
 	}
+	if (!(await validateTagIds(values.tagIds))) {
+		return buildErrorState(values, "One or more selected tags no longer exist.");
+	}
 
 	const post = await prisma.post.create({
 		data: {
-			title: values.title,
-			slug: values.slug,
-			excerpt: values.excerpt || null,
-			content: values.content,
-			published: values.published,
+			...buildPostWriteData(values),
+			tags: tagRelations(values.tagIds),
 			authorId: session.userId,
 		},
 		select: {
 			slug: true,
+			tags: { select: { tag: { select: { slug: true } } } },
 		},
 	});
 
-	revalidatePath("/");
-	revalidatePath(`/blog/${post.slug}`);
+	await revalidatePostSurfaces({
+		slug: post.slug,
+		tagSlugs: collectTagSlugs(post.tags),
+	});
 	revalidatePath("/admin/posts");
 	redirect("/admin/posts");
 	return initialPostFormState;
@@ -152,10 +264,18 @@ export async function updatePostAction(
 			slug: "This slug is already in use.",
 		});
 	}
+	if (!(await validateTagIds(values.tagIds))) {
+		return buildErrorState(values, "One or more selected tags no longer exist.");
+	}
 
 	const existingPost = await prisma.post.findUnique({
 		where: { id: postId },
-		select: { id: true },
+		select: {
+			id: true,
+			slug: true,
+			publishedAt: true,
+			tags: { select: { tag: { select: { slug: true } } } },
+		},
 	});
 	if (!existingPost) {
 		return buildErrorState(values, "That post no longer exists.");
@@ -164,21 +284,118 @@ export async function updatePostAction(
 	const post = await prisma.post.update({
 		where: { id: postId },
 		data: {
-			title: values.title,
-			slug: values.slug,
-			excerpt: values.excerpt || null,
-			content: values.content,
-			published: values.published,
+			...buildPostWriteData(values, existingPost),
+			tags: {
+				deleteMany: {},
+				...tagRelations(values.tagIds),
+			},
 		},
 		select: {
 			slug: true,
+			tags: { select: { tag: { select: { slug: true } } } },
 		},
 	});
 
-	revalidatePath("/");
-	revalidatePath(`/blog/${post.slug}`);
+	await revalidatePostSurfaces({
+		slug: post.slug,
+		previousSlug: existingPost.slug,
+		tagSlugs: [...collectTagSlugs(existingPost.tags), ...collectTagSlugs(post.tags)],
+	});
 	revalidatePath("/admin/posts");
 	revalidatePath(`/admin/posts/${postId}/edit`);
 	redirect("/admin/posts");
 	return initialPostFormState;
+}
+
+async function mutatePostStatus(
+	formData: FormData,
+	mutation: (post: { id: string; publishedAt: Date | null }) => Prisma.PostUpdateInput,
+) {
+	if (!(await ensureAdminSession())) {
+		throw new Error("Unauthorized");
+	}
+
+	const postId = formData.get("postId");
+	if (typeof postId !== "string") {
+		throw new Error("Invalid post.");
+	}
+
+	const existingPost = await prisma.post.findUnique({
+		where: { id: postId },
+		select: {
+			id: true,
+			slug: true,
+			publishedAt: true,
+			tags: { select: { tag: { select: { slug: true } } } },
+		},
+	});
+	if (!existingPost) {
+		throw new Error("Post not found.");
+	}
+
+	const updatedPost = await prisma.post.update({
+		where: { id: postId },
+		data: mutation(existingPost),
+		select: {
+			slug: true,
+			tags: { select: { tag: { select: { slug: true } } } },
+		},
+	});
+
+	await revalidatePostSurfaces({
+		slug: updatedPost.slug,
+		previousSlug: existingPost.slug,
+		tagSlugs: [...collectTagSlugs(existingPost.tags), ...collectTagSlugs(updatedPost.tags)],
+	});
+	revalidatePath("/admin/posts");
+	redirect(sanitizeReturnTo(formData.get("returnTo")));
+}
+
+export async function archivePostAction(formData: FormData) {
+	return mutatePostStatus(formData, (post) => ({
+		status: "ARCHIVED",
+		published: false,
+		scheduledFor: null,
+		publishedAt: post.publishedAt,
+	}));
+}
+
+export async function unpublishPostAction(formData: FormData) {
+	return mutatePostStatus(formData, (post) => ({
+		status: "DRAFT",
+		published: true,
+		scheduledFor: null,
+		publishedAt: post.publishedAt || new Date(),
+	}));
+}
+
+export async function deletePostAction(formData: FormData) {
+	if (!(await ensureAdminSession())) {
+		throw new Error("Unauthorized");
+	}
+
+	const postId = formData.get("postId");
+	if (typeof postId !== "string") {
+		throw new Error("Invalid post.");
+	}
+
+	const existingPost = await prisma.post.findUnique({
+		where: { id: postId },
+		select: {
+			slug: true,
+			tags: { select: { tag: { select: { slug: true } } } },
+		},
+	});
+	if (!existingPost) {
+		throw new Error("Post not found.");
+	}
+
+	await prisma.post.delete({ where: { id: postId } });
+
+	await revalidatePostSurfaces({
+		slug: existingPost.slug,
+		tagSlugs: collectTagSlugs(existingPost.tags),
+	});
+	revalidatePath("/admin/posts");
+	redirect(sanitizeReturnTo(formData.get("returnTo")));
 }

@@ -12,6 +12,9 @@
 # Copy environment file
 cp .env.example .env.local
 
+# Set the canonical public host used for RSS, sitemap, and blog post canonicals
+# Example: NEXT_PUBLIC_SITE_URL=http://localhost
+
 # Start all services (Node, PostgreSQL, Nginx)
 docker compose up -d
 
@@ -118,6 +121,16 @@ http://localhost:3000/admin/login?token=<high-entropy-token>
 
 3. The login page will authenticate via token and route you to passkey setup.
 4. After passkey creation, the stored login token hash is cleared and cannot be used again.
+
+## ✍️ CMS behaviour
+
+- Posts use tags only; there are no categories.
+- Canonical blog post URLs are derived automatically from `NEXT_PUBLIC_SITE_URL` + `/blog/[slug]`.
+- Cover images must use absolute external URLs.
+- Draft posts are intentionally available on their real `/blog/[slug]` URL, but are excluded from archives, search, tag pages, RSS, and the sitemap.
+- Scheduled posts become public automatically when `scheduledFor` is reached.
+- Archived posts are hidden from public pages, RSS, and the sitemap.
+- Scheduling inputs are interpreted as UTC when entered in the admin `datetime-local` field.
 
 ## 🚀 Caching Strategy
 
@@ -243,6 +256,7 @@ LOGIN_TOKEN_SECRET=<generate with: openssl rand -base64 32>
 # Application
 NODE_ENV=development
 APP_PORT=3000
+NEXT_PUBLIC_SITE_URL=http://localhost
 ```
 
 ## 🔒 Production Considerations
@@ -263,7 +277,7 @@ Before deploying to production:
 3. **Environment**
    - Use secure secret management
    - Set `NODE_ENV=production`
-   - Configure proper `NEXT_PUBLIC_APP_URL` and `NEXT_PUBLIC_RP_ID`
+   - Configure proper `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_RP_ID`, and `NEXT_PUBLIC_SITE_URL`
    - Use real domain names
 
 4. **Caching**

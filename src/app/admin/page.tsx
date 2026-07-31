@@ -43,6 +43,9 @@ export default async function AdminDashboard({
 				<Link href="/admin/posts/new" className={styles.button}>
 					New Post
 				</Link>
+				<Link href="/admin/tags" className={styles.button}>
+					Manage Tags
+				</Link>
 				<LogoutButton />
 			</nav>
 

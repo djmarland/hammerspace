@@ -1,5 +1,100 @@
-import {getAdminSessionUser} from "@/lib/admin-auth";
-import {prisma} from "@/lib/db";
+import type { PostStatus, Prisma } from "@/generated/client";
+import { getAdminSessionUser } from "@/lib/admin-auth";
+import {
+	ADMIN_POSTS_PER_PAGE,
+	PUBLIC_POSTS_PER_PAGE,
+	buildExcerpt,
+	buildDiscoverablePostWhere,
+	buildPublicPostWhere,
+	clampPage,
+	estimateReadingTimeMinutes,
+	formatPostStatus,
+	parsePageNumber,
+	resolveFirstPublicAt,
+	synchronizeScheduledPublicationDates,
+} from "@/lib/blog";
+import { prisma } from "@/lib/db";
+
+interface AdminPostFilters {
+	page?: number | string | string[];
+	query?: string;
+	status?: "ALL" | PostStatus;
+}
+
+interface PublicPostFilters {
+	page?: number | string | string[];
+	pageSize?: number;
+}
+
+interface SearchPublicPostsFilters extends PublicPostFilters {
+	query?: string;
+}
+
+interface TagArchiveFilters extends PublicPostFilters {
+	slug: string;
+}
+
+export interface PostTagSummary {
+	name: string;
+	slug: string;
+}
+
+export interface PublicPostSummary {
+	id: string;
+	title: string;
+	slug: string;
+	excerpt: string;
+	content: string;
+	status: PostStatus;
+	statusLabel: string;
+	publishedAt: Date;
+	coverImageUrl: string | null;
+	coverImageAlt: string | null;
+	readingTimeMinutes: number;
+	authorName: string;
+	tags: PostTagSummary[];
+}
+
+export interface PublicPostDetail extends PublicPostSummary {
+	createdAt: Date;
+	updatedAt: Date;
+}
+
+export interface PaginatedPosts<T> {
+	posts: T[];
+	page: number;
+	totalPages: number;
+	totalCount: number;
+	pageSize: number;
+}
+
+export interface AdminPostSummary {
+	id: string;
+	title: string;
+	slug: string;
+	status: PostStatus;
+	statusLabel: string;
+	publishedAt: Date | null;
+	scheduledFor: Date | null;
+	updatedAt: Date;
+	authorName: string;
+	tags: PostTagSummary[];
+}
+
+export interface AdminPostsResult extends PaginatedPosts<AdminPostSummary> {
+	filters: {
+		query: string;
+		status: "ALL" | PostStatus;
+	};
+}
+
+export interface PublicTagArchive {
+	tag: {
+		name: string;
+		slug: string;
+	};
+	posts: PaginatedPosts<PublicPostSummary>;
+}
 
 async function requireAdminSession() {
 	const session = await getAdminSessionUser();
@@ -9,25 +104,342 @@ async function requireAdminSession() {
 	return session;
 }
 
-export async function getAllPostsForAdmin() {
-	await requireAdminSession();
-	return prisma.post.findMany({
-		orderBy: { updatedAt: "desc" },
+const publicPostSelect = {
+	id: true,
+	title: true,
+	slug: true,
+	excerpt: true,
+	content: true,
+	status: true,
+	publishedAt: true,
+	scheduledFor: true,
+	coverImageUrl: true,
+	coverImageAlt: true,
+	createdAt: true,
+	updatedAt: true,
+	author: {
+		select: { name: true },
+	},
+	tags: {
 		select: {
-			id: true,
-			title: true,
-			slug: true,
-			published: true,
-			updatedAt: true,
-			author: {
-				select: { name: true },
+			tag: {
+				select: { name: true, slug: true },
 			},
 		},
+	},
+} satisfies Prisma.PostSelect;
+
+type PublicPostRecord = Prisma.PostGetPayload<{ select: typeof publicPostSelect }>;
+
+const adminPostSelect = {
+	id: true,
+	title: true,
+	slug: true,
+	status: true,
+	publishedAt: true,
+	scheduledFor: true,
+	updatedAt: true,
+	author: {
+		select: { name: true },
+	},
+	tags: {
+		select: {
+			tag: {
+				select: { name: true, slug: true },
+			},
+		},
+	},
+} satisfies Prisma.PostSelect;
+
+type AdminPostRecord = Prisma.PostGetPayload<{ select: typeof adminPostSelect }>;
+
+function orderPostsByRecency(): Prisma.PostOrderByWithRelationInput[] {
+	return [{ publishedAt: "desc" }, { scheduledFor: "desc" }, { createdAt: "desc" }];
+}
+
+function mapPostTags(tags: { tag: PostTagSummary }[]) {
+	return tags.map(({ tag }) => tag);
+}
+
+function mapPublicPost(record: PublicPostRecord): PublicPostSummary {
+	return {
+		id: record.id,
+		title: record.title,
+		slug: record.slug,
+		excerpt: buildExcerpt(record.excerpt, record.content),
+		content: record.content,
+		status: record.status,
+		statusLabel: formatPostStatus(record.status),
+		publishedAt: resolveFirstPublicAt(record),
+		coverImageUrl: record.coverImageUrl,
+		coverImageAlt: record.coverImageAlt,
+		readingTimeMinutes: estimateReadingTimeMinutes(record.content),
+		authorName: record.author.name || "Unknown",
+		tags: mapPostTags(record.tags),
+	};
+}
+
+function mapAdminPost(record: AdminPostRecord): AdminPostSummary {
+	return {
+		id: record.id,
+		title: record.title,
+		slug: record.slug,
+		status: record.status,
+		statusLabel: formatPostStatus(record.status),
+		publishedAt: record.publishedAt,
+		scheduledFor: record.scheduledFor,
+		updatedAt: record.updatedAt,
+		authorName: record.author.name || "Unknown",
+		tags: mapPostTags(record.tags),
+	};
+}
+
+function normalizeAdminStatus(
+	value: AdminPostFilters["status"],
+): AdminPostsResult["filters"]["status"] {
+	if (value === "DRAFT" || value === "SCHEDULED" || value === "PUBLISHED" || value === "ARCHIVED") {
+		return value;
+	}
+	return "ALL";
+}
+
+function buildPublicSearchWhere(query: string): Prisma.PostWhereInput {
+	return {
+		OR: [
+			{ title: { contains: query, mode: "insensitive" } },
+			{ excerpt: { contains: query, mode: "insensitive" } },
+			{ content: { contains: query, mode: "insensitive" } },
+		],
+	};
+}
+
+function buildAdminWhere(filters: AdminPostsResult["filters"]): Prisma.PostWhereInput {
+	const clauses: Prisma.PostWhereInput[] = [];
+	if (filters.status !== "ALL") {
+		clauses.push({ status: filters.status });
+	}
+	if (filters.query) {
+		clauses.push({
+			OR: [
+				{ title: { contains: filters.query, mode: "insensitive" } },
+				{ slug: { contains: filters.query, mode: "insensitive" } },
+				{ excerpt: { contains: filters.query, mode: "insensitive" } },
+				{ content: { contains: filters.query, mode: "insensitive" } },
+			],
+		});
+	}
+	if (clauses.length === 0) {
+		return {};
+	}
+	return { AND: clauses };
+}
+
+async function getPaginatedPublicPosts(
+	where: Prisma.PostWhereInput,
+	filters: PublicPostFilters = {},
+) {
+	const now = new Date();
+	await synchronizeScheduledPublicationDates(now);
+
+	const pageSize = filters.pageSize || PUBLIC_POSTS_PER_PAGE;
+	const requestedPage = parsePageNumber(filters.page);
+	const totalCount = await prisma.post.count({ where });
+	const { page, totalPages } = clampPage(requestedPage, totalCount, pageSize);
+	const posts = await prisma.post.findMany({
+		where,
+		orderBy: orderPostsByRecency(),
+		skip: (page - 1) * pageSize,
+		take: pageSize,
+		select: publicPostSelect,
 	});
+
+	return {
+		posts: posts.map(mapPublicPost),
+		page,
+		totalPages,
+		totalCount,
+		pageSize,
+	} satisfies PaginatedPosts<PublicPostSummary>;
+}
+
+export async function getLatestPublicPosts(limit = 5) {
+	const now = new Date();
+	await synchronizeScheduledPublicationDates(now);
+	const posts = await prisma.post.findMany({
+		where: buildDiscoverablePostWhere(now),
+		orderBy: orderPostsByRecency(),
+		take: limit,
+		select: publicPostSelect,
+	});
+	return posts.map(mapPublicPost);
+}
+
+export async function getPublicArchive(filters: PublicPostFilters = {}) {
+	return getPaginatedPublicPosts(buildDiscoverablePostWhere(new Date()), filters);
+}
+
+export async function searchPublicPosts(filters: SearchPublicPostsFilters = {}) {
+	const query = (filters.query || "").trim();
+	if (!query) {
+		return {
+			posts: [],
+			page: 1,
+			totalPages: 1,
+			totalCount: 0,
+			pageSize: filters.pageSize || PUBLIC_POSTS_PER_PAGE,
+		} satisfies PaginatedPosts<PublicPostSummary>;
+	}
+
+	return getPaginatedPublicPosts(
+		{ AND: [buildDiscoverablePostWhere(new Date()), buildPublicSearchWhere(query)] },
+		filters,
+	);
+}
+
+export async function getPublicTagArchive({ slug, ...filters }: TagArchiveFilters) {
+	const tag = await prisma.tag.findUnique({
+		where: { slug },
+		select: { name: true, slug: true },
+	});
+
+	if (!tag) {
+		return null;
+	}
+
+	return {
+		tag,
+		posts: await getPaginatedPublicPosts(
+			{
+				AND: [
+					buildDiscoverablePostWhere(new Date()),
+					{ tags: { some: { tag: { slug } } } },
+				],
+			},
+			filters,
+		),
+	} satisfies PublicTagArchive;
+}
+
+export async function getPublicPostBySlug(slug: string) {
+	const now = new Date();
+	await synchronizeScheduledPublicationDates(now);
+	const post = await prisma.post.findFirst({
+		where: {
+			slug,
+			AND: [buildPublicPostWhere(now)],
+		},
+		select: publicPostSelect,
+	});
+
+	if (!post) {
+		return null;
+	}
+
+	return {
+		...mapPublicPost(post),
+		createdAt: post.createdAt,
+		updatedAt: post.updatedAt,
+	} satisfies PublicPostDetail;
+}
+
+export async function getRelatedPosts(postId: string, tags: PostTagSummary[], limit = 3) {
+	if (tags.length === 0) {
+		return [];
+	}
+
+	const now = new Date();
+	await synchronizeScheduledPublicationDates(now);
+	const tagSlugs = tags.map((tag) => tag.slug);
+	const posts = await prisma.post.findMany({
+		where: {
+			id: { not: postId },
+			AND: [
+				buildDiscoverablePostWhere(now),
+				{ tags: { some: { tag: { slug: { in: tagSlugs } } } } },
+			],
+		},
+		orderBy: orderPostsByRecency(),
+		take: limit * 3,
+		select: publicPostSelect,
+	});
+
+	const relatedPosts = posts
+		.map((post) => ({
+			post: mapPublicPost(post),
+			sharedTagCount: post.tags.filter(({ tag }) => tagSlugs.includes(tag.slug)).length,
+		}))
+		.sort((left, right) => {
+			if (right.sharedTagCount !== left.sharedTagCount) {
+				return right.sharedTagCount - left.sharedTagCount;
+			}
+			return right.post.publishedAt.getTime() - left.post.publishedAt.getTime();
+		})
+		.slice(0, limit)
+		.map(({ post }) => post);
+
+	return relatedPosts;
+}
+
+export async function getPublicSyndicationPosts() {
+	const now = new Date();
+	await synchronizeScheduledPublicationDates(now);
+	const posts = await prisma.post.findMany({
+		where: buildDiscoverablePostWhere(now),
+		orderBy: orderPostsByRecency(),
+		select: publicPostSelect,
+	});
+	return posts.map(mapPublicPost);
+}
+
+export async function getPublicTagIndex() {
+	const now = new Date();
+	await synchronizeScheduledPublicationDates(now);
+	return prisma.tag.findMany({
+		where: {
+			posts: {
+				some: {
+					post: buildDiscoverablePostWhere(now),
+				},
+			},
+		},
+		orderBy: { name: "asc" },
+		select: { name: true, slug: true, updatedAt: true },
+	});
+}
+
+export async function getAllPostsForAdmin(filters: AdminPostFilters = {}) {
+	await requireAdminSession();
+	await synchronizeScheduledPublicationDates();
+
+	const normalizedFilters = {
+		query: (filters.query || "").trim(),
+		status: normalizeAdminStatus(filters.status),
+	};
+	const page = parsePageNumber(filters.page);
+	const where = buildAdminWhere(normalizedFilters);
+	const totalCount = await prisma.post.count({ where });
+	const { page: currentPage, totalPages } = clampPage(page, totalCount, ADMIN_POSTS_PER_PAGE);
+	const posts = await prisma.post.findMany({
+		where,
+		orderBy: [{ updatedAt: "desc" }],
+		skip: (currentPage - 1) * ADMIN_POSTS_PER_PAGE,
+		take: ADMIN_POSTS_PER_PAGE,
+		select: adminPostSelect,
+	});
+
+	return {
+		posts: posts.map(mapAdminPost),
+		page: currentPage,
+		totalPages,
+		totalCount,
+		pageSize: ADMIN_POSTS_PER_PAGE,
+		filters: normalizedFilters,
+	} satisfies AdminPostsResult;
 }
 
 export async function getPostById(postId: string) {
 	await requireAdminSession();
+	await synchronizeScheduledPublicationDates();
 	return prisma.post.findUnique({
 		where: { id: postId },
 		select: {
@@ -36,78 +448,22 @@ export async function getPostById(postId: string) {
 			slug: true,
 			excerpt: true,
 			content: true,
-			published: true,
-		},
-	});
-}
-
-export async function getPublishedPosts() {
-	return prisma.post.findMany({
-		where: { published: true },
-		orderBy: { createdAt: "desc" },
-		select: {
-			id: true,
-			title: true,
-			slug: true,
-			excerpt: true,
+			status: true,
+			publishedAt: true,
+			scheduledFor: true,
 			createdAt: true,
-			author: {
-				select: { name: true },
-			},
+			updatedAt: true,
+			coverImageUrl: true,
+			coverImageAlt: true,
+			tags: { select: { tagId: true } },
 		},
 	});
 }
 
-interface PublishedPostsPageOptions {
-	page: number;
-	pageSize: number;
-}
-
-export async function getPublishedPostsPage({
-	page,
-	pageSize,
-}: PublishedPostsPageOptions) {
-	const skip = (page - 1) * pageSize;
-    const baseQuery = { where : { published: true } };
-	const [posts, totalCount] = await prisma.$transaction([
-		prisma.post.findMany({
-            ...baseQuery,
-			orderBy: { createdAt: "desc" },
-			skip,
-			take: pageSize,
-			select: {
-				id: true,
-				title: true,
-				slug: true,
-				excerpt: true,
-				content: true,
-				createdAt: true,
-				updatedAt: true,
-				author: {
-					select: { name: true },
-				},
-			},
-		}),
-		prisma.post.count(baseQuery),
-	]);
-
-	return {
-		posts,
-		totalCount,
-		totalPages: Math.max(1, Math.ceil(totalCount / pageSize)),
-	};
-}
-
-export async function getPostBySlug(slug: string) {
-	return prisma.post.findFirst({
-		where: {
-			slug,
-			published: true,
-		},
-		include: {
-			author: {
-				select: { name: true },
-			},
-		},
+export async function getTagsForAdmin() {
+	await requireAdminSession();
+	return prisma.tag.findMany({
+		orderBy: { name: "asc" },
+		select: { id: true, name: true, slug: true, _count: { select: { posts: true } } },
 	});
 }

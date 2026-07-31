@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev",
-		"build": "next build",
+		"build": "NODE_ENV=production next build",
 		"start": "next start",
 		"lint": "eslint .",
 		"generate": "prisma generate",
@@ -15,6 +15,7 @@
 		"admin:create-initial": "node --import tsx scripts/create-initial-admin.ts"
 	},
 	"dependencies": {
+		"@js-temporal/polyfill": "^0.5.1",
 		"@prisma/adapter-pg": "^7.9.1",
 		"@prisma/client": "^7.9.1",
 		"@simplewebauthn/browser": "^13.3.0",
@@ -24,7 +25,9 @@
 		"next": "^16.2.12",
 		"next-auth": "5.0.0-beta.32",
 		"react": "^19.2.8",
-		"react-dom": "^19.2.8"
+		"react-dom": "^19.2.8",
+		"react-markdown": "^10.1.0",
+		"remark-gfm": "^4.0.1"
 	},
 	"devDependencies": {
 		"@types/bcryptjs": "^3.0.0",
