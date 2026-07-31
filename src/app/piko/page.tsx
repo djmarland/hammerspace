@@ -83,7 +83,7 @@ export default async function Page() {
 
 	return (
 		<div className="container">
-			<h1>Piko</h1>
+			<h1 className="piko-type-h1">Piko</h1>
 			<p>Piko is the design system for Hammerspace</p>
 
 			<div className="piko-docs-layout">
@@ -107,7 +107,7 @@ export default async function Page() {
 				</aside>
 
 				<div className="piko-docs-content">
-					<section className="piko-docs-section" id="core">
+					<section className="piko-docs-section piko-prose" id="core">
 						<h2>Core</h2>
 						<section id="core-colours">
 							<h3>Colours</h3>
@@ -172,7 +172,7 @@ export default async function Page() {
 						</section>
 					</section>
 
-					<section className="piko-docs-section" id="semantic">
+					<section className="piko-docs-section piko-prose" id="semantic">
 						<h2>Semantic</h2>
 						<section id="semantic-colours">
 							<h3>Colours</h3>
@@ -250,7 +250,7 @@ export default async function Page() {
 						</section>
 					</section>
 
-					<section className="piko-docs-section" id="html-kitchen-sink">
+					<section className="piko-docs-section piko-prose" id="html-kitchen-sink">
 						<h2>HTML Kitchen Sink</h2>
 						<p>
 							The rest of this page demonstrates the default styles for all the

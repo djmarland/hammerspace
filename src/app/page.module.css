@@ -1,51 +1,50 @@
 .container {
-	max-width: 1200px;
+	max-width: var(--piko-page-max);
 	margin: 0 auto;
-	padding: 20px;
+	padding: var(--piko-space-5);
 }
 
 .header {
 	text-align: center;
-	margin-bottom: 40px;
-	padding: 40px 20px;
-	border-bottom: 1px solid #e0e0e0;
+	margin-bottom: var(--piko-space-7);
+	padding: var(--piko-space-7) var(--piko-space-5);
+	border-bottom: 1px solid var(--piko-color-border);
 }
 
 .header h1 {
 	font-size: 2.5rem;
-	margin-bottom: 10px;
-	color: #1a1a1a;
+	margin-bottom: var(--piko-space-2);
 }
 
 .header p {
 	font-size: 1.1rem;
-	color: #666;
+	color: var(--piko-color-text-muted);
 }
 
 .nav {
 	display: flex;
-	gap: 20px;
+	gap: var(--piko-space-5);
 	justify-content: center;
-	margin-bottom: 40px;
-	padding: 20px 0;
+	margin-bottom: var(--piko-space-7);
+	padding: var(--piko-space-5) 0;
 }
 
 .nav a {
-	padding: 8px 16px;
-	border: 1px solid #ddd;
-	border-radius: 4px;
-	color: #0066cc;
+	padding: var(--piko-space-2) var(--piko-space-4);
+	border: 1px solid var(--piko-color-border);
+	border-radius: 0;
+	color: var(--piko-color-link);
 	text-decoration: none;
 	transition: all 0.2s ease;
 }
 
 .nav a:hover {
-	background-color: #f0f0f0;
-	border-color: #0066cc;
+	background-color: var(--piko-color-secondary-bg);
+	border-color: var(--piko-color-primary-border);
 }
 
 .content {
-	margin-top: 40px;
+	margin-top: var(--piko-space-7);
 }
 
 .postList {

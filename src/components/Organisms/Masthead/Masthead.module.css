@@ -1,7 +1,7 @@
 .masthead {
 	background: var(--piko-palette-dynamic-4);
-	color: #ffeeee;
-	padding: var(--piko-unit-half) var(--piko-unit);
+	color: var(--piko-color-primary-text);
+	padding: var(--piko-space-2) var(--piko-space-4);
 	position: sticky;
 	top: 0;
 }
