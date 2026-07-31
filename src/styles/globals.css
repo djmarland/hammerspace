@@ -1,12 +1,14 @@
 @layer piko {
 	@layer tokens {
-		/* Raw colours - rarely used directly */
 		@layer core {
 			:root {
-				--piko-unit: 16px;
+				--piko-unit: 1rem;
 				--piko-unit-half: calc(var(--piko-unit) / 2);
 				--piko-unit-quarter: calc(var(--piko-unit) / 4);
+				--piko-unit-three-quarter: calc(var(--piko-unit) * 0.75);
 				--piko-unit-double: calc(var(--piko-unit) * 2);
+				--piko-unit-triple: calc(var(--piko-unit) * 3);
+				--piko-unit-quad: calc(var(--piko-unit) * 4);
 
 				--piko-font--2: clamp(0.7813rem, 0.7736rem + 0.0341vw, 0.8rem);
 				--piko-font--1: clamp(0.9375rem, 0.9119rem + 0.1136vw, 1rem);
@@ -18,41 +20,288 @@
 				--piko-font-5: clamp(2.7994rem, 2.384rem + 1.8461vw, 3.8147rem);
 
 				--piko-palette-white: #fff;
+				--piko-palette-black: #000;
+				--piko-palette-slate-1: oklch(98% 0.004 247);
+				--piko-palette-slate-2: oklch(95.7% 0.007 247);
+				--piko-palette-slate-3: oklch(92.5% 0.011 247);
+				--piko-palette-slate-4: oklch(86.9% 0.016 247);
+				--piko-palette-slate-5: oklch(76.9% 0.021 247);
+				--piko-palette-slate-6: oklch(63.8% 0.023 247);
+				--piko-palette-slate-7: oklch(50.4% 0.022 247);
+				--piko-palette-slate-8: oklch(34.8% 0.019 247);
+				--piko-palette-slate-9: oklch(22.7% 0.016 247);
+
+				--piko-palette-red-1: oklch(97.9% 0.013 22);
+				--piko-palette-red-2: oklch(94.9% 0.029 22);
+				--piko-palette-red-3: oklch(90.8% 0.055 22);
+				--piko-palette-red-4: oklch(84.4% 0.093 22);
+				--piko-palette-red-5: oklch(75.6% 0.14 22);
+				--piko-palette-red-6: oklch(65.8% 0.18 22);
+				--piko-palette-red-7: oklch(56.2% 0.2 22);
+				--piko-palette-red-8: oklch(45.2% 0.179 22);
+				--piko-palette-red-9: oklch(34.8% 0.147 22);
+
+				--piko-palette-orange-1: oklch(98.4% 0.015 55);
+				--piko-palette-orange-2: oklch(96.2% 0.037 55);
+				--piko-palette-orange-3: oklch(92.7% 0.074 55);
+				--piko-palette-orange-4: oklch(87.8% 0.113 55);
+				--piko-palette-orange-5: oklch(80.7% 0.152 55);
+				--piko-palette-orange-6: oklch(72.2% 0.171 55);
+				--piko-palette-orange-7: oklch(61.4% 0.166 55);
+				--piko-palette-orange-8: oklch(48.1% 0.14 55);
+				--piko-palette-orange-9: oklch(37.6% 0.116 55);
+
+				--piko-palette-yellow-1: oklch(99.2% 0.014 97);
+				--piko-palette-yellow-2: oklch(98.1% 0.036 97);
+				--piko-palette-yellow-3: oklch(95.9% 0.071 97);
+				--piko-palette-yellow-4: oklch(92.7% 0.11 97);
+				--piko-palette-yellow-5: oklch(87.3% 0.145 97);
+				--piko-palette-yellow-6: oklch(79.8% 0.165 97);
+				--piko-palette-yellow-7: oklch(67.4% 0.147 97);
+				--piko-palette-yellow-8: oklch(53.4% 0.123 97);
+				--piko-palette-yellow-9: oklch(41.2% 0.101 97);
+
+				--piko-palette-green-1: oklch(98.6% 0.015 146);
+				--piko-palette-green-2: oklch(96.3% 0.039 146);
+				--piko-palette-green-3: oklch(92.2% 0.076 146);
+				--piko-palette-green-4: oklch(86.5% 0.115 146);
+				--piko-palette-green-5: oklch(78.2% 0.145 146);
+				--piko-palette-green-6: oklch(68.2% 0.146 146);
+				--piko-palette-green-7: oklch(56.7% 0.129 146);
+				--piko-palette-green-8: oklch(44.5% 0.106 146);
+				--piko-palette-green-9: oklch(34.2% 0.084 146);
+
+				--piko-palette-teal-1: oklch(98.3% 0.012 180);
+				--piko-palette-teal-2: oklch(95.5% 0.028 180);
+				--piko-palette-teal-3: oklch(91.2% 0.054 180);
+				--piko-palette-teal-4: oklch(84.6% 0.082 180);
+				--piko-palette-teal-5: oklch(75.7% 0.104 180);
+				--piko-palette-teal-6: oklch(64.8% 0.108 180);
+				--piko-palette-teal-7: oklch(52.3% 0.095 180);
+				--piko-palette-teal-8: oklch(39.8% 0.077 180);
+				--piko-palette-teal-9: oklch(30.7% 0.063 180);
+
+				--piko-palette-blue-1: oklch(98.1% 0.011 258);
+				--piko-palette-blue-2: oklch(95.2% 0.032 258);
+				--piko-palette-blue-3: oklch(90.7% 0.068 258);
+				--piko-palette-blue-4: oklch(84.2% 0.11 258);
+				--piko-palette-blue-5: oklch(75.2% 0.154 258);
+				--piko-palette-blue-6: oklch(64.4% 0.189 258);
+				--piko-palette-blue-7: oklch(53.5% 0.191 258);
+				--piko-palette-blue-8: oklch(43.5% 0.164 258);
+				--piko-palette-blue-9: oklch(34.5% 0.138 258);
+
+				--piko-palette-violet-1: oklch(98.3% 0.013 304);
+				--piko-palette-violet-2: oklch(95.8% 0.032 304);
+				--piko-palette-violet-3: oklch(91.8% 0.066 304);
+				--piko-palette-violet-4: oklch(86.1% 0.105 304);
+				--piko-palette-violet-5: oklch(77.9% 0.143 304);
+				--piko-palette-violet-6: oklch(68.5% 0.17 304);
+				--piko-palette-violet-7: oklch(58.5% 0.176 304);
+				--piko-palette-violet-8: oklch(47.2% 0.153 304);
+				--piko-palette-violet-9: oklch(37.6% 0.126 304);
+
+				--piko-palette-pink-1: oklch(98.2% 0.011 342);
+				--piko-palette-pink-2: oklch(95.2% 0.028 342);
+				--piko-palette-pink-3: oklch(90.8% 0.056 342);
+				--piko-palette-pink-4: oklch(84.3% 0.093 342);
+				--piko-palette-pink-5: oklch(75.6% 0.134 342);
+				--piko-palette-pink-6: oklch(65.7% 0.162 342);
+				--piko-palette-pink-7: oklch(55.4% 0.165 342);
+				--piko-palette-pink-8: oklch(44.6% 0.142 342);
+				--piko-palette-pink-9: oklch(35.5% 0.118 342);
 
 				--piko-palette-dynamic-hue: 40;
-
-				--piko-palette-dynamic-0: oklch(98.0% 0.010 var(--piko-palette-dynamic-hue));
-				--piko-palette-dynamic-1: oklch(95.9% 0.021 var(--piko-palette-dynamic-hue));
-				--piko-palette-dynamic-2: oklch(92.6% 0.039 var(--piko-palette-dynamic-hue));
-				--piko-palette-dynamic-3: oklch(87.5% 0.069 var(--piko-palette-dynamic-hue));
-				--piko-palette-dynamic-4: oklch(80.1% 0.117 var(--piko-palette-dynamic-hue));
-				--piko-palette-dynamic-5: oklch(70.0% 0.197 var(--piko-palette-dynamic-hue));
-				--piko-palette-dynamic-6: oklch(56.9% 0.178 var(--piko-palette-dynamic-hue));
-				--piko-palette-dynamic-7: oklch(41.4% 0.129 var(--piko-palette-dynamic-hue));
-				--piko-palette-dynamic-8: oklch(25.2% 0.079 var(--piko-palette-dynamic-hue));
-				--piko-palette-dynamic-9: oklch(10.0% 0.031 var(--piko-palette-dynamic-hue));
+				--piko-palette-dynamic-1: oklch(
+					97.2% 0.014 var(--piko-palette-dynamic-hue)
+				);
+				--piko-palette-dynamic-2: oklch(
+					94.8% 0.034 var(--piko-palette-dynamic-hue)
+				);
+				--piko-palette-dynamic-3: oklch(
+					90.7% 0.065 var(--piko-palette-dynamic-hue)
+				);
+				--piko-palette-dynamic-4: oklch(
+					84.6% 0.105 var(--piko-palette-dynamic-hue)
+				);
+				--piko-palette-dynamic-5: oklch(
+					76.5% 0.151 var(--piko-palette-dynamic-hue)
+				);
+				--piko-palette-dynamic-6: oklch(
+					66.1% 0.184 var(--piko-palette-dynamic-hue)
+				);
+				--piko-palette-dynamic-7: oklch(
+					54.5% 0.182 var(--piko-palette-dynamic-hue)
+				);
+				--piko-palette-dynamic-8: oklch(
+					42.3% 0.154 var(--piko-palette-dynamic-hue)
+				);
+				--piko-palette-dynamic-9: oklch(
+					32.8% 0.129 var(--piko-palette-dynamic-hue)
+				);
 				@media (color-gamut: p3) {
-					--piko-palette-dynamic-0: oklch(98.0% 0.043 var(--piko-palette-dynamic-hue));
-					--piko-palette-dynamic-1: oklch(95.9% 0.089 var(--piko-palette-dynamic-hue));
-					--piko-palette-dynamic-2: oklch(92.6% 0.133 var(--piko-palette-dynamic-hue));
-					--piko-palette-dynamic-3: oklch(87.5% 0.171 var(--piko-palette-dynamic-hue));
-					--piko-palette-dynamic-4: oklch(80.1% 0.201 var(--piko-palette-dynamic-hue));
-					--piko-palette-dynamic-5: oklch(70.0% 0.224 var(--piko-palette-dynamic-hue));
-					--piko-palette-dynamic-6: oklch(56.9% 0.241 var(--piko-palette-dynamic-hue));
-					--piko-palette-dynamic-7: oklch(41.4% 0.252 var(--piko-palette-dynamic-hue));
-					--piko-palette-dynamic-8: oklch(25.2% 0.260 var(--piko-palette-dynamic-hue));
-					--piko-palette-dynamic-9: oklch(10.0% 0.264 var(--piko-palette-dynamic-hue));
+					--piko-palette-dynamic-1: oklch(
+						97.2% 0.039 var(--piko-palette-dynamic-hue)
+					);
+					--piko-palette-dynamic-2: oklch(
+						94.8% 0.081 var(--piko-palette-dynamic-hue)
+					);
+					--piko-palette-dynamic-3: oklch(
+						90.7% 0.124 var(--piko-palette-dynamic-hue)
+					);
+					--piko-palette-dynamic-4: oklch(
+						84.6% 0.163 var(--piko-palette-dynamic-hue)
+					);
+					--piko-palette-dynamic-5: oklch(
+						76.5% 0.198 var(--piko-palette-dynamic-hue)
+					);
+					--piko-palette-dynamic-6: oklch(
+						66.1% 0.224 var(--piko-palette-dynamic-hue)
+					);
+					--piko-palette-dynamic-7: oklch(
+						54.5% 0.241 var(--piko-palette-dynamic-hue)
+					);
+					--piko-palette-dynamic-8: oklch(
+						42.3% 0.253 var(--piko-palette-dynamic-hue)
+					);
+					--piko-palette-dynamic-9: oklch(
+						32.8% 0.26 var(--piko-palette-dynamic-hue)
+					);
 				}
 			}
 		}
 
-
 		@layer semantic {
 			:root {
-				--piko-color-background: light-dark(var(--piko-palette-white), #111);
-				--piko-color-text: light-dark(#111, var(--piko-palette-white));
+				--piko-color-background: light-dark(
+					var(--piko-palette-slate-1),
+					var(--piko-palette-slate-9)
+				);
+				--piko-color-surface: light-dark(
+					var(--piko-palette-white),
+					var(--piko-palette-slate-8)
+				);
+				--piko-color-text: light-dark(
+					var(--piko-palette-slate-9),
+					var(--piko-palette-slate-1)
+				);
+				--piko-color-text-muted: light-dark(
+					var(--piko-palette-slate-7),
+					var(--piko-palette-slate-3)
+				);
+				--piko-color-border: light-dark(
+					var(--piko-palette-slate-4),
+					var(--piko-palette-slate-7)
+				);
+				--piko-color-link: light-dark(
+					var(--piko-palette-blue-7),
+					var(--piko-palette-blue-3)
+				);
+				--piko-color-link-hover: light-dark(
+					var(--piko-palette-blue-8),
+					var(--piko-palette-blue-2)
+				);
 
-				--piko-page-max: 1440px;
+				--piko-color-primary-text: light-dark(
+					var(--piko-palette-dynamic-9),
+					var(--piko-palette-dynamic-2)
+				);
+				--piko-color-primary-bg: light-dark(
+					var(--piko-palette-dynamic-2),
+					var(--piko-palette-dynamic-8)
+				);
+				--piko-color-primary-border: light-dark(
+					var(--piko-palette-dynamic-6),
+					var(--piko-palette-dynamic-5)
+				);
+
+				--piko-color-secondary-text: light-dark(
+					var(--piko-palette-slate-8),
+					var(--piko-palette-slate-2)
+				);
+				--piko-color-secondary-bg: light-dark(
+					var(--piko-palette-slate-2),
+					var(--piko-palette-slate-8)
+				);
+				--piko-color-secondary-border: light-dark(
+					var(--piko-palette-slate-5),
+					var(--piko-palette-slate-6)
+				);
+
+				--piko-color-tertiary-text: light-dark(
+					var(--piko-palette-slate-8),
+					var(--piko-palette-slate-3)
+				);
+				--piko-color-tertiary-bg: transparent;
+				--piko-color-tertiary-border: light-dark(
+					var(--piko-palette-slate-5),
+					var(--piko-palette-slate-5)
+				);
+
+				--piko-color-success-text: light-dark(
+					var(--piko-palette-green-8),
+					var(--piko-palette-green-3)
+				);
+				--piko-color-success-bg: light-dark(
+					var(--piko-palette-green-2),
+					var(--piko-palette-green-8)
+				);
+				--piko-color-success-border: light-dark(
+					var(--piko-palette-green-5),
+					var(--piko-palette-green-6)
+				);
+
+				--piko-color-warning-text: light-dark(
+					var(--piko-palette-orange-8),
+					var(--piko-palette-yellow-3)
+				);
+				--piko-color-warning-bg: light-dark(
+					var(--piko-palette-yellow-2),
+					var(--piko-palette-orange-8)
+				);
+				--piko-color-warning-border: light-dark(
+					var(--piko-palette-orange-5),
+					var(--piko-palette-yellow-6)
+				);
+
+				--piko-color-error-text: light-dark(
+					var(--piko-palette-red-8),
+					var(--piko-palette-red-3)
+				);
+				--piko-color-error-bg: light-dark(
+					var(--piko-palette-red-2),
+					var(--piko-palette-red-8)
+				);
+				--piko-color-error-border: light-dark(
+					var(--piko-palette-red-5),
+					var(--piko-palette-red-6)
+				);
+				--piko-color-danger-text: var(--piko-color-error-text);
+				--piko-color-danger-bg: var(--piko-color-error-bg);
+				--piko-color-danger-border: var(--piko-color-error-border);
+
+				--piko-type-body: var(--piko-font-base);
+				--piko-type-small: var(--piko-font--1);
+				--piko-type-caption: var(--piko-font--2);
+				--piko-type-lead: var(--piko-font-1);
+				--piko-type-h1: var(--piko-font-5);
+				--piko-type-h2: var(--piko-font-4);
+				--piko-type-h3: var(--piko-font-3);
+				--piko-type-h4: var(--piko-font-2);
+				--piko-type-h5: var(--piko-font-1);
+				--piko-type-h6: var(--piko-font-base);
+				--piko-type-code: var(--piko-font--1);
+
+				--piko-space-1: var(--piko-unit-quarter);
+				--piko-space-2: var(--piko-unit-half);
+				--piko-space-3: var(--piko-unit-three-quarter);
+				--piko-space-4: var(--piko-unit);
+				--piko-space-5: calc(var(--piko-unit) * 1.5);
+				--piko-space-6: var(--piko-unit-double);
+				--piko-space-7: var(--piko-unit-triple);
+				--piko-space-8: var(--piko-unit-quad);
+
+				--piko-page-max: 90rem;
 				--piko-page-gutter: var(--piko-unit-half);
 				@media (min-width: 50em) {
 					--piko-page-gutter: var(--piko-unit);
@@ -64,60 +313,413 @@
 		}
 	}
 
-
 	@layer reset {
-
-	}
-
-
-	@layer base {
-
-		/*
-		todo
-		 	- fluid type
-			- a p3 palette
-			- dynamic colours (changes every day)
-		 */
-		body {
-			margin: 0;
-			padding: 0;
+		*,
+		*::before,
+		*::after {
 			box-sizing: border-box;
-			color-scheme: light dark;
-			background-color: var(--piko-color-background);
-			color: var(--piko-color-text);
-			line-height: 1.6;
-			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-			"Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-			-webkit-font-smoothing: antialiased;
-			-moz-osx-font-smoothing: grayscale;
-		}
-
-		html {
-			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-			"Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-			-webkit-font-smoothing: antialiased;
-			-moz-osx-font-smoothing: grayscale;
-		}
-
-		a {
-			color: var(--piko-color-text);
-			text-decoration: none;
-		}
-
-		a:hover {
-			text-decoration: underline;
 		}
 
 		* {
-			box-sizing: border-box;
+			margin: 0;
+		}
+
+		html:focus-within {
+			scroll-behavior: smooth;
+		}
+
+		body {
+			min-height: 100vh;
+			line-height: 1.5;
+		}
+
+		img,
+		picture,
+		video,
+		canvas,
+		svg {
+			display: block;
+			max-width: 100%;
+		}
+
+		input,
+		button,
+		textarea,
+		select {
+			font: inherit;
+		}
+
+		p,
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
+			overflow-wrap: break-word;
+		}
+
+		ul[role="list"],
+		ol[role="list"] {
+			list-style: none;
+			padding: 0;
+		}
+
+		table {
+			border-collapse: collapse;
+		}
+	}
+
+	@layer base {
+		html {
+			color-scheme: light dark;
+			font-family:
+				-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+				"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+				sans-serif;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+		}
+
+		body {
+			background-color: var(--piko-color-background);
+			color: var(--piko-color-text);
+			font-size: var(--piko-type-body);
+			line-height: 1.6;
+		}
+
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
+			line-height: 1.2;
+			text-wrap: balance;
+			margin-block: var(--piko-space-6) var(--piko-space-3);
+		}
+
+		h1 {
+			font-size: var(--piko-type-h1);
+		}
+
+		h2 {
+			font-size: var(--piko-type-h2);
+		}
+
+		h3 {
+			font-size: var(--piko-type-h3);
+		}
+
+		h4 {
+			font-size: var(--piko-type-h4);
+		}
+
+		h5 {
+			font-size: var(--piko-type-h5);
+		}
+
+		h6 {
+			font-size: var(--piko-type-h6);
+		}
+
+		p,
+		ul,
+		ol,
+		dl,
+		pre,
+		table,
+		blockquote,
+		form {
+			margin-block: var(--piko-space-4);
+		}
+
+		a {
+			color: var(--piko-color-link);
+			text-decoration: underline;
+		}
+
+		a:hover {
+			color: var(--piko-color-link-hover);
+		}
+
+		fieldset {
+			border: 1px solid var(--piko-color-border);
+			padding: var(--piko-space-4);
+		}
+
+		legend {
+			padding-inline: var(--piko-space-1);
+			font-size: var(--piko-type-small);
+			font-weight: 600;
+		}
+
+		label {
+			display: inline-block;
+			margin-bottom: var(--piko-space-1);
+		}
+
+		:where(input, select, textarea, button) {
+			border-radius: 0;
+		}
+
+		:where(
+			input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not(
+					[type="submit"]
+				):not([type="reset"]),
+			textarea,
+			select,
+			button,
+			input[type="button"],
+			input[type="submit"],
+			input[type="reset"]
+		) {
+			background: var(--piko-color-surface);
+			border: 1px solid var(--piko-color-border);
+			color: var(--piko-color-text);
+			padding: var(--piko-space-1) var(--piko-space-3);
+		}
+
+		:where(
+			input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not(
+					[type="submit"]
+				):not([type="reset"])
+		) {
+			width: 100%;
+		}
+
+		:where(input, select, textarea, button):focus-visible {
+			outline: 2px solid var(--piko-color-primary-border);
+			outline-offset: 2px;
+		}
+
+		:where(input, textarea)::placeholder {
+			color: var(--piko-color-text-muted);
+			opacity: 1;
+		}
+
+		input[type="checkbox"],
+		input[type="radio"] {
+			accent-color: var(--piko-color-primary-border);
+		}
+
+		:where(
+			button,
+			input[type="button"],
+			input[type="submit"],
+			input[type="reset"]
+		) {
+			cursor: pointer;
+		}
+
+		:where(input, select, textarea, button):disabled {
+			cursor: not-allowed;
+			opacity: 0.7;
+		}
+
+		:where(.piko-button, .button) {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: var(--piko-space-2);
+			border: 1px solid var(--piko-color-border);
+			padding: var(--piko-space-2) var(--piko-space-4);
+			min-height: 2.5rem;
+			text-decoration: none;
+			border-radius: 0;
+			line-height: 1;
+		}
+
+		:where(.piko-button, .button):hover {
+			text-decoration: none;
+		}
+
+		:where(.piko-button--primary, .button.primary, .button.positive) {
+			background: var(--piko-color-primary-bg);
+			border-color: var(--piko-color-primary-border);
+			color: var(--piko-color-primary-text);
+		}
+
+		:where(.piko-button--secondary, .button.secondary) {
+			background: var(--piko-color-secondary-bg);
+			border-color: var(--piko-color-secondary-border);
+			color: var(--piko-color-secondary-text);
+		}
+
+		:where(.piko-button--tertiary, .button.tertiary) {
+			background: var(--piko-color-tertiary-bg);
+			border-color: var(--piko-color-tertiary-border);
+			color: var(--piko-color-tertiary-text);
+		}
+
+		:where(.piko-button--danger, .button.danger, .button.negative) {
+			background: var(--piko-color-danger-bg);
+			border-color: var(--piko-color-danger-border);
+			color: var(--piko-color-danger-text);
+		}
+
+		:where(.piko-button, .button):disabled,
+		:where(.piko-button, .button)[aria-disabled="true"] {
+			cursor: not-allowed;
+			opacity: 0.7;
 		}
 
 		.container {
 			max-width: var(--piko-page-max);
-			margin: 0 auto;
-			padding: 0 var(--piko-page-gutter);
+			margin-inline: auto;
+			padding-inline: var(--piko-page-gutter);
 		}
 
-	}
+		.piko-docs-layout {
+			display: grid;
+			gap: var(--piko-space-6);
+		}
 
+		.piko-docs-sidebar {
+			border: 1px solid var(--piko-color-border);
+			background: var(--piko-color-surface);
+			padding: var(--piko-space-3);
+			height: fit-content;
+		}
+
+		.piko-docs-nav {
+			display: grid;
+			gap: var(--piko-space-2);
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			font-size: var(--piko-type-small);
+		}
+
+		.piko-docs-nav a {
+			color: var(--piko-color-text);
+			text-decoration: none;
+		}
+
+		.piko-docs-nav a:hover,
+		.piko-docs-nav a:focus-visible {
+			text-decoration: underline;
+		}
+
+		@media (min-width: 64rem) {
+			.piko-docs-layout {
+				grid-template-columns: 14rem minmax(0, 1fr);
+				align-items: start;
+			}
+
+			.piko-docs-sidebar {
+				position: sticky;
+				top: var(--piko-space-6);
+			}
+		}
+
+		.piko-docs-section {
+			margin-block: var(--piko-space-7);
+		}
+
+		.piko-token-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+			gap: var(--piko-space-4);
+		}
+
+		.piko-swatch-scale {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+			gap: var(--piko-space-2);
+		}
+
+		.piko-swatch {
+			border: 1px solid var(--piko-color-border);
+			border-radius: 0;
+			min-height: 4.5rem;
+			padding: var(--piko-space-2);
+			display: flex;
+			align-items: flex-end;
+			font-size: var(--piko-type-caption);
+			color: var(--piko-palette-slate-9);
+			background: var(--piko-color-surface);
+		}
+
+		.piko-swatch code {
+			overflow-wrap: anywhere;
+		}
+
+		.piko-token-list {
+			display: grid;
+			gap: var(--piko-space-2);
+		}
+
+		.piko-token-chip {
+			border: 1px solid var(--piko-color-border);
+			border-radius: 0;
+			padding: var(--piko-space-2) var(--piko-space-3);
+			background: var(--piko-color-surface);
+			font-size: var(--piko-type-small);
+		}
+
+		.piko-space-demo {
+			display: flex;
+			flex-direction: column;
+			gap: var(--piko-space-2);
+		}
+
+		.piko-space-row {
+			display: flex;
+			align-items: center;
+			gap: var(--piko-space-3);
+		}
+
+		.piko-space-bar {
+			height: 1rem;
+			background: var(--piko-color-primary-bg);
+			border: 1px solid var(--piko-color-primary-border);
+			border-radius: 0;
+		}
+
+		.piko-state {
+			--piko-state-text: var(--piko-color-text);
+			--piko-state-bg: var(--piko-color-surface);
+			--piko-state-border: var(--piko-color-border);
+			border-radius: 0;
+		}
+
+		.piko-state[data-state="primary"] {
+			--piko-state-text: var(--piko-color-primary-text);
+			--piko-state-bg: var(--piko-color-primary-bg);
+			--piko-state-border: var(--piko-color-primary-border);
+		}
+
+		.piko-state[data-state="success"] {
+			--piko-state-text: var(--piko-color-success-text);
+			--piko-state-bg: var(--piko-color-success-bg);
+			--piko-state-border: var(--piko-color-success-border);
+		}
+
+		.piko-state[data-state="warning"] {
+			--piko-state-text: var(--piko-color-warning-text);
+			--piko-state-bg: var(--piko-color-warning-bg);
+			--piko-state-border: var(--piko-color-warning-border);
+		}
+
+		.piko-state[data-state="error"] {
+			--piko-state-text: var(--piko-color-error-text);
+			--piko-state-bg: var(--piko-color-error-bg);
+			--piko-state-border: var(--piko-color-error-border);
+		}
+
+		.piko-state--box {
+			background: var(--piko-state-bg);
+			border: 1px solid var(--piko-state-border);
+			color: var(--piko-state-text);
+			padding: var(--piko-space-3) var(--piko-space-4);
+		}
+
+		.piko-state--text {
+			color: var(--piko-state-text);
+			font-size: var(--piko-type-small);
+			font-weight: 600;
+			padding: 0;
+		}
+	}
 }
