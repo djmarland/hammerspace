@@ -37,6 +37,8 @@
 	border-radius: 0;
 	font-size: 1rem;
 	box-sizing: border-box;
+	background: light-dark(#fff, #222);
+	color: var(--piko-color-text);
 }
 
 .button {
