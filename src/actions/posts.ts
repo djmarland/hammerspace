@@ -97,6 +97,9 @@ export async function getPublishedPostsPage({
 		totalCount,
 		totalPages: Math.max(1, Math.ceil(totalCount / pageSize)),
 	};
+			},
+		},
+	});
 }
 
 export async function getPostBySlug(slug: string) {
