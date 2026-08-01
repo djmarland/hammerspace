@@ -15,28 +15,28 @@
 		"admin:create-initial": "node --import tsx scripts/create-initial-admin.ts"
 	},
 	"dependencies": {
-		"@prisma/adapter-pg": "^7.0.0",
-		"@prisma/client": "^7.0.0",
-		"@simplewebauthn/browser": "^11.0.0",
-		"@simplewebauthn/server": "^11.0.0",
-		"bcryptjs": "^2.4.3",
-		"dotenv": "^16.4.0",
-		"next": "^16.0.0",
-		"next-auth": "^5.0.0-beta",
-		"react": "^19.0.0",
-		"react-dom": "^19.0.0"
+		"@prisma/adapter-pg": "^7.9.1",
+		"@prisma/client": "^7.9.1",
+		"@simplewebauthn/browser": "^13.3.0",
+		"@simplewebauthn/server": "^13.3.2",
+		"bcryptjs": "^3.0.3",
+		"dotenv": "^17.4.2",
+		"next": "^16.2.12",
+		"next-auth": "5.0.0-beta.32",
+		"react": "^19.2.8",
+		"react-dom": "^19.2.8"
 	},
 	"devDependencies": {
-		"@types/bcryptjs": "^2.4.2",
-		"@types/node": "^22.0.0",
-		"@types/react": "^19.0.0",
-		"@types/react-dom": "^19.0.0",
-		"eslint": "^9.0.0",
-		"eslint-config-next": "^16.0.0",
-		"prettier": "3.9.5",
-		"prisma": "^7.0.0",
-		"tsx": "^4.19.0",
-		"typescript": "^5.6.0"
+		"@types/bcryptjs": "^3.0.0",
+		"@types/node": "^26.1.2",
+		"@types/react": "^19.2.18",
+		"@types/react-dom": "^19.2.4",
+		"eslint": "^9.39.5",
+		"eslint-config-next": "^16.2.12",
+		"prettier": "3.9.6",
+		"prisma": "^7.9.1",
+		"tsx": "^4.23.1",
+		"typescript": "^6.0.3"
 	},
 	"browserslist": [
 		"defaults ",

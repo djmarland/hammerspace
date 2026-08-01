@@ -1,44 +1,43 @@
 .container {
-	padding: 2rem 1rem;
+	padding: var(--piko-space-6) var(--piko-space-4);
 	max-width: 500px;
 	margin: 0 auto;
 }
 
 .card {
-	background: white;
-	border: 1px solid #e5e7eb;
-	border-radius: 8px;
-	padding: 2rem;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	background: var(--piko-color-surface);
+	border: 1px solid var(--piko-color-border);
+	border-radius: 0;
+	padding: var(--piko-space-6);
+	box-shadow: var(--piko-shadow-1);
 }
 
 .card h2 {
 	margin-top: 0;
-	color: #1f2937;
 	font-size: 1.5rem;
 }
 
 .card p {
-	color: #6b7280;
+	color: var(--piko-color-text-muted);
 	line-height: 1.6;
 }
 
 .error {
-	background-color: #fee2e2;
-	border: 1px solid #fecaca;
-	color: #991b1b;
-	padding: 0.75rem 1rem;
-	border-radius: 4px;
+	background-color: var(--piko-color-error-bg);
+	border: 1px solid var(--piko-color-error-border);
+	color: var(--piko-color-error-text);
+	padding: var(--piko-space-3) var(--piko-space-4);
+	border-radius: 0;
 	margin-bottom: 1rem;
 }
 
 .button {
 	width: 100%;
-	padding: 0.75rem 1rem;
-	background-color: #2563eb;
-	color: white;
-	border: none;
-	border-radius: 4px;
+	padding: var(--piko-space-control-padding-y) var(--piko-space-control-padding-x);
+	background-color: var(--piko-color-primary-bg);
+	color: var(--piko-color-primary-text);
+	border: 1px solid var(--piko-color-primary-border);
+	border-radius: 0;
 	font-size: 1rem;
 	cursor: pointer;
 	margin-top: 1.5rem;
@@ -46,7 +45,7 @@
 }
 
 .button:hover:not(:disabled) {
-	background-color: #1d4ed8;
+	background-color: var(--piko-color-primary-border);
 }
 
 .button:disabled {
@@ -55,16 +54,16 @@
 }
 
 .warning {
-	background-color: #fef3c7;
-	border: 1px solid #fde68a;
-	color: #92400e;
-	padding: 1rem;
-	border-radius: 4px;
+	background-color: var(--piko-color-warning-bg);
+	border: 1px solid var(--piko-color-warning-border);
+	color: var(--piko-color-warning-text);
+	padding: var(--piko-space-4);
+	border-radius: 0;
 }
 
 .skip {
 	margin-top: 1rem;
 	font-size: 0.875rem;
-	color: #9ca3af;
+	color: var(--piko-color-text-muted);
 	text-align: center;
 }
