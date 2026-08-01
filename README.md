@@ -176,9 +176,20 @@ Configured in `nginx.conf` for `/` route.
 ### Phase 5-7: Pending
 
 - Public blog pages with SWR caching
-- SEO metadata, sitemap, RSS feed
+- SEO metadata and sitemap
 - Admin dashboard with CRUD
 - Full testing and documentation
+
+## 📡 RSS Feed
+
+Published posts are available via a paginated RSS feed:
+
+- **Endpoint**: `http://localhost:3000/feed.xml`
+- **Pagination**: page 1 is `/feed.xml`, then increment `page` (`?page=2`, `?page=3`, ...)
+- **Page size**: 20 posts per page
+- **Item content**:
+  - `description` contains the post excerpt
+  - `content:encoded` contains the full post content
 
 ## 🛠️ Development
 

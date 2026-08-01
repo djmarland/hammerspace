@@ -6,6 +6,11 @@ import { Footer } from "@/components/Organisms/Footer/Footer.tsx";
 export const metadata: Metadata = {
 	title: "Hammerspace",
 	description: "A blog about Web Development, and any other musings",
+	alternates: {
+		types: {
+			"application/rss+xml": "/feed.xml",
+		},
+	},
 };
 
 export default function RootLayout({
