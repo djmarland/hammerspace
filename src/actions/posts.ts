@@ -1,5 +1,5 @@
-import { getAdminSessionUser } from "@/lib/admin-auth";
-import { prisma } from "@/lib/db";
+import {getAdminSessionUser} from "@/lib/admin-auth";
+import {prisma} from "@/lib/db";
 
 async function requireAdminSession() {
 	const session = await getAdminSessionUser();
@@ -68,9 +68,10 @@ export async function getPublishedPostsPage({
 	pageSize,
 }: PublishedPostsPageOptions) {
 	const skip = (page - 1) * pageSize;
+    const baseQuery = { where : { published: true } };
 	const [posts, totalCount] = await prisma.$transaction([
 		prisma.post.findMany({
-			where: { published: true },
+            ...baseQuery,
 			orderBy: { createdAt: "desc" },
 			skip,
 			take: pageSize,
@@ -87,9 +88,7 @@ export async function getPublishedPostsPage({
 				},
 			},
 		}),
-		prisma.post.count({
-			where: { published: true },
-		}),
+		prisma.post.count(baseQuery),
 	]);
 
 	return {
@@ -97,9 +96,6 @@ export async function getPublishedPostsPage({
 		totalCount,
 		totalPages: Math.max(1, Math.ceil(totalCount / pageSize)),
 	};
-			},
-		},
-	});
 }
 
 export async function getPostBySlug(slug: string) {
