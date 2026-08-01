@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createPostAction } from "@/actions/post-form-actions";
 import PostEditorForm from "@/components/Admin/PostEditorForm";
 import { getAdminSessionUser } from "@/lib/admin-auth";
+import { getTagsForAdmin } from "@/actions/posts";
 import styles from "./page.module.css";
 
 export default async function NewPostPage() {
@@ -10,6 +11,7 @@ export default async function NewPostPage() {
 	if (!session) {
 		redirect("/admin/login");
 	}
+	const tags = await getTagsForAdmin();
 
 	return (
 		<main className={styles.container}>
@@ -20,7 +22,7 @@ export default async function NewPostPage() {
 				</Link>
 			</header>
 
-			<PostEditorForm action={createPostAction} submitLabel="Create post" />
+			<PostEditorForm action={createPostAction} submitLabel="Create post" tags={tags} />
 		</main>
 	);
 }

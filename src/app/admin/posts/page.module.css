@@ -1,63 +1,162 @@
 .container {
-	max-width: 960px;
+	max-width: 1040px;
 	margin: 0 auto;
-	padding: 2rem 1.25rem;
+	padding: 2rem 1.25rem 3rem;
 }
 
 .header {
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 	justify-content: space-between;
 	gap: 1rem;
 	margin-bottom: 1.5rem;
 }
 
-.button {
+.headerActions,
+.buttonRow,
+.linkGroup {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+}
+
+.button,
+.secondaryButton,
+.dangerButton,
+.link,
+.inlineForm button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 	padding: 0.65rem 1rem;
+	border-radius: 999px;
+	text-decoration: none;
+	font: inherit;
+	cursor: pointer;
+}
+
+.button {
 	border: 1px solid #0066cc;
-	border-radius: 0.35rem;
 	background: #0066cc;
 	color: #fff;
-	text-decoration: none;
+}
+
+.secondaryButton,
+.link,
+.inlineForm button {
+	border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+	background: transparent;
+	color: inherit;
+}
+
+.dangerButton {
+	border: 1px solid #c10f0f;
+	background: #c10f0f;
+	color: #fff;
+}
+
+.filters {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	margin-bottom: 1.5rem;
+}
+
+.searchField {
+	flex: 1 1 22rem;
+}
+
+.searchField input,
+.selectField,
+.header form input,
+.list input {
+	width: 100%;
+	padding: 0.75rem 0.85rem;
+	border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+	border-radius: 0.75rem;
+	background: transparent;
+	color: inherit;
+	font: inherit;
 }
 
 .empty {
 	padding: 1rem;
-	background: #f8f8f8;
-	border: 1px solid #e5e5e5;
-	border-radius: 0.35rem;
+	background: color-mix(in srgb, currentColor 8%, transparent);
+	border: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+	border-radius: 0.75rem;
 }
 
 .list {
 	display: grid;
-	gap: 0.75rem;
+	gap: 1rem;
 	list-style: none;
 	padding: 0;
 	margin: 0;
 }
 
 .item {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
+	display: grid;
 	gap: 1rem;
 	padding: 1rem;
-	border: 1px solid #e5e5e5;
-	border-radius: 0.35rem;
+	border: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+	border-radius: 1rem;
+}
+
+.itemHeader {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 1rem;
 }
 
 .item h2 {
 	margin: 0 0 0.35rem;
-	font-size: 1.1rem;
+	font-size: 1.15rem;
 }
 
-.meta {
+.meta,
+.metaList {
 	margin: 0;
-	color: #666;
+	color: color-mix(in srgb, currentColor 72%, transparent);
+	font-size: 0.95rem;
+}
+
+.metaList {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	margin-top: 0.5rem;
+}
+
+.tagList {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	list-style: none;
+	padding: 0;
+	margin: 0.75rem 0 0;
+}
+
+.tagList li {
+	padding: 0.15rem 0.55rem;
+	border-radius: 999px;
+	background: color-mix(in srgb, currentColor 10%, transparent);
 	font-size: 0.92rem;
 }
 
-.link {
-	color: #0066cc;
-	text-decoration: none;
+.inlineForm {
+	margin: 0;
+}
+
+.visuallyHidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
 }

@@ -4,7 +4,8 @@ import {Masthead} from "@/components/Organisms/Masthead/Masthead.tsx";
 import {Footer} from "@/components/Organisms/Footer/Footer.tsx";
 
 export const metadata: Metadata = {
-	title: "Hammerspace",
+	metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
+	title: { default: "Hammerspace", template: "%s | Hammerspace" },
 	description: "A blog about Web Development, and any other musings",
 	alternates: {
 		types: {

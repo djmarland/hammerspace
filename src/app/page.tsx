@@ -1,45 +1,55 @@
 import Link from "next/link";
-import { getPublishedPosts } from "@/actions/posts";
+import { getLatestPublicPosts } from "@/actions/posts";
+import PostCard from "@/components/Blog/PostCard";
 import styles from "./page.module.css";
 
-export const revalidate = 60; // ISR: revalidate every 60 seconds
+export const revalidate = 60;
 
 export default async function Home() {
-	const posts = await getPublishedPosts();
+	const posts = await getLatestPublicPosts(6);
 
 	return (
 		<main className={styles.container}>
-			<header className={styles.header}>
+			<header className={styles.hero}>
+				<p className={styles.eyebrow}>Public-first publishing</p>
 				<h1>Hammerspace Blog</h1>
-				<p>Welcome to the blog</p>
+				<p className={styles.intro}>
+					Published posts and due scheduled posts appear here automatically. Drafts remain available only from their direct blog URL.
+				</p>
+				<form action="/search" className={styles.searchForm}>
+					<input
+						type="search"
+						name="q"
+						placeholder="Search posts"
+						className={styles.searchInput}
+					/>
+					<button type="submit" className={styles.primaryLink}>
+						Search
+					</button>
+				</form>
+				<nav className={styles.actions}>
+					<Link href="/blog" className={styles.secondaryLink}>
+						Browse archive
+					</Link>
+					<Link href="/feed.xml" className={styles.secondaryLink}>
+						RSS feed
+					</Link>
+					<Link href="/admin" className={styles.secondaryLink}>
+						Admin
+					</Link>
+				</nav>
 			</header>
 
-			<nav className={styles.nav}>
-				<a href="/">Home</a>
-				<a href="/admin">Admin</a>
-			</nav>
-
-			<section className={styles.content}>
-				{posts.length === 0 ? (
-					<p>No published posts yet.</p>
-				) : (
-					<ul className={styles.postList}>
-						{posts.map((post) => (
-							<li key={post.id} className={styles.postItem}>
-								<h2>
-									<Link href={`/blog/${post.slug}`}>{post.title}</Link>
-								</h2>
-								<p>{post.excerpt || "No excerpt available."}</p>
-								<p className={styles.postMeta}>
-									By {post.author.name || "Unknown"} ·{" "}
-									{new Intl.DateTimeFormat("en-GB", {
-										dateStyle: "medium",
-									}).format(post.createdAt)}
-								</p>
-							</li>
-						))}
-					</ul>
-				)}
+			<section className={styles.section}>
+				<div className={styles.sectionHeader}>
+					<h2>Latest posts</h2>
+					<p>{posts.length === 0 ? "No public posts yet." : `Showing ${posts.length} recent posts.`}</p>
+				</div>
+				<div className={styles.list}>
+					{posts.map((post) => (
+						<PostCard key={post.id} post={post} />
+					))}
+				</div>
 			</section>
 		</main>
 	);
