@@ -37,14 +37,17 @@ export default async function AdminDashboard({
 			<PasskeySetup hasPasskey={session.hasPasskey} />
 
 			<nav className={styles.nav}>
-				<Link href="/admin/create" className={styles.button}>
-					Create Post
+				<Link href="/admin/posts" className={styles.button}>
+					Manage Posts
+				</Link>
+				<Link href="/admin/posts/new" className={styles.button}>
+					New Post
 				</Link>
 				<LogoutButton />
 			</nav>
 
 			<section className={styles.content}>
-				<p>Blog management coming soon...</p>
+				<p>Manage drafts, publish posts, and edit existing content.</p>
 			</section>
 		</div>
 	);

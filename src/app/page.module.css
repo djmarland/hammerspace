@@ -47,3 +47,36 @@
 .content {
 	margin-top: 40px;
 }
+
+.postList {
+	display: grid;
+	gap: 1rem;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.postItem {
+	padding: 1rem;
+	border: 1px solid #e0e0e0;
+	border-radius: 0.35rem;
+}
+
+.postItem h2 {
+	margin: 0 0 0.5rem;
+	font-size: 1.35rem;
+}
+
+.postItem h2 a {
+	color: #1a1a1a;
+	text-decoration: none;
+}
+
+.postItem h2 a:hover {
+	text-decoration: underline;
+}
+
+.postMeta {
+	color: #666;
+	font-size: 0.92rem;
+}
