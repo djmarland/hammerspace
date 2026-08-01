@@ -32,6 +32,39 @@ function getDeterministicHue(dayOfYear: number, year: number) {
 	return shuffledDays[dayOfYear - 1];
 }
 
+function getComplementaryHue(hue: number) {
+	return (hue + 180) % 360;
+}
+
+function getHolidayHue(month: number, day: number) {
+	if (month === 12 && day === 25) {
+		// Christmas: classic green and red holiday colours.
+		return 146;
+	}
+
+	if (month === 10 && day === 31) {
+		// Halloween: orange and black for autumn nights.
+		return 35;
+	}
+
+	if (month === 1 && day === 1) {
+		// New Year: gold and silver for celebration.
+		return 45;
+	}
+
+	if (month === 2 && day === 14) {
+		// Valentine's Day: pink and red for romance.
+		return 342;
+	}
+
+	if (month === 3 && day === 17) {
+		// St Patrick's Day: green for Irish tradition.
+		return 146;
+	}
+
+	return null;
+}
+
 export default function RootLayout({
 	children,
 }: {
@@ -40,13 +73,17 @@ export default function RootLayout({
 	const now = Temporal.Now.instant().toZonedDateTimeISO("UTC");
 	const dayOfYear = now.dayOfYear;
 	const dynamicHue = getDeterministicHue(dayOfYear, now.year);
+	const holidayHue = getHolidayHue(now.month, now.day);
+	const paletteHue = holidayHue ?? dynamicHue;
+	const complementaryHue = getComplementaryHue(paletteHue);
 
 	return (
 		<html
 			lang="en"
 			style={
 				{
-					"--piko-palette-dynamic-hue": dynamicHue,
+					"--piko-palette-dynamic-primary-hue": paletteHue,
+					"--piko-palette-dynamic-secondary-hue": complementaryHue,
 				} as React.CSSProperties
 			}
 		>

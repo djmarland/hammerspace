@@ -111,61 +111,116 @@
 				--piko-palette-pink-8: oklch(44.6% 0.142 342);
 				--piko-palette-pink-9: oklch(35.5% 0.118 342);
 
-				--piko-palette-dynamic-hue: 40;
-				--piko-palette-dynamic-1: oklch(
-								97.2% 0.014 var(--piko-palette-dynamic-hue)
+				--piko-palette-dynamic-primary-hue: 40;
+				--piko-palette-dynamic-secondary-hue: 220;
+				--piko-palette-dynamic-primary-1: oklch(
+								97.2% 0.014 var(--piko-palette-dynamic-primary-hue)
 				);
-				--piko-palette-dynamic-2: oklch(
-								94.8% 0.034 var(--piko-palette-dynamic-hue)
+				--piko-palette-dynamic-primary-2: oklch(
+								94.8% 0.034 var(--piko-palette-dynamic-primary-hue)
 				);
-				--piko-palette-dynamic-3: oklch(
-								90.7% 0.065 var(--piko-palette-dynamic-hue)
+				--piko-palette-dynamic-primary-3: oklch(
+								90.7% 0.065 var(--piko-palette-dynamic-primary-hue)
 				);
-				--piko-palette-dynamic-4: oklch(
-								84.6% 0.105 var(--piko-palette-dynamic-hue)
+				--piko-palette-dynamic-primary-4: oklch(
+								84.6% 0.105 var(--piko-palette-dynamic-primary-hue)
 				);
-				--piko-palette-dynamic-5: oklch(
-								76.5% 0.151 var(--piko-palette-dynamic-hue)
+				--piko-palette-dynamic-primary-5: oklch(
+								76.5% 0.151 var(--piko-palette-dynamic-primary-hue)
 				);
-				--piko-palette-dynamic-6: oklch(
-								66.1% 0.184 var(--piko-palette-dynamic-hue)
+				--piko-palette-dynamic-primary-6: oklch(
+								66.1% 0.184 var(--piko-palette-dynamic-primary-hue)
 				);
-				--piko-palette-dynamic-7: oklch(
-								54.5% 0.182 var(--piko-palette-dynamic-hue)
+				--piko-palette-dynamic-primary-7: oklch(
+								54.5% 0.182 var(--piko-palette-dynamic-primary-hue)
 				);
-				--piko-palette-dynamic-8: oklch(
-								42.3% 0.154 var(--piko-palette-dynamic-hue)
+				--piko-palette-dynamic-primary-8: oklch(
+								42.3% 0.154 var(--piko-palette-dynamic-primary-hue)
 				);
-				--piko-palette-dynamic-9: oklch(
-								32.8% 0.129 var(--piko-palette-dynamic-hue)
+				--piko-palette-dynamic-primary-9: oklch(
+								32.8% 0.129 var(--piko-palette-dynamic-primary-hue)
+				);
+				--piko-palette-dynamic-secondary-1: oklch(
+								97.2% 0.014 var(--piko-palette-dynamic-secondary-hue)
+				);
+				--piko-palette-dynamic-secondary-2: oklch(
+								94.8% 0.034 var(--piko-palette-dynamic-secondary-hue)
+				);
+				--piko-palette-dynamic-secondary-3: oklch(
+								90.7% 0.065 var(--piko-palette-dynamic-secondary-hue)
+				);
+				--piko-palette-dynamic-secondary-4: oklch(
+								84.6% 0.105 var(--piko-palette-dynamic-secondary-hue)
+				);
+				--piko-palette-dynamic-secondary-5: oklch(
+								76.5% 0.151 var(--piko-palette-dynamic-secondary-hue)
+				);
+				--piko-palette-dynamic-secondary-6: oklch(
+								66.1% 0.184 var(--piko-palette-dynamic-secondary-hue)
+				);
+				--piko-palette-dynamic-secondary-7: oklch(
+								54.5% 0.182 var(--piko-palette-dynamic-secondary-hue)
+				);
+				--piko-palette-dynamic-secondary-8: oklch(
+								42.3% 0.154 var(--piko-palette-dynamic-secondary-hue)
+				);
+				--piko-palette-dynamic-secondary-9: oklch(
+								32.8% 0.129 var(--piko-palette-dynamic-secondary-hue)
 				);
 				@media (color-gamut: p3) {
-					--piko-palette-dynamic-1: oklch(
-									97.2% 0.039 var(--piko-palette-dynamic-hue)
+					--piko-palette-dynamic-primary-1: oklch(
+									97.2% 0.039 var(--piko-palette-dynamic-primary-hue)
 					);
-					--piko-palette-dynamic-2: oklch(
-									94.8% 0.081 var(--piko-palette-dynamic-hue)
+					--piko-palette-dynamic-primary-2: oklch(
+									94.8% 0.081 var(--piko-palette-dynamic-primary-hue)
 					);
-					--piko-palette-dynamic-3: oklch(
-									90.7% 0.124 var(--piko-palette-dynamic-hue)
+					--piko-palette-dynamic-primary-3: oklch(
+									90.7% 0.124 var(--piko-palette-dynamic-primary-hue)
 					);
-					--piko-palette-dynamic-4: oklch(
-									84.6% 0.163 var(--piko-palette-dynamic-hue)
+					--piko-palette-dynamic-primary-4: oklch(
+									84.6% 0.163 var(--piko-palette-dynamic-primary-hue)
 					);
-					--piko-palette-dynamic-5: oklch(
-									76.5% 0.198 var(--piko-palette-dynamic-hue)
+					--piko-palette-dynamic-primary-5: oklch(
+									76.5% 0.198 var(--piko-palette-dynamic-primary-hue)
 					);
-					--piko-palette-dynamic-6: oklch(
-									66.1% 0.224 var(--piko-palette-dynamic-hue)
+					--piko-palette-dynamic-primary-6: oklch(
+									66.1% 0.224 var(--piko-palette-dynamic-primary-hue)
 					);
-					--piko-palette-dynamic-7: oklch(
-									54.5% 0.241 var(--piko-palette-dynamic-hue)
+					--piko-palette-dynamic-primary-7: oklch(
+									54.5% 0.241 var(--piko-palette-dynamic-primary-hue)
 					);
-					--piko-palette-dynamic-8: oklch(
-									42.3% 0.253 var(--piko-palette-dynamic-hue)
+					--piko-palette-dynamic-primary-8: oklch(
+									42.3% 0.253 var(--piko-palette-dynamic-primary-hue)
 					);
-					--piko-palette-dynamic-9: oklch(
-									32.8% 0.26 var(--piko-palette-dynamic-hue)
+					--piko-palette-dynamic-primary-9: oklch(
+									32.8% 0.26 var(--piko-palette-dynamic-primary-hue)
+					);
+					--piko-palette-dynamic-secondary-1: oklch(
+									97.2% 0.039 var(--piko-palette-dynamic-secondary-hue)
+					);
+					--piko-palette-dynamic-secondary-2: oklch(
+									94.8% 0.081 var(--piko-palette-dynamic-secondary-hue)
+					);
+					--piko-palette-dynamic-secondary-3: oklch(
+									90.7% 0.124 var(--piko-palette-dynamic-secondary-hue)
+					);
+					--piko-palette-dynamic-secondary-4: oklch(
+									84.6% 0.163 var(--piko-palette-dynamic-secondary-hue)
+					);
+					--piko-palette-dynamic-secondary-5: oklch(
+									76.5% 0.198 var(--piko-palette-dynamic-secondary-hue)
+					);
+					--piko-palette-dynamic-secondary-6: oklch(
+									66.1% 0.224 var(--piko-palette-dynamic-secondary-hue)
+					);
+					--piko-palette-dynamic-secondary-7: oklch(
+									54.5% 0.241 var(--piko-palette-dynamic-secondary-hue)
+					);
+					--piko-palette-dynamic-secondary-8: oklch(
+									42.3% 0.253 var(--piko-palette-dynamic-secondary-hue)
+					);
+					--piko-palette-dynamic-secondary-9: oklch(
+									32.8% 0.26 var(--piko-palette-dynamic-secondary-hue)
 					);
 				}
 			}
@@ -203,29 +258,29 @@
 				);
 
 				--piko-color-primary-text: light-dark(
-								var(--piko-palette-dynamic-9),
-								var(--piko-palette-dynamic-2)
+								var(--piko-palette-dynamic-primary-9),
+								var(--piko-palette-dynamic-primary-2)
 				);
 				--piko-color-primary-bg: light-dark(
-								var(--piko-palette-dynamic-2),
-								var(--piko-palette-dynamic-8)
+								var(--piko-palette-dynamic-primary-2),
+								var(--piko-palette-dynamic-primary-8)
 				);
 				--piko-color-primary-border: light-dark(
-								var(--piko-palette-dynamic-6),
-								var(--piko-palette-dynamic-5)
+								var(--piko-palette-dynamic-primary-6),
+								var(--piko-palette-dynamic-primary-5)
 				);
 
 				--piko-color-secondary-text: light-dark(
-								var(--piko-palette-slate-8),
-								var(--piko-palette-slate-2)
+								var(--piko-palette-dynamic-secondary-9),
+								var(--piko-palette-dynamic-secondary-2)
 				);
 				--piko-color-secondary-bg: light-dark(
-								var(--piko-palette-slate-2),
-								var(--piko-palette-slate-8)
+								var(--piko-palette-dynamic-secondary-2),
+								var(--piko-palette-dynamic-secondary-8)
 				);
 				--piko-color-secondary-border: light-dark(
-								var(--piko-palette-slate-5),
-								var(--piko-palette-slate-6)
+								var(--piko-palette-dynamic-secondary-6),
+								var(--piko-palette-dynamic-secondary-5)
 				);
 
 				--piko-color-tertiary-text: light-dark(
@@ -320,6 +375,7 @@
 					--piko-page-gutter: var(--piko-unit-double);
 				}
 			}
+
 		}
 	}
 
