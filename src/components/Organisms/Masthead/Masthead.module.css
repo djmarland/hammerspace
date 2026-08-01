@@ -1,7 +1,16 @@
+.logo {
+	fill: var(--piko-palette-dynamic-4);
+	max-width: 200px;
+
+	&:hover {
+		fill: white;
+	}
+}
+
 .masthead {
-	background: var(--piko-palette-dynamic-4);
+	background: var(--piko-palette-slate-8);
 	color: var(--piko-color-primary-text);
-	padding: var(--piko-space-2) var(--piko-space-4);
+	padding: var(--piko-unit) var(--piko-space-4);
 	position: sticky;
 	top: 0;
 }

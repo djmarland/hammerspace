@@ -2,7 +2,7 @@
 	@layer tokens {
 		@layer core {
 			:root {
-				--piko-unit: 1rem;
+				--piko-unit: 16px;
 				--piko-unit-half: calc(var(--piko-unit) / 2);
 				--piko-unit-quarter: calc(var(--piko-unit) / 4);
 				--piko-unit-three-quarter: calc(var(--piko-unit) * 0.75);
@@ -113,59 +113,59 @@
 
 				--piko-palette-dynamic-hue: 40;
 				--piko-palette-dynamic-1: oklch(
-					97.2% 0.014 var(--piko-palette-dynamic-hue)
+								97.2% 0.014 var(--piko-palette-dynamic-hue)
 				);
 				--piko-palette-dynamic-2: oklch(
-					94.8% 0.034 var(--piko-palette-dynamic-hue)
+								94.8% 0.034 var(--piko-palette-dynamic-hue)
 				);
 				--piko-palette-dynamic-3: oklch(
-					90.7% 0.065 var(--piko-palette-dynamic-hue)
+								90.7% 0.065 var(--piko-palette-dynamic-hue)
 				);
 				--piko-palette-dynamic-4: oklch(
-					84.6% 0.105 var(--piko-palette-dynamic-hue)
+								84.6% 0.105 var(--piko-palette-dynamic-hue)
 				);
 				--piko-palette-dynamic-5: oklch(
-					76.5% 0.151 var(--piko-palette-dynamic-hue)
+								76.5% 0.151 var(--piko-palette-dynamic-hue)
 				);
 				--piko-palette-dynamic-6: oklch(
-					66.1% 0.184 var(--piko-palette-dynamic-hue)
+								66.1% 0.184 var(--piko-palette-dynamic-hue)
 				);
 				--piko-palette-dynamic-7: oklch(
-					54.5% 0.182 var(--piko-palette-dynamic-hue)
+								54.5% 0.182 var(--piko-palette-dynamic-hue)
 				);
 				--piko-palette-dynamic-8: oklch(
-					42.3% 0.154 var(--piko-palette-dynamic-hue)
+								42.3% 0.154 var(--piko-palette-dynamic-hue)
 				);
 				--piko-palette-dynamic-9: oklch(
-					32.8% 0.129 var(--piko-palette-dynamic-hue)
+								32.8% 0.129 var(--piko-palette-dynamic-hue)
 				);
 				@media (color-gamut: p3) {
 					--piko-palette-dynamic-1: oklch(
-						97.2% 0.039 var(--piko-palette-dynamic-hue)
+									97.2% 0.039 var(--piko-palette-dynamic-hue)
 					);
 					--piko-palette-dynamic-2: oklch(
-						94.8% 0.081 var(--piko-palette-dynamic-hue)
+									94.8% 0.081 var(--piko-palette-dynamic-hue)
 					);
 					--piko-palette-dynamic-3: oklch(
-						90.7% 0.124 var(--piko-palette-dynamic-hue)
+									90.7% 0.124 var(--piko-palette-dynamic-hue)
 					);
 					--piko-palette-dynamic-4: oklch(
-						84.6% 0.163 var(--piko-palette-dynamic-hue)
+									84.6% 0.163 var(--piko-palette-dynamic-hue)
 					);
 					--piko-palette-dynamic-5: oklch(
-						76.5% 0.198 var(--piko-palette-dynamic-hue)
+									76.5% 0.198 var(--piko-palette-dynamic-hue)
 					);
 					--piko-palette-dynamic-6: oklch(
-						66.1% 0.224 var(--piko-palette-dynamic-hue)
+									66.1% 0.224 var(--piko-palette-dynamic-hue)
 					);
 					--piko-palette-dynamic-7: oklch(
-						54.5% 0.241 var(--piko-palette-dynamic-hue)
+									54.5% 0.241 var(--piko-palette-dynamic-hue)
 					);
 					--piko-palette-dynamic-8: oklch(
-						42.3% 0.253 var(--piko-palette-dynamic-hue)
+									42.3% 0.253 var(--piko-palette-dynamic-hue)
 					);
 					--piko-palette-dynamic-9: oklch(
-						32.8% 0.26 var(--piko-palette-dynamic-hue)
+									32.8% 0.26 var(--piko-palette-dynamic-hue)
 					);
 				}
 			}
@@ -174,107 +174,107 @@
 		@layer semantic {
 			:root {
 				--piko-color-background: light-dark(
-					var(--piko-palette-slate-1),
-					var(--piko-palette-slate-9)
+								var(--piko-palette-slate-1),
+								var(--piko-palette-slate-9)
 				);
 				--piko-color-surface: light-dark(
-					var(--piko-palette-white),
-					var(--piko-palette-slate-8)
+								var(--piko-palette-white),
+								var(--piko-palette-slate-8)
 				);
 				--piko-color-text: light-dark(
-					var(--piko-palette-slate-9),
-					var(--piko-palette-slate-1)
+								var(--piko-palette-slate-9),
+								var(--piko-palette-slate-1)
 				);
 				--piko-color-text-muted: light-dark(
-					var(--piko-palette-slate-7),
-					var(--piko-palette-slate-3)
+								var(--piko-palette-slate-7),
+								var(--piko-palette-slate-3)
 				);
 				--piko-color-border: light-dark(
-					var(--piko-palette-slate-4),
-					var(--piko-palette-slate-7)
+								var(--piko-palette-slate-4),
+								var(--piko-palette-slate-7)
 				);
 				--piko-color-link: light-dark(
-					var(--piko-palette-blue-7),
-					var(--piko-palette-blue-3)
+								var(--piko-palette-blue-7),
+								var(--piko-palette-blue-3)
 				);
 				--piko-color-link-hover: light-dark(
-					var(--piko-palette-blue-8),
-					var(--piko-palette-blue-2)
+								var(--piko-palette-blue-8),
+								var(--piko-palette-blue-2)
 				);
 
 				--piko-color-primary-text: light-dark(
-					var(--piko-palette-dynamic-9),
-					var(--piko-palette-dynamic-2)
+								var(--piko-palette-dynamic-9),
+								var(--piko-palette-dynamic-2)
 				);
 				--piko-color-primary-bg: light-dark(
-					var(--piko-palette-dynamic-2),
-					var(--piko-palette-dynamic-8)
+								var(--piko-palette-dynamic-2),
+								var(--piko-palette-dynamic-8)
 				);
 				--piko-color-primary-border: light-dark(
-					var(--piko-palette-dynamic-6),
-					var(--piko-palette-dynamic-5)
+								var(--piko-palette-dynamic-6),
+								var(--piko-palette-dynamic-5)
 				);
 
 				--piko-color-secondary-text: light-dark(
-					var(--piko-palette-slate-8),
-					var(--piko-palette-slate-2)
+								var(--piko-palette-slate-8),
+								var(--piko-palette-slate-2)
 				);
 				--piko-color-secondary-bg: light-dark(
-					var(--piko-palette-slate-2),
-					var(--piko-palette-slate-8)
+								var(--piko-palette-slate-2),
+								var(--piko-palette-slate-8)
 				);
 				--piko-color-secondary-border: light-dark(
-					var(--piko-palette-slate-5),
-					var(--piko-palette-slate-6)
+								var(--piko-palette-slate-5),
+								var(--piko-palette-slate-6)
 				);
 
 				--piko-color-tertiary-text: light-dark(
-					var(--piko-palette-slate-8),
-					var(--piko-palette-slate-3)
+								var(--piko-palette-slate-8),
+								var(--piko-palette-slate-3)
 				);
 				--piko-color-tertiary-bg: transparent;
 				--piko-color-tertiary-border: light-dark(
-					var(--piko-palette-slate-5),
-					var(--piko-palette-slate-5)
+								var(--piko-palette-slate-5),
+								var(--piko-palette-slate-5)
 				);
 
 				--piko-color-success-text: light-dark(
-					var(--piko-palette-green-8),
-					var(--piko-palette-green-3)
+								var(--piko-palette-green-8),
+								var(--piko-palette-green-3)
 				);
 				--piko-color-success-bg: light-dark(
-					var(--piko-palette-green-2),
-					var(--piko-palette-green-8)
+								var(--piko-palette-green-2),
+								var(--piko-palette-green-8)
 				);
 				--piko-color-success-border: light-dark(
-					var(--piko-palette-green-5),
-					var(--piko-palette-green-6)
+								var(--piko-palette-green-5),
+								var(--piko-palette-green-6)
 				);
 
 				--piko-color-warning-text: light-dark(
-					var(--piko-palette-orange-8),
-					var(--piko-palette-yellow-3)
+								var(--piko-palette-orange-8),
+								var(--piko-palette-yellow-3)
 				);
 				--piko-color-warning-bg: light-dark(
-					var(--piko-palette-yellow-2),
-					var(--piko-palette-orange-8)
+								var(--piko-palette-yellow-2),
+								var(--piko-palette-orange-8)
 				);
 				--piko-color-warning-border: light-dark(
-					var(--piko-palette-orange-5),
-					var(--piko-palette-yellow-6)
+								var(--piko-palette-orange-5),
+								var(--piko-palette-yellow-6)
 				);
 
 				--piko-color-error-text: light-dark(
-					var(--piko-palette-red-8),
-					var(--piko-palette-red-3)
+								var(--piko-palette-red-8),
+								var(--piko-palette-red-3)
 				);
 				--piko-color-error-bg: light-dark(
-					var(--piko-palette-red-2),
-					var(--piko-palette-red-8)
+								var(--piko-palette-red-2),
+								var(--piko-palette-red-8)
 				);
 				--piko-color-error-border: light-dark(
-					var(--piko-palette-red-5),
-					var(--piko-palette-red-6)
+								var(--piko-palette-red-5),
+								var(--piko-palette-red-6)
 				);
 				--piko-color-danger-text: var(--piko-color-error-text);
 				--piko-color-danger-bg: var(--piko-color-error-bg);
@@ -383,10 +383,9 @@
 	@layer base {
 		html {
 			color-scheme: light dark;
-			font-family:
-				-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-				"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-				sans-serif;
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+			"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+			sans-serif;
 			-webkit-font-smoothing: antialiased;
 			-moz-osx-font-smoothing: grayscale;
 		}
