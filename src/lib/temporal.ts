@@ -1,5 +1,3 @@
-import { Temporal } from "@js-temporal/polyfill";
-
 export const CMS_TIME_ZONE = "UTC";
 
 function parseDateTimeLocal(value: string) {
