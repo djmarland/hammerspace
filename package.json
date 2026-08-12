@@ -1,6 +1,7 @@
 {
   "name": "hammerspace",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "vite dev",
@@ -22,21 +23,24 @@
     "@simplewebauthn/server": "^13.3.2",
     "bcryptjs": "^3.0.3",
     "dotenv": "^17.4.2",
+    "eslint-plugin-svelte": "^3.22.0",
+    "globals": "^17.11.0",
+    "marked": "^11.0.0",
     "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@sveltejs/adapter-node": "^5.5.4",
     "@sveltejs/kit": "^2.63.0",
     "@sveltejs/vite-plugin-svelte": "^7.1.2",
-    "svelte": "^5.56.1",
-    "svelte-check": "^4.6.0",
-    "typescript": "^6.0.3",
-    "vite": "^8.0.16",
     "@types/node": "^26.1.2",
     "eslint": "^9.39.5",
     "prettier": "3.9.6",
     "prisma": "^7.9.1",
-    "tsx": "^4.23.1"
+    "svelte": "^5.56.1",
+    "svelte-check": "^4.6.0",
+    "tsx": "^4.23.1",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16"
   },
   "browserslist": [
     "defaults ",

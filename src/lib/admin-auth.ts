@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import { getRequestEvent } from "$app/server";
 import { prisma } from "@/lib/db";
 
 export const ADMIN_AUTH_COOKIE = "admin_session";
@@ -139,8 +140,33 @@ export function clearAdminSession(response: any): any {
 }
 
 export async function getAdminSessionUser(): Promise<AdminSessionUser | null> {
-	// In SvelteKit, this needs to be called from a server hook with the cookies
-	// For now, return null to allow public pages to work
-	// This will be implemented in +server.ts files that have access to cookies
-	return null;
+	const event = getRequestEvent();
+	const cookieValue = event.cookies.get(ADMIN_AUTH_COOKIE);
+
+	const payload = cookieValue ? parsePayload(cookieValue) : null;
+	if (!payload) {
+		return null;
+	}
+
+	const user = await prisma.user.findUnique({
+		where: { id: payload.sub },
+		select: {
+			id: true,
+			name: true,
+			hasPasskey: true,
+			loginTokenHash: true,
+		},
+	});
+
+	if (!user) {
+		return null;
+	}
+
+	return {
+		userId: user.id,
+		name: user.name,
+		hasPasskey: user.hasPasskey,
+		bootstrap: payload.bootstrap,
+		loginTokenHash: user.loginTokenHash,
+	};
 }
