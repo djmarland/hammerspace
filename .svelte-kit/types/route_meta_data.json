@@ -1,0 +1,37 @@
+{
+	"/": [
+		"src/routes/+page.server.ts"
+	],
+	"/admin": [],
+	"/admin/login": [],
+	"/admin/posts": [],
+	"/admin/posts/new": [],
+	"/admin/posts/[id]/edit": [],
+	"/admin/tags": [],
+	"/api/auth/logout": [
+		"src/routes/api/auth/logout/+server.ts"
+	],
+	"/api/auth/token-login": [
+		"src/routes/api/auth/token-login/+server.ts"
+	],
+	"/api/auth/webauthn/authenticate-options": [
+		"src/routes/api/auth/webauthn/authenticate-options/+server.ts"
+	],
+	"/api/auth/webauthn/register-options": [
+		"src/routes/api/auth/webauthn/register-options/+server.ts"
+	],
+	"/api/auth/webauthn/verify-authenticate": [
+		"src/routes/api/auth/webauthn/verify-authenticate/+server.ts"
+	],
+	"/api/auth/webauthn/verify-register": [
+		"src/routes/api/auth/webauthn/verify-register/+server.ts"
+	],
+	"/blog": [],
+	"/blog/[slug]": [],
+	"/feed.xml": [
+		"src/routes/feed.xml/+server.ts"
+	],
+	"/piko": [],
+	"/search": [],
+	"/tags/[slug]": []
+}

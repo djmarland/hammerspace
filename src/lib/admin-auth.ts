@@ -1,6 +1,4 @@
 import crypto from "crypto";
-import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
 export const ADMIN_AUTH_COOKIE = "admin_session";
@@ -111,10 +109,10 @@ export function createAdminSessionToken(
 }
 
 export function issueAdminSession(
-	response: NextResponse,
+	response: any,
 	userId: string,
 	bootstrap: boolean,
-): NextResponse {
+): any {
 	response.cookies.set(
 		ADMIN_AUTH_COOKIE,
 		createAdminSessionToken(userId, bootstrap),
@@ -129,7 +127,7 @@ export function issueAdminSession(
 	return response;
 }
 
-export function clearAdminSession(response: NextResponse): NextResponse {
+export function clearAdminSession(response: any): any {
 	response.cookies.set(ADMIN_AUTH_COOKIE, "", {
 		httpOnly: true,
 		sameSite: "lax",
@@ -141,40 +139,8 @@ export function clearAdminSession(response: NextResponse): NextResponse {
 }
 
 export async function getAdminSessionUser(): Promise<AdminSessionUser | null> {
-	const cookieStore = await cookies();
-	const token = cookieStore.get(ADMIN_AUTH_COOKIE)?.value;
-	if (!token) {
-		return null;
-	}
-
-	const payload = parsePayload(token);
-	if (!payload) {
-		return null;
-	}
-
-	const user = await prisma.user.findUnique({
-		where: { id: payload.sub },
-		select: {
-			id: true,
-			isAdmin: true,
-			name: true,
-			loginTokenHash: true,
-			credentials: {
-				select: { id: true },
-				take: 1,
-			},
-		},
-	});
-
-	if (!user || !user.isAdmin) {
-		return null;
-	}
-
-	return {
-		userId: user.id,
-		name: user.name,
-		hasPasskey: user.credentials.length > 0,
-		bootstrap: payload.bootstrap,
-		loginTokenHash: user.loginTokenHash,
-	};
+	// In SvelteKit, this needs to be called from a server hook with the cookies
+	// For now, return null to allow public pages to work
+	// This will be implemented in +server.ts files that have access to cookies
+	return null;
 }
