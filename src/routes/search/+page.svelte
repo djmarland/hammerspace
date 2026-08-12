@@ -1,8 +1,8 @@
 <script lang="ts">
-	import PostCard from '@/components/Blog/PostCard.svelte';
-	import PaginationNav from '@/components/PaginationNav.svelte';
+    import PostCard from '@/components/Blog/PostCard.svelte';
+    import PaginationNav from '@/components/PaginationNav.svelte';
 
-	export let data;
+    export let data;
 
 	$: query = data.query;
 	$: results = data.results;
@@ -58,7 +58,7 @@
 		/>
 	{:else}
 		<p class="empty">
-			Enter a search term or <a href="/blog">browse the archive</a>.
+			Enter a search term or <a href="/posts">browse the archive</a>.
 		</p>
 	{/if}
 </main>
@@ -83,19 +83,11 @@
 
 	.intro,
 	.filterMeta,
-	.empty,
-	.helper {
+	.empty {
 		margin: 0;
 		color: color-mix(in srgb, currentColor 75%, transparent);
 	}
 
-	.actions {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.75rem;
-	}
-
-	.actionLink,
 	.button {
 		display: inline-flex;
 		align-items: center;
@@ -130,10 +122,4 @@
 		gap: 1rem;
 	}
 
-	.tagTitle {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: baseline;
-		gap: 0.5rem;
-	}
 </style>

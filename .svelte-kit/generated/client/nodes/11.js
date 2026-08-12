@@ -1,1 +1,1 @@
-export { default as component } from "../../../../src/routes/piko/+page.svelte";
+export { default as component } from "../../../../src/routes/posts/[slug]/+page.svelte";

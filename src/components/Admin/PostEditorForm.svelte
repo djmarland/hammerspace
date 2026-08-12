@@ -46,11 +46,19 @@
 		formState = {}
 	}: Props = $props();
 
-	let previewContent = $state(initialValues.content || '');
+	let previewContent = $state('');
+	let previewInitialized = $state(false);
 	let pending = $state(false);
 
-	const fieldErrors = formState.fieldErrors || {};
-	const values = formState.values || initialValues;
+	const fieldErrors = $derived(formState.fieldErrors || {});
+	const values = $derived(formState.values || initialValues);
+
+	$effect(() => {
+		if (!previewInitialized) {
+			previewContent = initialValues.content || '';
+			previewInitialized = true;
+		}
+	});
 </script>
 
 <form class="form" method="POST">
@@ -75,7 +83,7 @@
 	{#if tags.length > 0}
 		<fieldset class="fieldset">
 			<legend>Tags</legend>
-			<div class={styles.tagGrid}>
+			<div class="tagGrid">
 				{#each tags as tag (tag.id)}
 					<label class="checkboxField">
 						<input
@@ -110,7 +118,7 @@
 
 	<label class="field">
 		<span>Excerpt</span>
-		<textarea name="excerpt" rows={3} value={values.excerpt || ''} />
+		<textarea name="excerpt" rows={3}>{values.excerpt || ''}</textarea>
 	</label>
 
 	<label class="field">
@@ -119,11 +127,10 @@
 			name="content"
 			rows={14}
 			required
-			value={values.content || ''}
 			onchange={(e) => (previewContent = e.currentTarget.value)}
 			oninput={(e) => (previewContent = e.currentTarget.value)}
 			aria-invalid={fieldErrors.content ? 'true' : 'false'}
-		/>
+		>{values.content || ''}</textarea>
 		{#if fieldErrors.content}
 			<span class="fieldError">{fieldErrors.content}</span>
 		{/if}

@@ -35,9 +35,9 @@ export const dictionary = {
 		"/admin/posts/new": [~7],
 		"/admin/posts/[id]/edit": [~6],
 		"/admin/tags": [~8],
-		"/blog": [~9],
-		"/blog/[slug]": [~10],
-		"/piko": [11],
+		"/piko": [9],
+		"/posts": [~10],
+		"/posts/[slug]": [~11],
 		"/search": [~12],
 		"/tags/[slug]": [~13]
 	};

@@ -36,16 +36,16 @@
 	"/api/auth/webauthn/verify-register": [
 		"src/routes/api/auth/webauthn/verify-register/+server.ts"
 	],
-	"/blog": [
-		"src/routes/blog/+page.server.ts"
-	],
-	"/blog/[slug]": [
-		"src/routes/blog/[slug]/+page.server.ts"
-	],
 	"/feed.xml": [
 		"src/routes/feed.xml/+server.ts"
 	],
 	"/piko": [],
+	"/posts": [
+		"src/routes/posts/+page.server.ts"
+	],
+	"/posts/[slug]": [
+		"src/routes/posts/[slug]/+page.server.ts"
+	],
 	"/search": [
 		"src/routes/search/+page.server.ts"
 	],

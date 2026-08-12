@@ -28,7 +28,7 @@
 			</button>
 		</form>
 		<nav class="actions">
-			<a href="/blog" class="secondaryLink">Browse archive</a>
+			<a href="/posts" class="secondaryLink">Browse archive</a>
 			<a href="/feed.xml" class="secondaryLink">RSS feed</a>
 			<a href="/admin" class="secondaryLink">Admin</a>
 		</nav>
@@ -69,10 +69,7 @@
 		font-size: clamp(2rem, 1.7rem + 1vw, 3rem);
 	}
 
-	.intro,
-	.filterMeta,
-	.empty,
-	.helper {
+	.intro {
 		margin: 0;
 		color: color-mix(in srgb, currentColor 75%, transparent);
 	}
@@ -128,4 +125,3 @@
 		margin-bottom: 2rem;
 	}
 </style>
-

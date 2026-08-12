@@ -209,49 +209,6 @@
 		text-align: center;
 	}
 
-	.field {
-		margin-bottom: 20px;
-	}
-
-	.field label {
-		display: block;
-		margin-bottom: 5px;
-		font-weight: 500;
-	}
-
-	.field input {
-		width: 100%;
-		padding: 10px;
-		border: 1px solid var(--piko-color-border);
-		border-radius: 0;
-		font-size: 1rem;
-		box-sizing: border-box;
-		background: light-dark(#fff, #222);
-		color: var(--piko-color-text);
-	}
-
-	.button {
-		width: 100%;
-		padding: var(--piko-space-control-padding-y) var(--piko-space-control-padding-x);
-		background-color: var(--piko-color-primary-bg);
-		color: var(--piko-color-primary-text);
-		border: 1px solid var(--piko-color-primary-border);
-		border-radius: 0;
-		font-size: 1rem;
-		cursor: pointer;
-		transition: background-color 0.2s ease;
-		box-sizing: border-box;
-	}
-
-	.button:hover:not(:disabled) {
-		background-color: var(--piko-color-primary-border);
-	}
-
-	.button:disabled {
-		opacity: 0.6;
-		cursor: not-allowed;
-	}
-
 	.passkeyButton {
 		width: 100%;
 		padding: var(--piko-space-control-padding-y) var(--piko-space-control-padding-x);
@@ -273,36 +230,6 @@
 	.passkeyButton:disabled {
 		opacity: 0.6;
 		cursor: not-allowed;
-	}
-
-	.divider {
-		text-align: center;
-		margin: 20px 0;
-		color: var(--piko-color-text-muted);
-		position: relative;
-	}
-
-	.divider::before {
-		content: "";
-		position: absolute;
-		left: 0;
-		top: 50%;
-		width: 100%;
-		height: 1px;
-		background-color: var(--piko-color-border);
-	}
-
-	.divider {
-		position: relative;
-		z-index: 1;
-	}
-
-	.divider::after {
-		content: "OR";
-		background-color: var(--piko-color-surface);
-		padding: 0 var(--piko-space-2);
-		position: relative;
-		z-index: 2;
 	}
 
 	.error {

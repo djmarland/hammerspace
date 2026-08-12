@@ -169,7 +169,7 @@
 										<div
 											class="piko-space-bar"
 											style:width={`max(var(${token}), 0.125rem)`}
-										/>
+										></div>
 									</td>
 								</tr>
 							{/each}
@@ -185,7 +185,7 @@
 					<div class="piko-token-grid">
 						{#each semanticColors as token (token)}
 							<div class="piko-token-chip">
-								<div class="piko-swatch" style:background-color={`var(${token})`} />
+								<div class="piko-swatch" style:background-color={`var(${token})`}></div>
 								<PikoToken token={token} />
 							</div>
 						{/each}
@@ -225,7 +225,7 @@
 										<div
 											class="piko-space-bar"
 											style:width={`max(var(${token}), 0.125rem)`}
-										/>
+										></div>
 									</td>
 								</tr>
 							{/each}
@@ -776,23 +776,17 @@
 									<input type="button" id="f6" value="button text" />
 								</div>
 								<div>
-									<label>
+									<div>
 										Button Elements: 
 										<span class="small quiet">
 											Can use &lt;button&gt; tag or &lt;a class="button"&gt;
 										</span>
-									</label>
+									</div>
 									<br />
 									<button class="button primary">Primary</button> 
-									<a class="button secondary" href="#">
-										Secondary
-									</a> 
-									<a href="#" class="button tertiary">
-										Tertiary
-									</a> 
-									<a href="#" class="button danger">
-										Danger
-									</a>
+									<button class="button secondary">Secondary</button> 
+									<button class="button tertiary">Tertiary</button> 
+									<button class="button danger">Danger</button>
 								</div>
 							</fieldset>
 						</form>

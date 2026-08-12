@@ -3,16 +3,24 @@
 	import type { PageData } from './$types';
 	import { enhance } from '$app/forms';
 
+	const statusOptions = ['ALL', 'DRAFT', 'SCHEDULED', 'PUBLISHED', 'ARCHIVED'] as const;
+	type StatusFilter = (typeof statusOptions)[number];
+
 	interface Props {
 		data: PageData;
 	}
 
 	let { data }: Props = $props();
 
-	let query = $state(data.filters?.query ?? '');
-	let status = $state(data.filters?.status ?? 'ALL');
+	let query = $state('');
+	let status = $state<StatusFilter>('ALL');
 	let deleteConfirm = $state<string | null>(null);
 	let actionInProgress = $state(false);
+
+	$effect(() => {
+		query = data.filters?.query ?? '';
+		status = data.filters?.status ?? 'ALL';
+	});
 
 	function buildHref(page: number) {
 		const params = new URLSearchParams();
@@ -68,7 +76,10 @@
 					name="status"
 					value={status}
 					onchange={(e) => {
-						status = e.currentTarget.value;
+						const value = e.currentTarget.value;
+						if (statusOptions.includes(value as StatusFilter)) {
+							status = value as StatusFilter;
+						}
 					}}
 				>
 					<option value="ALL">All</option>

@@ -1,8 +1,8 @@
 <script lang="ts">
-	import PostCard from '@/components/Blog/PostCard.svelte';
-	import PaginationNav from '@/components/PaginationNav.svelte';
+    import PostCard from '@/components/Blog/PostCard.svelte';
+    import PaginationNav from '@/components/PaginationNav.svelte';
 
-	export let data;
+    export let data;
 
 	$: archive = data.archive;
 
@@ -21,7 +21,7 @@
 	<header class="header">
 		<div class="tagTitle">
 			<h1>#{archive.tag.name}</h1>
-			<a href="/blog" class="actionLink">
+			<a href="/posts" class="actionLink">
 				Back to archive
 			</a>
 		</div>
@@ -61,22 +61,12 @@
 		font-size: clamp(2rem, 1.7rem + 1vw, 3rem);
 	}
 
-	.intro,
-	.filterMeta,
-	.empty,
-	.helper {
+	.intro {
 		margin: 0;
 		color: color-mix(in srgb, currentColor 75%, transparent);
 	}
 
-	.actions {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.75rem;
-	}
-
-	.actionLink,
-	.button {
+	.actionLink {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
@@ -89,31 +79,15 @@
 		cursor: pointer;
 	}
 
-	.searchForm {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.75rem;
-	}
-
-	.searchInput {
-		flex: 1 1 18rem;
-		padding: 0.75rem 0.9rem;
-		border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
-		border-radius: 0.75rem;
-		background: transparent;
-		color: inherit;
-		font: inherit;
-	}
-
-	.list {
-		display: grid;
-		gap: 1rem;
-	}
-
 	.tagTitle {
 		display: flex;
 		flex-wrap: wrap;
 		align-items: baseline;
 		gap: 0.5rem;
+	}
+
+	.list {
+		display: grid;
+		gap: 1rem;
 	}
 </style>

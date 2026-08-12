@@ -12,7 +12,7 @@
 # Copy environment file
 cp .env.example .env.local
 
-# Set the canonical public host used for RSS, sitemap, and blog post canonicals
+# Set the canonical public host used for RSS, sitemap, and posts post canonicals
 # Example: NEXT_PUBLIC_SITE_URL=http://localhost
 
 # Start all services (Node, PostgreSQL, Nginx)
@@ -125,9 +125,8 @@ http://localhost:3000/admin/login?token=<high-entropy-token>
 ## ✍️ CMS behaviour
 
 - Posts use tags only; there are no categories.
-- Canonical blog post URLs are derived automatically from `NEXT_PUBLIC_SITE_URL` + `/blog/[slug]`.
 - Cover images must use absolute external URLs.
-- Draft posts are intentionally available on their real `/blog/[slug]` URL, but are excluded from archives, search, tag pages, RSS, and the sitemap.
+- Draft posts are intentionally available on their real `/posts/[slug]` URL, but are excluded from archives, search, tag pages, RSS, and the sitemap.
 - Scheduled posts become public automatically when `scheduledFor` is reached.
 - Archived posts are hidden from public pages, RSS, and the sitemap.
 - Scheduling inputs are interpreted as UTC when entered in the admin `datetime-local` field.

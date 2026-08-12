@@ -15,8 +15,8 @@ export const GET: () => Promise<Response> = async () => {
 		.map(
 			(post) => `<item>
 	<title>${escapeXml(post.title)}</title>
-	<link>${absoluteUrl(`/blog/${post.slug}`)}</link>
-	<guid isPermaLink="true">${absoluteUrl(`/blog/${post.slug}`)}</guid>
+	<link>${absoluteUrl(`/posts/${post.slug}`)}</link>
+	<guid isPermaLink="true">${absoluteUrl(`/posts/${post.slug}`)}</guid>
 	<description>${escapeXml(post.excerpt || '')}</description>
 	<pubDate>${post.publishedAt.toUTCString()}</pubDate>
 </item>`

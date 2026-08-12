@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { PublicPostSummary } from '@/actions/posts';
+    import type {PublicPostSummary} from '@/lib/posts';
 
-	interface $$Props {
+    interface $$Props {
 		post: PublicPostSummary;
 		headingLevel?: 'h2' | 'h3';
 	}
@@ -38,7 +38,7 @@
 			{/if}
 		</div>
 		<svelte:element this={headingLevel} class="title">
-			<a href={`/blog/${post.slug}`}>{post.title}</a>
+			<a href={`/posts/${post.slug}`}>{post.title}</a>
 		</svelte:element>
 		<p class="excerpt">{post.excerpt || 'No excerpt available.'}</p>
 		{#if post.tags.length > 0}

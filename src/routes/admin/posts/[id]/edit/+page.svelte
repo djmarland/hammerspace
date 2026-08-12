@@ -286,7 +286,6 @@
 		font-size: 0.9rem;
 	}
 
-	.btn-warning,
 	.btn-danger,
 	.btn-delete-confirm,
 	.btn-cancel {
@@ -302,13 +301,13 @@
 		white-space: nowrap;
 	}
 
-	.btn-warning {
+	:global(.btn-warning) {
 		background-color: #fff3e0;
 		border-color: #ffe0b2;
 		color: #e65100;
 	}
 
-	.btn-warning:hover:not(:disabled) {
+	:global(.btn-warning:hover:not(:disabled)) {
 		background-color: #ffe0b2;
 	}
 

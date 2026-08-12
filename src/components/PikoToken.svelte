@@ -23,13 +23,14 @@
 		}, COPY_RESET_TIMEOUT_MS);
 	}
 
-	const copyLabel = copyState === 'copied' ? 'Copied' : 'Copy';
-	const statusText =
+	const copyLabel = $derived(copyState === 'copied' ? 'Copied' : 'Copy');
+	const statusText = $derived(
 		copyState === 'copied'
 			? `Copied ${token} to clipboard.`
 			: copyState === 'error'
 				? 'Copy failed.'
-				: '';
+				: ''
+	);
 </script>
 
 <span class="token">

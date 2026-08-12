@@ -2,9 +2,12 @@ import adapter from '@sveltejs/adapter-node';
 
 export default {
   kit: {
+    alias: {
+      '@': 'src'
+    },
     adapter: adapter(),
     csrf: {
-      checkOrigin: false
+      trustedOrigins: ['*']
     }
   },
   vite: {

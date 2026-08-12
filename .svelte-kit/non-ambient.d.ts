@@ -29,11 +29,11 @@ declare module "$app/types" {
 	type MatcherParam<M> = M extends (param : string) => param is (infer U extends string) ? U : string;
 
 	export interface AppTypes {
-		RouteId(): "/" | "/admin" | "/admin/login" | "/admin/posts" | "/admin/posts/new" | "/admin/posts/[id]" | "/admin/posts/[id]/edit" | "/admin/tags" | "/api" | "/api/auth" | "/api/auth/logout" | "/api/auth/token-login" | "/api/auth/webauthn" | "/api/auth/webauthn/authenticate-options" | "/api/auth/webauthn/register-options" | "/api/auth/webauthn/verify-authenticate" | "/api/auth/webauthn/verify-register" | "/blog" | "/blog/[slug]" | "/feed.xml" | "/piko" | "/search" | "/tags" | "/tags/[slug]";
+		RouteId(): "/" | "/admin" | "/admin/login" | "/admin/posts" | "/admin/posts/new" | "/admin/posts/[id]" | "/admin/posts/[id]/edit" | "/admin/tags" | "/api" | "/api/auth" | "/api/auth/logout" | "/api/auth/token-login" | "/api/auth/webauthn" | "/api/auth/webauthn/authenticate-options" | "/api/auth/webauthn/register-options" | "/api/auth/webauthn/verify-authenticate" | "/api/auth/webauthn/verify-register" | "/feed.xml" | "/piko" | "/posts" | "/posts/[slug]" | "/search" | "/tags" | "/tags/[slug]";
 		RouteParams(): {
 			"/admin/posts/[id]": { id: string };
 			"/admin/posts/[id]/edit": { id: string };
-			"/blog/[slug]": { slug: string };
+			"/posts/[slug]": { slug: string };
 			"/tags/[slug]": { slug: string }
 		};
 		LayoutParams(): {
@@ -54,15 +54,15 @@ declare module "$app/types" {
 			"/api/auth/webauthn/register-options": Record<string, never>;
 			"/api/auth/webauthn/verify-authenticate": Record<string, never>;
 			"/api/auth/webauthn/verify-register": Record<string, never>;
-			"/blog": { slug?: string | undefined };
-			"/blog/[slug]": { slug: string };
 			"/feed.xml": Record<string, never>;
 			"/piko": Record<string, never>;
+			"/posts": { slug?: string | undefined };
+			"/posts/[slug]": { slug: string };
 			"/search": Record<string, never>;
 			"/tags": { slug?: string | undefined };
 			"/tags/[slug]": { slug: string }
 		};
-		Pathname(): "/" | "/admin" | "/admin/login" | "/admin/posts" | "/admin/posts/new" | `/admin/posts/${string}/edit` & {} | "/admin/tags" | "/api/auth/logout" | "/api/auth/token-login" | "/api/auth/webauthn/authenticate-options" | "/api/auth/webauthn/register-options" | "/api/auth/webauthn/verify-authenticate" | "/api/auth/webauthn/verify-register" | "/blog" | `/blog/${string}` & {} | "/feed.xml" | "/piko" | "/search" | `/tags/${string}` & {};
+		Pathname(): "/" | "/admin" | "/admin/login" | "/admin/posts" | "/admin/posts/new" | `/admin/posts/${string}/edit` & {} | "/admin/tags" | "/api/auth/logout" | "/api/auth/token-login" | "/api/auth/webauthn/authenticate-options" | "/api/auth/webauthn/register-options" | "/api/auth/webauthn/verify-authenticate" | "/api/auth/webauthn/verify-register" | "/feed.xml" | "/piko" | "/posts" | `/posts/${string}` & {} | "/search" | `/tags/${string}` & {};
 		ResolvedPathname(): `${"" | `/${string}`}${ReturnType<AppTypes['Pathname']>}`;
 		Asset(): "/globals.css" | string & {};
 	}

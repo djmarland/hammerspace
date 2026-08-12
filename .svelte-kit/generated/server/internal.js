@@ -11,7 +11,7 @@ export const options = {
 	async: false,
 	csp: {"mode":"auto","directives":{"upgrade-insecure-requests":false,"block-all-mixed-content":false},"reportOnly":{"upgrade-insecure-requests":false,"block-all-mixed-content":false}},
 	csrf_check_origin: false,
-	csrf_trusted_origins: [],
+	csrf_trusted_origins: ["*"],
 	embedded: false,
 	env_public_prefix: 'PUBLIC_',
 	env_private_prefix: '',
@@ -26,7 +26,7 @@ export const options = {
 		app: ({ head, body, assets, nonce, env }) => "<!doctype html>\n<html lang=\"en\">\n\t<head>\n\t\t<meta charset=\"utf-8\" />\n\t\t<meta name=\"viewport\" content=\"width=device-width\" />\n\t\t<link rel=\"stylesheet\" href=\"/globals.css\" />\n\t\t" + head + "\n\t</head>\n\t<body>\n\t\t<div id=\"svelte\">" + body + "</div>\n\t</body>\n</html>\n",
 		error
 	},
-	version_hash: "19zn58d"
+	version_hash: "lg7oes"
 };
 
 export async function get_hooks() {

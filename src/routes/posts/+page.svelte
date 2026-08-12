@@ -1,13 +1,13 @@
 <script lang="ts">
-	import PostCard from '@/components/Blog/PostCard.svelte';
-	import PaginationNav from '@/components/PaginationNav.svelte';
+    import PostCard from '@/components/Blog/PostCard.svelte';
+    import PaginationNav from '@/components/PaginationNav.svelte';
 
-	export let data;
+    export let data;
 
 	$: archive = data.archive;
 
 	function buildArchiveHref(page: number) {
-		return page > 1 ? `/blog?page=${page}` : '/blog';
+		return page > 1 ? `/posts?page=${page}` : '/posts';
 	}
 </script>
 
@@ -64,10 +64,7 @@
 		font-size: clamp(2rem, 1.7rem + 1vw, 3rem);
 	}
 
-	.intro,
-	.filterMeta,
-	.empty,
-	.helper {
+	.intro {
 		margin: 0;
 		color: color-mix(in srgb, currentColor 75%, transparent);
 	}
@@ -78,8 +75,7 @@
 		gap: 0.75rem;
 	}
 
-	.actionLink,
-	.button {
+	.actionLink {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
@@ -92,13 +88,13 @@
 		cursor: pointer;
 	}
 
-	.searchForm {
+	:global(.searchForm) {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.75rem;
 	}
 
-	.searchInput {
+	:global(.searchInput) {
 		flex: 1 1 18rem;
 		padding: 0.75rem 0.9rem;
 		border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
@@ -113,10 +109,4 @@
 		gap: 1rem;
 	}
 
-	.tagTitle {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: baseline;
-		gap: 0.5rem;
-	}
 </style>

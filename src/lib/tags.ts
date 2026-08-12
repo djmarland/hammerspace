@@ -13,10 +13,6 @@ async function requireAdmin() {
 	if (!(await getAdminSessionUser())) throw new Error("Unauthorized");
 }
 
-function collectPostSlugs(posts: { post: { slug: string } }[]) {
-	return posts.map(({ post }) => post.slug);
-}
-
 export async function createTagAction(formData: FormData) {
 	await requireAdmin();
 	const nameValue = formData.get("name");

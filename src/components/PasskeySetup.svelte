@@ -17,14 +17,11 @@
 	let error = $state('');
 	let completed = $state(false);
 
-	$effect(async () => {
-		supported = await isWebAuthnSupported();
+	$effect(() => {
+		void (async () => {
+			supported = await isWebAuthnSupported();
+		})();
 	});
-
-	// Don't show if user already has a passkey
-	if (hasPasskey || completed) {
-		$effect.pre(() => null);
-	}
 
 	async function handleRegisterPasskey() {
 		error = '';

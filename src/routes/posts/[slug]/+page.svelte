@@ -1,8 +1,8 @@
 <script lang="ts">
-	import PostCard from '@/components/Blog/PostCard.svelte';
-	import MarkdownContent from '@/components/Blog/MarkdownContent.svelte';
+    import PostCard from '@/components/Blog/PostCard.svelte';
+    import MarkdownContent from '@/components/Blog/MarkdownContent.svelte';
 
-	export let data;
+    export let data;
 
 	$: post = data.post;
 	$: relatedPosts = data.relatedPosts;
@@ -22,12 +22,12 @@
 		<meta property="og:image" content={post.coverImageUrl} />
 		<meta property="og:image:alt" content={post.coverImageAlt || post.title} />
 	{/if}
-	<link rel="canonical" href="https://davidmarland.com/blog/{post.slug}" />
+	<link rel="canonical" href="https://www.hammerspace.com/posts/{post.slug}" />
 </svelte:head>
 
 <main class="container">
 	<p>
-		<a href="/blog" class="backLink">
+		<a href="/posts" class="backLink">
 			← Back to archive
 		</a>
 	</p>
