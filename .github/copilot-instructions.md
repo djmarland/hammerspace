@@ -33,7 +33,7 @@ docker compose logs -f node
 ## Script Execution
 
 This project uses **npm** for package management. All scripts should be executed inside the running container (including npx commands).
-When you need to run pnpm scripts:
+When you need to run npm scripts:
 
 1. **For development/testing** - Let the running container handle it:
 

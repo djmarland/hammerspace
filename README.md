@@ -160,7 +160,7 @@ Configured in `nginx.conf` for `/` route.
 ### Phase 1: Docker Infrastructure ✅
 
 - Docker Compose setup (Node, PostgreSQL, Nginx)
-- Dockerfile with pnpm and Prisma
+- Dockerfile with npm and Prisma
 - Nginx reverse proxy with caching configuration
 - Environment configuration with `.env.example`
 - Copilot skills documentation
@@ -209,7 +209,7 @@ Published posts are available via a paginated RSS feed:
 ### Hot Reload
 
 - Source code changes auto-reload in development
-- Database schema changes require `pnpm db:push`
+- Database schema changes require `npx prisma db push`
 - Next.js automatically handles HMR (Hot Module Replacement)
 
 ### Adding Dependencies
