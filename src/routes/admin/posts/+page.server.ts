@@ -1,9 +1,13 @@
-import { fail } from "@sveltejs/kit";
+import { fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
 import { archivePostAction, deletePostAction, unpublishPostAction } from "@/lib/post-form-actions";
 import { getAllPostsForAdmin } from "@/lib/posts";
 
 export const load: PageServerLoad = async ({ url, locals }) => {
+	if (!locals.session) {
+		throw redirect(302, "/admin/login");
+	}
+
 	const query = url.searchParams.get("query") || "";
 	const status = (url.searchParams.get("status") || "ALL") as "ALL" | "DRAFT" | "SCHEDULED" | "PUBLISHED" | "ARCHIVED";
 	const page = url.searchParams.get("page") || "1";

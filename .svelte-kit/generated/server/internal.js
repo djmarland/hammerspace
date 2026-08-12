@@ -26,7 +26,7 @@ export const options = {
 		app: ({ head, body, assets, nonce, env }) => "<!doctype html>\n<html lang=\"en\">\n\t<head>\n\t\t<meta charset=\"utf-8\" />\n\t\t<meta name=\"viewport\" content=\"width=device-width\" />\n\t\t<link rel=\"stylesheet\" href=\"/globals.css\" />\n\t\t" + head + "\n\t</head>\n\t<body>\n\t\t<div id=\"svelte\">" + body + "</div>\n\t</body>\n</html>\n",
 		error
 	},
-	version_hash: "1mykj3z"
+	version_hash: "v2n901"
 };
 
 export async function get_hooks() {
@@ -35,7 +35,7 @@ export async function get_hooks() {
 	let handleError;
 	let handleValidationError;
 	let init;
-	
+	({ handle, handleFetch, handleError, handleValidationError, init } = await import("../../../src/hooks.server.ts"));
 
 	let reroute;
 	let transport;
