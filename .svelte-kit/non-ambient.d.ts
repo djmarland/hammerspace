@@ -64,6 +64,6 @@ declare module "$app/types" {
 		};
 		Pathname(): "/" | "/admin" | "/admin/login" | "/admin/posts" | "/admin/posts/new" | `/admin/posts/${string}/edit` & {} | "/admin/tags" | "/api/auth/logout" | "/api/auth/token-login" | "/api/auth/webauthn/authenticate-options" | "/api/auth/webauthn/register-options" | "/api/auth/webauthn/verify-authenticate" | "/api/auth/webauthn/verify-register" | "/blog" | `/blog/${string}` & {} | "/feed.xml" | "/piko" | "/search" | `/tags/${string}` & {};
 		ResolvedPathname(): `${"" | `/${string}`}${ReturnType<AppTypes['Pathname']>}`;
-		Asset(): string & {};
+		Asset(): "/globals.css" | string & {};
 	}
 }
