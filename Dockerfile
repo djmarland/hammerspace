@@ -8,8 +8,8 @@ RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists
 # Copy package files
 COPY package.json package-lock.json* ./
 
-# Clean any leftover pnpm artifacts and install dependencies with npm
-RUN rm -rf node_modules .pnpm pnpm-lock.yaml pnpm-lock.yaml* .pnpm-store || true \
+# Upgrade npm to avoid npm 11 issues, then clean any leftover pnpm artifacts and install dependencies with npm
+RUN npm install -g npm@12.0.2 && rm -rf node_modules .pnpm pnpm-lock.yaml pnpm-lock.yaml* .pnpm-store || true \
   && npm install --legacy-peer-deps
 
 # Copy the rest of the application
