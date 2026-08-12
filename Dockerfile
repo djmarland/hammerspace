@@ -10,7 +10,7 @@ COPY package.json package-lock.json* ./
 
 # Install dependencies with npm
 # Use npm install to ensure a package-lock.json is generated if missing
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # Copy the rest of the application
 COPY . .
