@@ -39,7 +39,7 @@ services:
         condition: service_healthy
     networks:
       - hammerspace-network
-    command: sh -c "npx prisma db push --accept-data-loss && npx svelte-kit dev --host --port 3000"
+    command: sh -c "npx prisma db push --accept-data-loss && npx svelte-kit dev -- --host 0.0.0.0 --port 3000"
     # command: sh -c "npx prisma db push && npm run build && npm run start"
 
   nginx:
