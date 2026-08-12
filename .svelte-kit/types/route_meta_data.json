@@ -6,10 +6,18 @@
 		"src/routes/admin/+page.server.ts"
 	],
 	"/admin/login": [],
-	"/admin/posts": [],
-	"/admin/posts/new": [],
-	"/admin/posts/[id]/edit": [],
-	"/admin/tags": [],
+	"/admin/posts": [
+		"src/routes/admin/posts/+page.server.ts"
+	],
+	"/admin/posts/new": [
+		"src/routes/admin/posts/new/+page.server.ts"
+	],
+	"/admin/posts/[id]/edit": [
+		"src/routes/admin/posts/[id]/edit/+page.server.ts"
+	],
+	"/admin/tags": [
+		"src/routes/admin/tags/+page.server.ts"
+	],
 	"/api/auth/logout": [
 		"src/routes/api/auth/logout/+server.ts"
 	],

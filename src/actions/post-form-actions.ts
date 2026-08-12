@@ -1,8 +1,4 @@
-"use server";
-
 import type { Prisma } from "@/generated/client";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { getAdminSessionUser } from "@/lib/admin-auth";
 import { isPostPublic } from "@/lib/blog";
 import { prisma } from "@/lib/db";
@@ -162,41 +158,6 @@ function buildErrorState(
 	};
 }
 
-function collectTagSlugs(tagRelations: { tag: { slug: string } }[]) {
-	return tagRelations.map(({ tag }) => tag.slug);
-}
-
-async function revalidatePostSurfaces({
-	slug,
-	previousSlug,
-	tagSlugs,
-}: {
-	slug: string;
-	previousSlug?: string;
-	tagSlugs: string[];
-}) {
-	revalidatePath("/");
-	revalidatePath("/blog");
-	revalidatePath("/search");
-	revalidatePath("/feed.xml");
-	revalidatePath("/sitemap.xml");
-	revalidatePath(`/blog/${slug}`);
-	if (previousSlug && previousSlug !== slug) {
-		revalidatePath(`/blog/${previousSlug}`);
-	}
-
-	for (const tagSlug of new Set(tagSlugs)) {
-		revalidatePath(`/tags/${tagSlug}`);
-	}
-}
-
-function sanitizeReturnTo(value: FormDataEntryValue | null) {
-	if (typeof value !== "string") {
-		return "/admin/posts";
-	}
-
-	return value.startsWith("/admin") ? value : "/admin/posts";
-}
 
 export async function createPostAction(
 	_prevState: PostFormState | undefined,
@@ -222,7 +183,7 @@ export async function createPostAction(
 		return buildErrorState(values, "One or more selected tags no longer exist.");
 	}
 
-	const post = await prisma.post.create({
+	await prisma.post.create({
 		data: {
 			...buildPostWriteData(values),
 			tags: tagRelations(values.tagIds),
@@ -234,12 +195,6 @@ export async function createPostAction(
 		},
 	});
 
-	await revalidatePostSurfaces({
-		slug: post.slug,
-		tagSlugs: collectTagSlugs(post.tags),
-	});
-	revalidatePath("/admin/posts");
-	redirect("/admin/posts");
 	return initialPostFormState;
 }
 
@@ -281,7 +236,7 @@ export async function updatePostAction(
 		return buildErrorState(values, "That post no longer exists.");
 	}
 
-	const post = await prisma.post.update({
+	await prisma.post.update({
 		where: { id: postId },
 		data: {
 			...buildPostWriteData(values, existingPost),
@@ -296,14 +251,6 @@ export async function updatePostAction(
 		},
 	});
 
-	await revalidatePostSurfaces({
-		slug: post.slug,
-		previousSlug: existingPost.slug,
-		tagSlugs: [...collectTagSlugs(existingPost.tags), ...collectTagSlugs(post.tags)],
-	});
-	revalidatePath("/admin/posts");
-	revalidatePath(`/admin/posts/${postId}/edit`);
-	redirect("/admin/posts");
 	return initialPostFormState;
 }
 
@@ -333,7 +280,7 @@ async function mutatePostStatus(
 		throw new Error("Post not found.");
 	}
 
-	const updatedPost = await prisma.post.update({
+	await prisma.post.update({
 		where: { id: postId },
 		data: mutation(existingPost),
 		select: {
@@ -341,14 +288,6 @@ async function mutatePostStatus(
 			tags: { select: { tag: { select: { slug: true } } } },
 		},
 	});
-
-	await revalidatePostSurfaces({
-		slug: updatedPost.slug,
-		previousSlug: existingPost.slug,
-		tagSlugs: [...collectTagSlugs(existingPost.tags), ...collectTagSlugs(updatedPost.tags)],
-	});
-	revalidatePath("/admin/posts");
-	redirect(sanitizeReturnTo(formData.get("returnTo")));
 }
 
 export async function archivePostAction(formData: FormData) {
@@ -391,11 +330,4 @@ export async function deletePostAction(formData: FormData) {
 	}
 
 	await prisma.post.delete({ where: { id: postId } });
-
-	await revalidatePostSurfaces({
-		slug: existingPost.slug,
-		tagSlugs: collectTagSlugs(existingPost.tags),
-	});
-	revalidatePath("/admin/posts");
-	redirect(sanitizeReturnTo(formData.get("returnTo")));
 }
