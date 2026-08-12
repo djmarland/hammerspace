@@ -8,9 +8,9 @@ RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists
 # Copy package files
 COPY package.json package-lock.json* ./
 
-# Install dependencies with npm
-# Use npm install to ensure a package-lock.json is generated if missing
-RUN npm install --legacy-peer-deps
+# Clean any leftover pnpm artifacts and install dependencies with npm
+RUN rm -rf node_modules .pnpm pnpm-lock.yaml pnpm-lock.yaml* .pnpm-store || true \
+  && npm install --legacy-peer-deps
 
 # Copy the rest of the application
 COPY . .
