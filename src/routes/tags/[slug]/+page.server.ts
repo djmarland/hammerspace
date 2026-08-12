@@ -1,4 +1,4 @@
-import { getPublicTagArchive } from '@/actions/posts';
+import { getPublicTagArchive } from '@/lib/posts';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 

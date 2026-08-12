@@ -1,4 +1,4 @@
-import {getPublicSyndicationPosts} from '@/actions/posts';
+import {getPublicSyndicationPosts} from '@/lib/posts';
 import {absoluteUrl, site} from '@/lib/site';
 
 function escapeXml(value: string) {

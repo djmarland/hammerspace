@@ -75,12 +75,7 @@ export const POST: RequestHandler = async ({ request }) => {
 			}
 		});
 
-		// Mark user as having a passkey
-		await prisma.user.update({
-			where: { id: user.id },
-			data: { hasPasskey: true }
-		});
-
+		// Clear login token after first passkey registration (bootstrap mode)
 		if (sessionUser.bootstrap && user.loginTokenHash) {
 			await prisma.user.update({
 				where: { id: user.id },

@@ -1,7 +1,7 @@
 import { fail } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
-import { archivePostAction, deletePostAction, unpublishPostAction } from "@/actions/post-form-actions";
-import { getAllPostsForAdmin } from "@/actions/posts";
+import { archivePostAction, deletePostAction, unpublishPostAction } from "@/lib/post-form-actions";
+import { getAllPostsForAdmin } from "@/lib/posts";
 
 export const load: PageServerLoad = async ({ url, locals }) => {
 	const query = url.searchParams.get("query") || "";

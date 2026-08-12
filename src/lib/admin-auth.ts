@@ -153,8 +153,10 @@ export async function getAdminSessionUser(): Promise<AdminSessionUser | null> {
 		select: {
 			id: true,
 			name: true,
-			hasPasskey: true,
 			loginTokenHash: true,
+			credentials: {
+				select: { credentialId: true },
+			},
 		},
 	});
 
@@ -165,7 +167,7 @@ export async function getAdminSessionUser(): Promise<AdminSessionUser | null> {
 	return {
 		userId: user.id,
 		name: user.name,
-		hasPasskey: user.hasPasskey,
+		hasPasskey: user.credentials.length > 0,
 		bootstrap: payload.bootstrap,
 		loginTokenHash: user.loginTokenHash,
 	};

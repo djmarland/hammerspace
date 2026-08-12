@@ -1,4 +1,4 @@
-import { getPublicPostBySlug, getRelatedPosts } from '@/actions/posts';
+import { getPublicPostBySlug, getRelatedPosts } from '@/lib/posts';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 

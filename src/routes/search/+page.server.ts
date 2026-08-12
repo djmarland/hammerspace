@@ -1,4 +1,4 @@
-import { searchPublicPosts } from '@/actions/posts';
+import { searchPublicPosts } from '@/lib/posts';
 
 export async function load({ url }) {
 	const q = (url.searchParams.get('q') || '').trim();

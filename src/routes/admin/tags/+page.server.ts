@@ -1,7 +1,7 @@
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
-import { createTagAction, deleteTagAction, updateTagAction } from "@/actions/tags";
-import { getTagsForAdmin } from "@/actions/posts";
+import { createTagAction, deleteTagAction, updateTagAction } from "@/lib/tags";
+import { getTagsForAdmin } from "@/lib/posts";
 
 export const load: PageServerLoad = async () => {
 	const tags = await getTagsForAdmin();

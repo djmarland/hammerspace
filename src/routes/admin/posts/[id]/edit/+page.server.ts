@@ -1,7 +1,7 @@
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
-import { updatePostAction } from "@/actions/post-form-actions";
-import { getPostById, getTagsForAdmin } from "@/actions/posts";
+import { updatePostAction } from "@/lib/post-form-actions";
+import { getPostById, getTagsForAdmin } from "@/lib/posts";
 
 export const load: PageServerLoad = async ({ params }) => {
 	const post = await getPostById(params.id);

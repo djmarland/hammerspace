@@ -1,4 +1,4 @@
-import { getPublicArchive } from '@/actions/posts';
+import { getPublicArchive } from '@/lib/posts';
 
 export async function load({ url }) {
 	const page = url.searchParams.get('page') || undefined;
