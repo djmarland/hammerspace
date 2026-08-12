@@ -1,6 +1,5 @@
-import type { RequestHandler } from './$types';
-import { getPublicSyndicationPosts } from '@/actions/posts';
-import { absoluteUrl, site } from '@/lib/site';
+import {getPublicSyndicationPosts} from '@/actions/posts';
+import {absoluteUrl, site} from '@/lib/site';
 
 function escapeXml(value: string) {
 	return value.replace(/[<>&'"]/g, (character) => {
@@ -10,7 +9,7 @@ function escapeXml(value: string) {
 	});
 }
 
-export const GET: RequestHandler = async () => {
+export const GET: () => Promise<Response> = async () => {
 	const posts = await getPublicSyndicationPosts();
 	const items = posts
 		.map(

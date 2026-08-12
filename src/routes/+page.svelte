@@ -1,7 +1,7 @@
 <script lang="ts">
-	import PostCard from '@/components/Blog/PostCard.svelte';
+    import PostCard from '@/components/Blog/PostCard.svelte';
 
-	export let data;
+    export let data;
 
 	$: posts = data.posts;
 </script>
@@ -12,7 +12,6 @@
 
 <main class="container">
 	<header class="hero">
-		<p class="eyebrow">Public-first publishing</p>
 		<h1>Hammerspace Blog</h1>
 		<p class="intro">
 			Published posts and due scheduled posts appear here automatically. Drafts remain available only from their direct blog URL.

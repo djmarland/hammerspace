@@ -1,10 +1,11 @@
 import type { RequestHandler } from './$types';
+import { redirect } from '@sveltejs/kit';
+import { ADMIN_AUTH_COOKIE } from '@/lib/admin-auth';
 
-export const POST: RequestHandler = async () => {
-  // Clear admin session cookie and redirect to /
-  const headers = new Headers();
-  // Clear cookie (HttpOnly, Path=/, Max-Age=0)
-  headers.set('Set-Cookie', 'admin_session=; Max-Age=0; Path=/; HttpOnly; SameSite=Lax');
-  headers.set('Location', '/');
-  return new Response(null, { status: 303, headers });
+export const POST: RequestHandler = async ({ cookies }) => {
+	// Clear admin session cookie
+	cookies.delete(ADMIN_AUTH_COOKIE, { path: '/' });
+	
+	// Redirect to home page
+	throw redirect(303, '/');
 };
