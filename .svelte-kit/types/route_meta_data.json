@@ -2,7 +2,9 @@
 	"/": [
 		"src/routes/+page.server.ts"
 	],
-	"/admin": [],
+	"/admin": [
+		"src/routes/admin/+page.server.ts"
+	],
 	"/admin/login": [],
 	"/admin/posts": [],
 	"/admin/posts/new": [],
@@ -26,12 +28,20 @@
 	"/api/auth/webauthn/verify-register": [
 		"src/routes/api/auth/webauthn/verify-register/+server.ts"
 	],
-	"/blog": [],
-	"/blog/[slug]": [],
+	"/blog": [
+		"src/routes/blog/+page.server.ts"
+	],
+	"/blog/[slug]": [
+		"src/routes/blog/[slug]/+page.server.ts"
+	],
 	"/feed.xml": [
 		"src/routes/feed.xml/+server.ts"
 	],
 	"/piko": [],
-	"/search": [],
-	"/tags/[slug]": []
+	"/search": [
+		"src/routes/search/+page.server.ts"
+	],
+	"/tags/[slug]": [
+		"src/routes/tags/[slug]/+page.server.ts"
+	]
 }

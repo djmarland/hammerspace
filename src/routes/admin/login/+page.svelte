@@ -6,7 +6,6 @@
 		startAuthentication,
 		verifyAuthentication
 	} from '@/lib/webauthn-client';
-	import styles from './page.module.css';
 
 	const PASSKEY_TIMEOUT_MS = 12000;
 
@@ -147,38 +146,38 @@
 	<title>Admin Login</title>
 </svelte:head>
 
-<div class={styles.container}>
-	<div class={styles.form}>
+<div class="container">
+	<div class="form">
 		<h1>Admin Login</h1>
 
 		{#if error}
-			<div class={styles.error}>{error}</div>
+			<div class="error">{error}</div>
 		{/if}
 
 		{#if token}
-			<p class={styles.demo}>
+			<p class="demo">
 				{tokenLoading ? 'Verifying login token...' : 'Token login attempted.'}
 			</p>
 		{:else}
-			<p class={styles.demo}>
+			<p class="demo">
 				Passkey prompt should appear automatically. If it does not, use the
 				button below.
 			</p>
 
 			{#if autoAttempting}
-				<p class={styles.demo}>Attempting automatic passkey login...</p>
+				<p class="demo">Attempting automatic passkey login...</p>
 			{/if}
 
 			<button
 				onclick={() => void handlePasskeyLogin('manual')}
-				class={styles.passkeyButton}
+				class="passkeyButton"
 				disabled={passkeyLoading}
 			>
 				{passkeyLoading ? 'Authenticating...' : 'Retry Passkey Login'}
 			</button>
 
 			{#if !webauthnSupported}
-				<p class={styles.demo}>
+				<p class="demo">
 					This browser may report limited WebAuthn support, but you can still
 					try passkey login manually.
 				</p>
@@ -186,3 +185,139 @@
 		{/if}
 	</div>
 </div>
+
+<style>
+	.container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		min-height: 100vh;
+	}
+
+	.form {
+		background: var(--piko-color-surface);
+		padding: calc(var(--piko-space-6) + var(--piko-space-2));
+		border: 1px solid var(--piko-color-border);
+		border-radius: 0;
+		box-shadow: var(--piko-shadow-2);
+		width: 100%;
+		max-width: 400px;
+	}
+
+	.form h1 {
+		margin-bottom: 30px;
+		text-align: center;
+	}
+
+	.field {
+		margin-bottom: 20px;
+	}
+
+	.field label {
+		display: block;
+		margin-bottom: 5px;
+		font-weight: 500;
+	}
+
+	.field input {
+		width: 100%;
+		padding: 10px;
+		border: 1px solid var(--piko-color-border);
+		border-radius: 0;
+		font-size: 1rem;
+		box-sizing: border-box;
+		background: light-dark(#fff, #222);
+		color: var(--piko-color-text);
+	}
+
+	.button {
+		width: 100%;
+		padding: var(--piko-space-control-padding-y) var(--piko-space-control-padding-x);
+		background-color: var(--piko-color-primary-bg);
+		color: var(--piko-color-primary-text);
+		border: 1px solid var(--piko-color-primary-border);
+		border-radius: 0;
+		font-size: 1rem;
+		cursor: pointer;
+		transition: background-color 0.2s ease;
+		box-sizing: border-box;
+	}
+
+	.button:hover:not(:disabled) {
+		background-color: var(--piko-color-primary-border);
+	}
+
+	.button:disabled {
+		opacity: 0.6;
+		cursor: not-allowed;
+	}
+
+	.passkeyButton {
+		width: 100%;
+		padding: var(--piko-space-control-padding-y) var(--piko-space-control-padding-x);
+		background-color: var(--piko-color-success-bg);
+		color: var(--piko-color-success-text);
+		border: 1px solid var(--piko-color-success-border);
+		border-radius: 0;
+		font-size: 1rem;
+		cursor: pointer;
+		transition: background-color 0.2s ease;
+		margin-top: 16px;
+		box-sizing: border-box;
+	}
+
+	.passkeyButton:hover:not(:disabled) {
+		background-color: var(--piko-color-success-border);
+	}
+
+	.passkeyButton:disabled {
+		opacity: 0.6;
+		cursor: not-allowed;
+	}
+
+	.divider {
+		text-align: center;
+		margin: 20px 0;
+		color: var(--piko-color-text-muted);
+		position: relative;
+	}
+
+	.divider::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 50%;
+		width: 100%;
+		height: 1px;
+		background-color: var(--piko-color-border);
+	}
+
+	.divider {
+		position: relative;
+		z-index: 1;
+	}
+
+	.divider::after {
+		content: "OR";
+		background-color: var(--piko-color-surface);
+		padding: 0 var(--piko-space-2);
+		position: relative;
+		z-index: 2;
+	}
+
+	.error {
+		background-color: var(--piko-color-error-bg);
+		border: 1px solid var(--piko-color-error-border);
+		color: var(--piko-color-error-text);
+		padding: 10px;
+		border-radius: 0;
+		margin-bottom: 20px;
+	}
+
+	.demo {
+		margin-top: 20px;
+		text-align: center;
+		font-size: 0.9rem;
+		color: var(--piko-color-text-muted);
+	}
+</style>

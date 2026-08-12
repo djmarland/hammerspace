@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { PublicPostSummary } from '@/actions/posts';
-	import styles from './PostCard.module.css';
 
 	interface $$Props {
 		post: PublicPostSummary;
@@ -17,17 +16,17 @@
 	$: shouldShowStatus = post.status !== 'PUBLISHED';
 </script>
 
-<article class={styles.card}>
+<article class="card">
 	{#if post.coverImageUrl}
 		<img
 			src={post.coverImageUrl}
 			alt={post.coverImageAlt || ''}
-			class={styles.image}
+			class="image"
 		/>
 	{/if}
-	<div class={styles.content}>
-		<div class={styles.metaRow}>
-			<p class={styles.meta}>
+	<div class="content">
+		<div class="metaRow">
+			<p class="meta">
 				By {post.authorName} ·
 				<time dateTime={post.publishedAt.toISOString()}>
 					{dateFormatter.format(post.publishedAt)}
@@ -35,15 +34,15 @@
 				· {post.readingTimeMinutes} min read
 			</p>
 			{#if shouldShowStatus}
-				<span class={styles.status}>{post.statusLabel}</span>
+				<span class="status">{post.statusLabel}</span>
 			{/if}
 		</div>
-		<svelte:element this={headingLevel} class={styles.title}>
+		<svelte:element this={headingLevel} class="title">
 			<a href={`/blog/${post.slug}`}>{post.title}</a>
 		</svelte:element>
-		<p class={styles.excerpt}>{post.excerpt || 'No excerpt available.'}</p>
+		<p class="excerpt">{post.excerpt || 'No excerpt available.'}</p>
 		{#if post.tags.length > 0}
-			<ul class={styles.tags}>
+			<ul class="tags">
 				{#each post.tags as tag (tag.slug)}
 					<li>
 						<a href={`/tags/${tag.slug}`}>#{tag.name}</a>
@@ -53,3 +52,80 @@
 		{/if}
 	</div>
 </article>
+
+<style>
+	.card {
+		display: grid;
+		gap: 1rem;
+		padding: 1.25rem;
+		border: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+		border-radius: 1rem;
+		background: color-mix(in srgb, var(--piko-color-background) 92%, currentColor 8%);
+	}
+
+	.image {
+		width: 100%;
+		height: auto;
+		border-radius: 0.75rem;
+		object-fit: cover;
+	}
+
+	.content {
+		display: grid;
+		gap: 0.75rem;
+	}
+
+	.metaRow {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+	}
+
+	.meta {
+		margin: 0;
+		color: color-mix(in srgb, currentColor 70%, transparent);
+		font-size: 0.95rem;
+	}
+
+	.status {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.2rem 0.6rem;
+		border-radius: 999px;
+		background: color-mix(in srgb, currentColor 12%, transparent);
+		font-size: 0.85rem;
+		font-weight: 600;
+	}
+
+	.title {
+		margin: 0;
+		font-size: clamp(1.4rem, 1.2rem + 0.7vw, 1.9rem);
+	}
+
+	.title a {
+		text-decoration: none;
+	}
+
+	.excerpt {
+		margin: 0;
+	}
+
+	.tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem;
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.tags a {
+		display: inline-flex;
+		padding: 0.15rem 0.55rem;
+		border-radius: 999px;
+		background: color-mix(in srgb, currentColor 10%, transparent);
+		font-size: 0.95rem;
+	}
+</style>

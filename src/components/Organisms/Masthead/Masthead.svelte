@@ -1,15 +1,14 @@
 <script lang="ts">
-	import styles from './Masthead.module.css';
 </script>
 
-<header class={styles.masthead}>
+<header class="masthead">
 	<div class="container">
 		<p>
 			<a href="/">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					viewBox="0 0 1168.43 455.48"
-					class={styles.logo}
+					class="logo"
 				>
 					<title>Hammerspace</title>
 					<path
@@ -21,3 +20,65 @@
 		</p>
 	</div>
 </header>
+
+<style>
+	.logo {
+		fill: var(--piko-palette-dynamic-primary-4);
+		max-width: 140px;
+		transition: fill 180ms ease;
+	}
+
+	.logo:hover {
+		fill: var(--piko-palette-dynamic-secondary-4);
+	}
+
+	.masthead {
+		background: radial-gradient(
+						circle at 15% 20%,
+						color-mix(in srgb, var(--piko-palette-dynamic-primary-4) 42%, transparent) 0%,
+						transparent 38%
+		),
+		radial-gradient(
+						circle at 85% 80%,
+						color-mix(in srgb, var(--piko-palette-dynamic-secondary-4) 38%, transparent) 0%,
+						transparent 46%
+		),
+		radial-gradient(
+						ellipse at 60% 30%,
+						color-mix(in srgb, var(--piko-palette-white) 18%, transparent) 0%,
+						transparent 58%
+		),
+		radial-gradient(
+						ellipse at 25% 80%,
+						color-mix(in srgb, var(--piko-palette-dynamic-primary-3) 24%, transparent) 0%,
+						transparent 55%
+		),
+		radial-gradient(
+						ellipse at 78% 12%,
+						color-mix(in srgb, var(--piko-palette-dynamic-secondary-3) 22%, transparent) 0%,
+						transparent 52%
+		),
+		var(--piko-palette-slate-8);
+		border-bottom: 1px solid color-mix(in srgb, var(--piko-palette-dynamic-secondary-5) 65%, var(--piko-palette-slate-7));
+		color: var(--piko-color-primary-text);
+		padding: var(--piko-unit) var(--piko-space-4);
+		position: sticky;
+		top: 0;
+		animation: masthead-glow 16s ease-in-out infinite alternate;
+	}
+
+	@keyframes masthead-glow {
+		0% {
+			background-position: 0 0, 100% 100%, 0 0;
+		}
+		100% {
+			background-position: 8% 12%, 92% 88%, 0 0;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.masthead {
+			animation: none;
+		}
+	}
+</style>

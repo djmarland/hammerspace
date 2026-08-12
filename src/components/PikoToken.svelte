@@ -1,6 +1,4 @@
 <script lang="ts">
-	import styles from './PikoToken.module.css';
-
 	interface Props {
 		token: string;
 	}
@@ -34,11 +32,11 @@
 				: '';
 </script>
 
-<span class={styles.token}>
+<span class="token">
 	<code>{token}</code>
 	<button
 		type="button"
-		class={styles.copyButton}
+		class="copyButton"
 		onclick={handleCopy}
 		aria-label={`Copy ${token} to clipboard`}
 		aria-describedby={statusId}
@@ -47,10 +45,55 @@
 	</button>
 	<span
 		id={statusId}
-		class={styles.visuallyHidden}
+		class="visuallyHidden"
 		role="status"
 		aria-live="polite"
 	>
 		{statusText}
 	</span>
 </span>
+
+<style>
+	.token {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--piko-space-2);
+		max-width: 100%;
+	}
+
+	.token code {
+		overflow-wrap: anywhere;
+	}
+
+	.copyButton {
+		border: 1px solid currentColor;
+		background: transparent;
+		color: inherit;
+		cursor: pointer;
+		font: inherit;
+		line-height: 1;
+		padding: 0.2rem 0.4rem;
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 120ms ease;
+	}
+
+	.token:hover .copyButton,
+	.token:focus-within .copyButton,
+	.copyButton:focus-visible {
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+	.visuallyHidden {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
+	}
+</style>
