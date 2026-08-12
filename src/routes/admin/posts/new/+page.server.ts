@@ -3,7 +3,11 @@ import type { Actions, PageServerLoad } from "./$types";
 import { createPostAction } from "@/lib/post-form-actions";
 import { getTagsForAdmin } from "@/lib/posts";
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ locals }) => {
+	if (!locals.session) {
+		throw redirect(302, "/admin/login");
+	}
+
 	const tags = await getTagsForAdmin();
 	return { tags };
 };
