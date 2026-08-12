@@ -18,13 +18,14 @@ export const POST: RequestHandler = async () => {
 			}
 		});
 
-		if (!user || user.credentials.length === 0) {
+		if (!user) {
 			return json(
-				{ error: 'No admin passkey available' },
+				{ error: 'No admin user found' },
 				{ status: 400 }
 			);
 		}
 
+		// Allow authentication even with no credentials (first-time setup)
 		const allowCredentials = user.credentials.map((cred) => ({
 			id: credentialIdToBase64url(cred.credentialId)
 		}));
@@ -32,7 +33,7 @@ export const POST: RequestHandler = async () => {
 		const options = await generateAuthenticationOptions({
 			rpID: process.env.NEXT_PUBLIC_RP_ID || 'localhost',
 			userVerification: 'preferred',
-			allowCredentials
+			allowCredentials: allowCredentials.length > 0 ? allowCredentials : undefined
 		});
 
 		await storeChallenge(user.id, options.challenge);
