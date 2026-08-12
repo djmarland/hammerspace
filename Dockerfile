@@ -5,14 +5,12 @@ WORKDIR /app
 # Install OpenSSL
 RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
-# Install pnpm
-RUN npm install -g pnpm
-
 # Copy package files
-COPY package.json pnpm-lock.yaml* ./
+COPY package.json package-lock.json* ./
 
-# Install dependencies with pnpm flag to ignore scripts
-RUN pnpm install --prod=false --ignore-scripts
+# Install dependencies with npm
+# Use npm install to ensure a package-lock.json is generated if missing
+RUN npm install
 
 # Copy the rest of the application
 COPY . .
@@ -21,4 +19,4 @@ COPY . .
 EXPOSE 3000
 
 # Default command (can be overridden by docker-compose)
-CMD ["sh", "-c", "pnpm exec prisma generate && pnpm dev"]
+CMD ["sh", "-c", "npx prisma generate && npm run dev"]

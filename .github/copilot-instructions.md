@@ -32,29 +32,29 @@ docker compose logs -f node
 
 ## Script Execution
 
-This project uses **pnpm** for package management. All scripts should be executed inside the running container (including npx commands).
+This project uses **npm** for package management. All scripts should be executed inside the running container (including npx commands).
 When you need to run pnpm scripts:
 
 1. **For development/testing** - Let the running container handle it:
 
    ```bash
-   docker compose exec node pnpm <script-name>
+   docker compose exec node npm run <script-name>
    ```
 
 2. **For one-off tasks**:
 
    ```bash
-   docker compose run --rm node pnpm <script-name>
+   docker compose run --rm node npm run <script-name>
    ```
 
 3. **Available scripts** (see package.json):
-   - `pnpm dev` - Start development server (already running)
-   - `pnpm build` - Build for production
-   - `pnpm start` - Start production server
-   - `pnpm lint` - Run linter
-   - `pnpm db:push` - Sync Prisma schema with database
-   - `pnpm db:migrate` - Create and apply Prisma migrations
-   - `pnpm db:seed` - Seed database with initial data
+   - `npm run dev` - Start development server (already running)
+   - `npm run build` - Build for production
+   - `npm run start` - Start production server
+   - `npm run lint` - Run linter
+   - `npx prisma db push` - Sync Prisma schema with database
+   - `npx prisma migrate dev` - Create and apply Prisma migrations
+   - `npm run db:seed` - Seed database with initial data
 
 ## Database Management
 
@@ -62,10 +62,10 @@ Database operations are handled via Prisma:
 
 ```bash
 # Apply schema changes
-docker compose exec node pnpm db:push
+docker compose exec node npx prisma db push
 
 # Create a new migration
-docker compose exec node pnpm db:migrate
+docker compose exec node npx prisma migrate dev
 
 # Access database directly (if needed)
 docker compose exec postgres psql -U postgres -d hammerspace
@@ -82,7 +82,7 @@ When you need to:
 
 ## Key Points
 
-- ✅ Do NOT try to run `npm install` or `pnpm install` locally
+- ✅ Do NOT try to run `npm install` locally
 - ✅ Do NOT try to run `next dev` or other scripts locally
 - ✅ All database operations go through Docker
 - ✅ The app is available at http://localhost:3000
@@ -110,4 +110,4 @@ When you need to:
 - **Port already in use**: Change ports in docker compose.yml or .env
 - **Database connection errors**: Check `docker compose logs postgres`
 - **Build failures**: Run `docker compose up --build` to rebuild images
-- **Module not found**: Run `docker compose exec node pnpm install`
+- **Module not found**: Run `docker compose exec node npm install`

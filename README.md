@@ -44,7 +44,7 @@ docker compose down
 - **Authentication**: Custom JWT cookie sessions + WebAuthn passkeys
 - **Styling**: CSS Modules
 - **Reverse Proxy**: Nginx with SWR caching
-- **Package Manager**: pnpm
+- **Package Manager**: npm
 
 ### Directory Structure
 
@@ -82,13 +82,13 @@ All commands should be run via Docker. See `copilot-skills.md` for detailed inst
 
 ```bash
 # Apply database schema changes
-docker compose exec node pnpm exec prisma db push
+docker compose exec node npx prisma db push
 
 # Create a migration
-docker compose exec node pnpm exec prisma migrate dev
+docker compose exec node npx prisma migrate dev
 
 # Seed database (if available)
-docker compose exec node pnpm db:seed
+docker compose exec node npm run db:seed
 
 # Access database shell
 docker compose exec postgres psql -U postgres -d hammerspace
@@ -100,7 +100,7 @@ docker compose up --build
 docker compose logs -f node
 
 # One-off command
-docker compose run --rm node pnpm <command>
+docker compose run --rm node npm run <command>
 ```
 
 ## 🔒 Authentication
@@ -110,7 +110,7 @@ docker compose run --rm node pnpm <command>
 1. Create the initial admin user (fails if an admin already exists):
 
 ```bash
-docker compose exec node pnpm admin:create-initial
+docker compose exec node npm run admin:create-initial
 ```
 
 2. Open the printed one-time login URL, for example:
@@ -216,7 +216,7 @@ Published posts are available via a paginated RSS feed:
 
 ```bash
 # Via Docker
-docker compose exec node pnpm add <package-name>
+docker compose exec node npm install <package-name>
 
 # Or update package.json and restart
 docker compose restart node
