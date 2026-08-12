@@ -19,4 +19,4 @@ COPY . .
 EXPOSE 3000
 
 # Default command (can be overridden by docker-compose)
-CMD ["sh", "-c", "npx prisma generate && npx svelte-kit dev --host --port 3000"]
+CMD ["sh", "-c", "npx prisma generate && npm run dev"]
