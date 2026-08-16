@@ -2,20 +2,17 @@ export type PostFieldName =
 	| "title"
 	| "slug"
 	| "content"
-	| "status"
-	| "scheduledFor"
+	| "publishedAt"
 	| "coverImageUrl"
 	| "coverImageAlt";
-
-export type PostStatus = "DRAFT" | "SCHEDULED" | "PUBLISHED" | "ARCHIVED";
 
 export interface PostFormValues {
 	title: string;
 	slug: string;
 	excerpt: string;
 	content: string;
-	status: PostStatus;
-	scheduledFor: string;
+	isPublished: boolean;
+	publishedAt: string;
 	coverImageUrl: string;
 	coverImageAlt: string;
 	tagIds: string[];
@@ -35,8 +32,8 @@ export const initialPostFormState: PostFormState = {
 		slug: "",
 		excerpt: "",
 		content: "",
-		status: "DRAFT",
-		scheduledFor: "",
+		isPublished: false,
+		publishedAt: "",
 		coverImageUrl: "",
 		coverImageAlt: "",
 		tagIds: [],

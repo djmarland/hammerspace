@@ -25,5 +25,5 @@
 	disabled={pending}
 	onclick={handleClick}
 >
-	{pending ? 'Working...' : label}
+	{pending ? "Working..." : label}
 </button>

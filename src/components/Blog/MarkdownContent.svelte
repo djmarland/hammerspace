@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { marked } from 'marked';
+	import { renderMarkdown } from "@/lib/markdown";
 
 	interface Props {
 		content: string;
@@ -9,13 +9,12 @@
 
 	const html = $derived.by(() => {
 		try {
-			return marked(content);
+			return renderMarkdown(content);
 		} catch (e) {
-			console.error('Markdown rendering error:', e);
+			console.error("Markdown rendering error:", e);
 			return `<p>${content}</p>`;
 		}
 	});
 </script>
 
 <div>{@html html}</div>
-

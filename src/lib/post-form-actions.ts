@@ -1,19 +1,16 @@
-import type { Prisma } from "@/generated/client";
 import { getAdminSessionUser } from "@/lib/admin-auth";
-import { isPostPublic } from "@/lib/blog";
 import { prisma } from "@/lib/db";
+import {
+	nowDate,
+	parseDateTimeLocalAsDate,
+	isValidDateTimeLocal,
+} from "@/lib/temporal";
 import {
 	initialPostFormState,
 	type PostFieldName,
 	type PostFormState,
 	type PostFormValues,
-	type PostStatus,
 } from "@/lib/post-form";
-import {
-	CMS_TIME_ZONE,
-	isValidDateTimeLocal,
-	parseDateTimeLocalAsDate,
-} from "@/lib/temporal";
 
 interface ValidatedPostPayload {
 	values: PostFormValues;
@@ -33,11 +30,15 @@ function parsePostFormData(formData: FormData): PostFormValues {
 		slug: normalizeWhitespace(formData.get("slug")).toLowerCase(),
 		excerpt: normalizeWhitespace(formData.get("excerpt")),
 		content: normalizeWhitespace(formData.get("content")),
-		status: normalizeWhitespace(formData.get("status")) as PostStatus,
-		scheduledFor: normalizeWhitespace(formData.get("scheduledFor")),
+		isPublished:
+			formData.get("isPublished") === "on" ||
+			formData.get("isPublished") === "true",
+		publishedAt: normalizeWhitespace(formData.get("publishedAt")),
 		coverImageUrl: normalizeWhitespace(formData.get("coverImageUrl")),
 		coverImageAlt: normalizeWhitespace(formData.get("coverImageAlt")),
-		tagIds: formData.getAll("tagIds").filter((value): value is string => typeof value === "string"),
+		tagIds: formData
+			.getAll("tagIds")
+			.filter((value): value is string => typeof value === "string"),
 	};
 }
 
@@ -69,13 +70,10 @@ function validatePostValues(values: PostFormValues): ValidatedPostPayload {
 	if (!values.content) {
 		fieldErrors.content = "Content is required.";
 	}
-	if (!["DRAFT", "SCHEDULED", "PUBLISHED", "ARCHIVED"].includes(values.status)) {
-		fieldErrors.status = "Choose a valid publishing status.";
-	}
-	if (values.status === "SCHEDULED" && !values.scheduledFor) {
-		fieldErrors.scheduledFor = "A scheduled post needs a publication date.";
-	} else if (values.scheduledFor && !isValidDateTimeLocal(values.scheduledFor)) {
-		fieldErrors.scheduledFor = `Enter a valid publication date in ${CMS_TIME_ZONE}.`;
+	if (values.isPublished && !values.publishedAt) {
+		fieldErrors.publishedAt = "Choose a publish date and time.";
+	} else if (values.isPublished && !isValidDateTimeLocal(values.publishedAt)) {
+		fieldErrors.publishedAt = "Enter a valid publication date and time.";
 	}
 	if (!parseOptionalUrl(values.coverImageUrl)) {
 		fieldErrors.coverImageUrl = "Use an absolute http or https URL.";
@@ -89,26 +87,19 @@ function buildPostWriteData(
 	values: PostFormValues,
 	existingPost?: { publishedAt: Date | null },
 ) {
-	const now = new Date();
-	const scheduledFor = values.status === "SCHEDULED" ? parseDateTimeLocalAsDate(values.scheduledFor) : null;
-	const nextIsPublic = isPostPublic(values.status, scheduledFor, now);
-	const publishedAt =
-		existingPost?.publishedAt ||
-		(nextIsPublic
-			? values.status === "SCHEDULED" && scheduledFor
-				? scheduledFor
-				: now
-			: null);
+	const now = nowDate();
+	const publishDate = values.isPublished
+		? (parseDateTimeLocalAsDate(values.publishedAt) ??
+			existingPost?.publishedAt ??
+			now)
+		: null;
 
 	return {
 		title: values.title,
 		slug: values.slug,
 		excerpt: values.excerpt || null,
 		content: values.content,
-		status: values.status,
-		published: nextIsPublic,
-		publishedAt,
-		scheduledFor,
+		publishedAt: publishDate,
 		coverImageUrl: values.coverImageUrl || null,
 		coverImageAlt: values.coverImageAlt || null,
 	};
@@ -158,7 +149,6 @@ function buildErrorState(
 	};
 }
 
-
 export async function createPostAction(
 	_prevState: PostFormState | undefined,
 	formData: FormData,
@@ -171,7 +161,11 @@ export async function createPostAction(
 
 	const { fieldErrors } = validatePostValues(values);
 	if (Object.keys(fieldErrors).length > 0) {
-		return buildErrorState(values, "Please fix the highlighted fields.", fieldErrors);
+		return buildErrorState(
+			values,
+			"Please fix the highlighted fields.",
+			fieldErrors,
+		);
 	}
 
 	if (await slugBelongsToDifferentPost(values.slug)) {
@@ -180,7 +174,10 @@ export async function createPostAction(
 		});
 	}
 	if (!(await validateTagIds(values.tagIds))) {
-		return buildErrorState(values, "One or more selected tags no longer exist.");
+		return buildErrorState(
+			values,
+			"One or more selected tags no longer exist.",
+		);
 	}
 
 	await prisma.post.create({
@@ -211,7 +208,11 @@ export async function updatePostAction(
 
 	const { fieldErrors } = validatePostValues(values);
 	if (Object.keys(fieldErrors).length > 0) {
-		return buildErrorState(values, "Please fix the highlighted fields.", fieldErrors);
+		return buildErrorState(
+			values,
+			"Please fix the highlighted fields.",
+			fieldErrors,
+		);
 	}
 
 	if (await slugBelongsToDifferentPost(values.slug, postId)) {
@@ -220,7 +221,10 @@ export async function updatePostAction(
 		});
 	}
 	if (!(await validateTagIds(values.tagIds))) {
-		return buildErrorState(values, "One or more selected tags no longer exist.");
+		return buildErrorState(
+			values,
+			"One or more selected tags no longer exist.",
+		);
 	}
 
 	const existingPost = await prisma.post.findUnique({
@@ -252,60 +256,6 @@ export async function updatePostAction(
 	});
 
 	return initialPostFormState;
-}
-
-async function mutatePostStatus(
-	formData: FormData,
-	mutation: (post: { id: string; publishedAt: Date | null }) => Prisma.PostUpdateInput,
-) {
-	if (!(await ensureAdminSession())) {
-		throw new Error("Unauthorized");
-	}
-
-	const postId = formData.get("postId");
-	if (typeof postId !== "string") {
-		throw new Error("Invalid post.");
-	}
-
-	const existingPost = await prisma.post.findUnique({
-		where: { id: postId },
-		select: {
-			id: true,
-			slug: true,
-			publishedAt: true,
-			tags: { select: { tag: { select: { slug: true } } } },
-		},
-	});
-	if (!existingPost) {
-		throw new Error("Post not found.");
-	}
-
-	await prisma.post.update({
-		where: { id: postId },
-		data: mutation(existingPost),
-		select: {
-			slug: true,
-			tags: { select: { tag: { select: { slug: true } } } },
-		},
-	});
-}
-
-export async function archivePostAction(formData: FormData) {
-	return mutatePostStatus(formData, (post) => ({
-		status: "ARCHIVED",
-		published: false,
-		scheduledFor: null,
-		publishedAt: post.publishedAt,
-	}));
-}
-
-export async function unpublishPostAction(formData: FormData) {
-	return mutatePostStatus(formData, (post) => ({
-		status: "DRAFT",
-		published: true,
-		scheduledFor: null,
-		publishedAt: post.publishedAt || new Date(),
-	}));
 }
 
 export async function deletePostAction(formData: FormData) {

@@ -1,4 +1,4 @@
-import type { AdminSessionUser } from '$lib/admin-auth';
+import type { AdminSessionUser } from "$lib/admin-auth";
 
 declare global {
 	namespace App {

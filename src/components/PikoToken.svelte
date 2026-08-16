@@ -7,29 +7,29 @@
 
 	const COPY_RESET_TIMEOUT_MS = 1500;
 
-	let copyState = $state<'idle' | 'copied' | 'error'>('idle');
+	let copyState = $state<"idle" | "copied" | "error">("idle");
 	let statusId = `token-status-${Math.random().toString(36).substr(2, 9)}`;
 
 	async function handleCopy() {
 		try {
 			await navigator.clipboard.writeText(token);
-			copyState = 'copied';
+			copyState = "copied";
 		} catch {
-			copyState = 'error';
+			copyState = "error";
 		}
 
 		setTimeout(() => {
-			copyState = 'idle';
+			copyState = "idle";
 		}, COPY_RESET_TIMEOUT_MS);
 	}
 
-	const copyLabel = $derived(copyState === 'copied' ? 'Copied' : 'Copy');
+	const copyLabel = $derived(copyState === "copied" ? "Copied" : "Copy");
 	const statusText = $derived(
-		copyState === 'copied'
+		copyState === "copied"
 			? `Copied ${token} to clipboard.`
-			: copyState === 'error'
-				? 'Copy failed.'
-				: ''
+			: copyState === "error"
+				? "Copy failed."
+				: "",
 	);
 </script>
 
@@ -44,12 +44,7 @@
 	>
 		{copyLabel}
 	</button>
-	<span
-		id={statusId}
-		class="visuallyHidden"
-		role="status"
-		aria-live="polite"
-	>
+	<span id={statusId} class="visuallyHidden" role="status" aria-live="polite">
 		{statusText}
 	</span>
 </span>

@@ -1,15 +1,26 @@
-export const CMS_TIME_ZONE = "UTC";
+export function nowDate() {
+	return new Date();
+}
 
 function parseDateTimeLocal(value: string) {
 	if (!value) {
 		return null;
 	}
 
-	try {
-		return Temporal.PlainDateTime.from(value);
-	} catch {
+	const match = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/u.exec(value);
+	if (!match) {
 		return null;
 	}
+
+	const [datePart, timePart] = value.split("T");
+	const [year, month, day] = datePart.split("-").map(Number);
+	const [hours, minutes] = timePart.split(":").map(Number);
+
+	if ([year, month, day, hours, minutes].some((part) => Number.isNaN(part))) {
+		return null;
+	}
+
+	return new Date(Date.UTC(year, month - 1, day, hours, minutes));
 }
 
 export function isValidDateTimeLocal(value: string) {
@@ -17,13 +28,7 @@ export function isValidDateTimeLocal(value: string) {
 }
 
 export function parseDateTimeLocalAsDate(value: string) {
-	const plainDateTime = parseDateTimeLocal(value);
-	if (!plainDateTime) {
-		return null;
-	}
-
-	const zonedDateTime = plainDateTime.toZonedDateTime(CMS_TIME_ZONE);
-	return new Date(zonedDateTime.epochMilliseconds);
+	return parseDateTimeLocal(value);
 }
 
 export function formatDateTimeLocalValue(date: Date | null | undefined) {
@@ -31,8 +36,20 @@ export function formatDateTimeLocalValue(date: Date | null | undefined) {
 		return "";
 	}
 
-	return Temporal.Instant.from(date.toISOString())
-		.toZonedDateTimeISO(CMS_TIME_ZONE)
-		.toPlainDateTime()
-		.toString({ smallestUnit: "minute" });
+	const parts = new Intl.DateTimeFormat("sv-SE", {
+		timeZone: "UTC",
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+		hour: "2-digit",
+		minute: "2-digit",
+		hour12: false,
+	}).formatToParts(new Date(date));
+
+	const values = Object.fromEntries(
+		parts
+			.filter((part) => part.type !== "literal")
+			.map((part) => [part.type, part.value]),
+	);
+	return `${values.year}-${values.month}-${values.day}T${values.hour}:${values.minute}`;
 }

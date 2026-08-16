@@ -1,26 +1,24 @@
 <script lang="ts">
-    import type {PublicPostSummary} from '@/lib/posts';
+	import { resolve } from "$app/paths";
+	import type { PublicPostSummary } from "@/lib/posts";
 
-    interface $$Props {
+	type Props = {
 		post: PublicPostSummary;
-		headingLevel?: 'h2' | 'h3';
-	}
+		headingLevel?: "h2" | "h3";
+	};
 
-	export let post: PublicPostSummary;
-	export let headingLevel: 'h2' | 'h3' = 'h2';
+	let { post, headingLevel = "h2" }: Props = $props();
 
-	const dateFormatter = new Intl.DateTimeFormat('en-GB', {
-		dateStyle: 'medium'
+	const dateFormatter = new Intl.DateTimeFormat("en-GB", {
+		dateStyle: "medium",
 	});
-
-	$: shouldShowStatus = post.status !== 'PUBLISHED';
 </script>
 
 <article class="card">
 	{#if post.coverImageUrl}
 		<img
 			src={post.coverImageUrl}
-			alt={post.coverImageAlt || ''}
+			alt={post.coverImageAlt || ""}
 			class="image"
 		/>
 	{/if}
@@ -33,19 +31,16 @@
 				</time>
 				· {post.readingTimeMinutes} min read
 			</p>
-			{#if shouldShowStatus}
-				<span class="status">{post.statusLabel}</span>
-			{/if}
 		</div>
 		<svelte:element this={headingLevel} class="title">
-			<a href={`/posts/${post.slug}`}>{post.title}</a>
+			<a href={resolve(`/posts/${post.slug}`)}>{post.title}</a>
 		</svelte:element>
-		<p class="excerpt">{post.excerpt || 'No excerpt available.'}</p>
+		<p class="excerpt">{post.excerpt || "No excerpt available."}</p>
 		{#if post.tags.length > 0}
 			<ul class="tags">
 				{#each post.tags as tag (tag.slug)}
 					<li>
-						<a href={`/tags/${tag.slug}`}>#{tag.name}</a>
+						<a href={resolve(`/tags/${tag.slug}`)}>#{tag.name}</a>
 					</li>
 				{/each}
 			</ul>
@@ -60,7 +55,11 @@
 		padding: 1.25rem;
 		border: 1px solid color-mix(in srgb, currentColor 15%, transparent);
 		border-radius: 1rem;
-		background: color-mix(in srgb, var(--piko-color-background) 92%, currentColor 8%);
+		background: color-mix(
+			in srgb,
+			var(--piko-color-background) 92%,
+			currentColor 8%
+		);
 	}
 
 	.image {
@@ -87,16 +86,6 @@
 		margin: 0;
 		color: color-mix(in srgb, currentColor 70%, transparent);
 		font-size: 0.95rem;
-	}
-
-	.status {
-		display: inline-flex;
-		align-items: center;
-		padding: 0.2rem 0.6rem;
-		border-radius: 999px;
-		background: color-mix(in srgb, currentColor 12%, transparent);
-		font-size: 0.85rem;
-		font-weight: 600;
 	}
 
 	.title {

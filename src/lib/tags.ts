@@ -19,7 +19,9 @@ export async function createTagAction(formData: FormData) {
 	const name = typeof nameValue === "string" ? nameValue.trim() : "";
 	const slug = slugify(name);
 	if (!name || !slug) throw new Error("Invalid tag name");
-	const existingTag = await prisma.tag.findFirst({ where: { OR: [{ name }, { slug }] } });
+	const existingTag = await prisma.tag.findFirst({
+		where: { OR: [{ name }, { slug }] },
+	});
 	if (existingTag) throw new Error("Tag already exists");
 	await prisma.tag.create({ data: { name, slug } });
 }
@@ -30,7 +32,10 @@ export async function deleteTagAction(formData: FormData) {
 	if (typeof tagId !== "string") throw new Error("Invalid tag.");
 	const existingTag = await prisma.tag.findUnique({
 		where: { id: tagId },
-		select: { slug: true, posts: { select: { post: { select: { slug: true } } } } },
+		select: {
+			slug: true,
+			posts: { select: { post: { select: { slug: true } } } },
+		},
 	});
 	if (!existingTag) {
 		throw new Error("Tag not found.");
@@ -50,7 +55,10 @@ export async function updateTagAction(formData: FormData) {
 	if (!name || !slug) throw new Error("Invalid tag name");
 	const existingTag = await prisma.tag.findUnique({
 		where: { id: tagId },
-		select: { slug: true, posts: { select: { post: { select: { slug: true } } } } },
+		select: {
+			slug: true,
+			posts: { select: { post: { select: { slug: true } } } },
+		},
 	});
 	if (!existingTag) {
 		throw new Error("Tag not found.");

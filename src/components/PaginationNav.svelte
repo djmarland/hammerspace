@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { resolve } from "$app/paths";
+
 	interface Props {
 		page: number;
 		totalPages: number;
@@ -20,7 +22,7 @@
 {#if totalPages > 1}
 	<nav class="nav" aria-label="Pagination">
 		<a
-			href={buildHref(Math.max(1, page - 1))}
+			href={resolve(buildHref(Math.max(1, page - 1)))}
 			class="link"
 			aria-disabled={page === 1}
 			tabindex={page === 1 ? -1 : undefined}
@@ -36,9 +38,9 @@
 						<span class="gap">…</span>
 					{/if}
 					<a
-						href={buildHref(value)}
+						href={resolve(buildHref(value))}
 						class={value === page ? "currentPage" : "link"}
-						aria-current={value === page ? 'page' : undefined}
+						aria-current={value === page ? "page" : undefined}
 					>
 						{value}
 					</a>
@@ -46,7 +48,7 @@
 			{/each}
 		</div>
 		<a
-			href={buildHref(Math.min(totalPages, page + 1))}
+			href={resolve(buildHref(Math.min(totalPages, page + 1)))}
 			class="link"
 			aria-disabled={page === totalPages}
 			tabindex={page === totalPages ? -1 : undefined}

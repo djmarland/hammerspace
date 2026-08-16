@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { goto } from "$app/navigation";
+	import { resolve } from "$app/paths";
 	import {
 		startRegistration,
 		verifyRegistration,
-		isWebAuthnSupported
-	} from '@/lib/webauthn-client';
+		isWebAuthnSupported,
+	} from "@/lib/webauthn-client";
 
 	interface Props {
 		hasPasskey: boolean;
@@ -14,7 +15,7 @@
 
 	let supported = $state(false);
 	let loading = $state(false);
-	let error = $state('');
+	let error = $state("");
 	let completed = $state(false);
 
 	$effect(() => {
@@ -24,16 +25,16 @@
 	});
 
 	async function handleRegisterPasskey() {
-		error = '';
+		error = "";
 		loading = true;
 
 		try {
 			const credential = await startRegistration();
 			await verifyRegistration(credential);
 			completed = true;
-			await goto('/admin');
+			await goto(resolve("/admin"));
 		} catch (err) {
-			error = err instanceof Error ? err.message : 'Failed to register passkey';
+			error = err instanceof Error ? err.message : "Failed to register passkey";
 		} finally {
 			loading = false;
 		}
@@ -63,7 +64,7 @@
 					disabled={loading}
 					class="button"
 				>
-					{loading ? 'Setting up passkey...' : 'Add Passkey'}
+					{loading ? "Setting up passkey..." : "Add Passkey"}
 				</button>
 
 				<p class="skip">
@@ -110,7 +111,8 @@
 
 	.button {
 		width: 100%;
-		padding: var(--piko-space-control-padding-y) var(--piko-space-control-padding-x);
+		padding: var(--piko-space-control-padding-y)
+			var(--piko-space-control-padding-x);
 		background-color: var(--piko-color-primary-bg);
 		color: var(--piko-color-primary-text);
 		border: 1px solid var(--piko-color-primary-border);

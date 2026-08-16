@@ -1,10 +1,7 @@
-node_modules
 .env
 .env.local
 .env.*.local
-.next
-dist
-build
-.pnp.*
-src/generated
 .svelte-kit
+build
+node_modules
+src/generated

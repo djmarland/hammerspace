@@ -1,16 +1,18 @@
 <script lang="ts">
-	import MarkdownContent from '../Blog/MarkdownContent.svelte';
-	import { CMS_TIME_ZONE } from '@/lib/temporal';
+	import MarkdownContent from "../Blog/MarkdownContent.svelte";
+
+	import { formatDateTimeLocalValue } from "@/lib/temporal";
 
 	interface Props {
+		action?: string;
 		submitLabel: string;
 		initialValues?: {
 			title?: string;
 			slug?: string;
 			excerpt?: string;
 			content?: string;
-			status?: string;
-			scheduledFor?: string;
+			isPublished?: boolean;
+			publishedAt?: string;
 			coverImageUrl?: string;
 			coverImageAlt?: string;
 			tagIds?: string[];
@@ -22,7 +24,7 @@
 				title?: string;
 				slug?: string;
 				content?: string;
-				scheduledFor?: string;
+				publishedAt?: string;
 				coverImageAlt?: string;
 			};
 			values?: {
@@ -30,8 +32,8 @@
 				slug?: string;
 				excerpt?: string;
 				content?: string;
-				status?: string;
-				scheduledFor?: string;
+				isPublished?: boolean;
+				publishedAt?: string;
 				coverImageUrl?: string;
 				coverImageAlt?: string;
 				tagIds?: string[];
@@ -40,28 +42,34 @@
 	}
 
 	const {
+		action = "",
 		submitLabel,
 		initialValues = {},
 		tags,
-		formState = {}
+		formState = {},
 	}: Props = $props();
 
-	let previewContent = $state('');
+	let previewContent = $state("");
 	let previewInitialized = $state(false);
 	let pending = $state(false);
+	let isPublished = $state(false);
 
 	const fieldErrors = $derived(formState.fieldErrors || {});
 	const values = $derived(formState.values || initialValues);
 
 	$effect(() => {
+		isPublished = Boolean(values.isPublished ?? false);
+	});
+
+	$effect(() => {
 		if (!previewInitialized) {
-			previewContent = initialValues.content || '';
+			previewContent = initialValues.content || "";
 			previewInitialized = true;
 		}
 	});
 </script>
 
-<form class="form" method="POST">
+<form class="form" method="POST" action={action || undefined}>
 	{#if formState.formError}
 		<p class="error">{formState.formError}</p>
 	{/if}
@@ -72,8 +80,8 @@
 			type="text"
 			name="title"
 			required
-			value={values.title || ''}
-			aria-invalid={fieldErrors.title ? 'true' : 'false'}
+			value={values.title || ""}
+			aria-invalid={fieldErrors.title ? "true" : "false"}
 		/>
 		{#if fieldErrors.title}
 			<span class="fieldError">{fieldErrors.title}</span>
@@ -105,20 +113,21 @@
 			type="text"
 			name="slug"
 			required
-			value={values.slug || ''}
-			aria-invalid={fieldErrors.slug ? 'true' : 'false'}
+			value={values.slug || ""}
+			aria-invalid={fieldErrors.slug ? "true" : "false"}
 		/>
 		{#if fieldErrors.slug}
 			<span class="fieldError">{fieldErrors.slug}</span>
 		{/if}
 		<p class="helpText">
-			Canonical URL is derived automatically from NEXT_PUBLIC_SITE_URL and this slug.
+			Canonical URL is derived automatically from NEXT_PUBLIC_SITE_URL and this
+			slug.
 		</p>
 	</label>
 
 	<label class="field">
 		<span>Excerpt</span>
-		<textarea name="excerpt" rows={3}>{values.excerpt || ''}</textarea>
+		<textarea name="excerpt" rows={3}>{values.excerpt || ""}</textarea>
 	</label>
 
 	<label class="field">
@@ -129,8 +138,9 @@
 			required
 			onchange={(e) => (previewContent = e.currentTarget.value)}
 			oninput={(e) => (previewContent = e.currentTarget.value)}
-			aria-invalid={fieldErrors.content ? 'true' : 'false'}
-		>{values.content || ''}</textarea>
+			aria-invalid={fieldErrors.content ? "true" : "false"}
+			>{values.content || ""}</textarea
+		>
 		{#if fieldErrors.content}
 			<span class="fieldError">{fieldErrors.content}</span>
 		{/if}
@@ -139,7 +149,9 @@
 	<section class="preview" aria-label="Markdown preview">
 		<div class="previewHeader">
 			<h2>Preview</h2>
-			<p>Rendered with the same MarkdownContent component used on public posts.</p>
+			<p>
+				Rendered with the same MarkdownContent component used on public posts.
+			</p>
 		</div>
 		<div class="previewBody">
 			{#if previewContent}
@@ -150,42 +162,40 @@
 		</div>
 	</section>
 
-	<label class="field">
-		<span>Status</span>
-		<select name="status" value={values.status || 'DRAFT'}>
-			<option value="DRAFT">Draft</option>
-			<option value="SCHEDULED">Scheduled</option>
-			<option value="PUBLISHED">Published</option>
-			<option value="ARCHIVED">Archived</option>
-		</select>
+	<label class="field checkboxField">
+		<input
+			type="checkbox"
+			name="isPublished"
+			checked={isPublished}
+			onchange={(event) => {
+				isPublished = event.currentTarget.checked;
+			}}
+		/>
+		<span>Published</span>
 		<p class="helpText">
-			Drafts remain available only on their direct blog URL. Archive a post to hide it completely.
+			When checked, the post is public and appears in the main blog archive.
+			Leave it unchecked to keep the post as a draft.
 		</p>
 	</label>
 
-	<label class="field">
-		<span>Schedule for</span>
-		<input
-			type="datetime-local"
-			name="scheduledFor"
-			value={values.scheduledFor || ''}
-			aria-invalid={fieldErrors.scheduledFor ? 'true' : 'false'}
-		/>
-		<p class="helpText">
-			Stored using Temporal and interpreted as {CMS_TIME_ZONE}.
-		</p>
-		{#if fieldErrors.scheduledFor}
-			<span class="fieldError">{fieldErrors.scheduledFor}</span>
-		{/if}
-	</label>
+	{#if isPublished}
+		<label class="field">
+			<span>Published at</span>
+			<input
+				type="datetime-local"
+				name="publishedAt"
+				value={values.publishedAt || formatDateTimeLocalValue(new Date())}
+				aria-invalid={fieldErrors.publishedAt ? "true" : "false"}
+			/>
+			{#if fieldErrors.publishedAt}
+				<span class="fieldError">{fieldErrors.publishedAt}</span>
+			{/if}
+		</label>
+	{/if}
 
 	<label class="field">
 		<span>Cover image URL</span>
-		<input
-			type="url"
-			name="coverImageUrl"
-			value={values.coverImageUrl || ''}
-		/>
+		<input type="url" name="coverImageUrl" value={values.coverImageUrl || ""} />
 		<p class="helpText">Only absolute external image URLs are supported.</p>
 	</label>
 
@@ -194,7 +204,7 @@
 		<input
 			type="text"
 			name="coverImageAlt"
-			value={values.coverImageAlt || ''}
+			value={values.coverImageAlt || ""}
 		/>
 		{#if fieldErrors.coverImageAlt}
 			<span class="fieldError">{fieldErrors.coverImageAlt}</span>
@@ -202,7 +212,7 @@
 	</label>
 
 	<button type="submit" class="submitButton" disabled={pending}>
-		{pending ? 'Saving...' : submitLabel}
+		{pending ? "Saving..." : submitLabel}
 	</button>
 </form>
 
@@ -231,8 +241,7 @@
 	}
 
 	.field input,
-	.field textarea,
-	.field select {
+	.field textarea {
 		padding: 0.75rem 0.85rem;
 		border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
 		border-radius: 0.75rem;
@@ -290,7 +299,11 @@
 	.previewBody {
 		padding: 1rem;
 		border-radius: 0.75rem;
-		background: color-mix(in srgb, var(--piko-color-background) 92%, currentColor 8%);
+		background: color-mix(
+			in srgb,
+			var(--piko-color-background) 92%,
+			currentColor 8%
+		);
 	}
 
 	.previewBody > :first-child {

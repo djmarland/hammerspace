@@ -127,9 +127,8 @@ http://localhost:3000/admin/login?token=<high-entropy-token>
 - Posts use tags only; there are no categories.
 - Cover images must use absolute external URLs.
 - Draft posts are intentionally available on their real `/posts/[slug]` URL, but are excluded from archives, search, tag pages, RSS, and the sitemap.
-- Scheduled posts become public automatically when `scheduledFor` is reached.
-- Archived posts are hidden from public pages, RSS, and the sitemap.
-- Scheduling inputs are interpreted as UTC when entered in the admin `datetime-local` field.
+- Published posts have a non-null `publishedAt` date and appear in public lists once the date is in the past.
+- Only `publishedAt` drives visibility; there is no separate scheduled or archived state in the database.
 
 ## 🚀 Caching Strategy
 

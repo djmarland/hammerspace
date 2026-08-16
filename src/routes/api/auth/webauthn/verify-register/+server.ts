@@ -1,13 +1,13 @@
-import type { RequestHandler } from './$types';
-import { json } from '@sveltejs/kit';
-import { verifyRegistrationResponse } from '@simplewebauthn/server';
-import { prisma } from '@/lib/db';
-import { getAdminSessionUser } from '@/lib/admin-auth';
+import type { RequestHandler } from "./$types";
+import { json } from "@sveltejs/kit";
+import { verifyRegistrationResponse } from "@simplewebauthn/server";
+import { prisma } from "@/lib/db";
+import { getAdminSessionUser } from "@/lib/admin-auth";
 import {
 	clearChallenge,
 	credentialIdFromBase64url,
-	getAndValidateChallenge
-} from '@/lib/webauthn';
+	getAndValidateChallenge,
+} from "@/lib/webauthn";
 
 interface VerifyRegistrationRequest {
 	id: string;
@@ -25,18 +25,18 @@ export const POST: RequestHandler = async ({ request }) => {
 		const sessionUser = await getAdminSessionUser();
 
 		if (!sessionUser) {
-			return json({ error: 'Unauthorized' }, { status: 401 });
+			return json({ error: "Unauthorized" }, { status: 401 });
 		}
 
 		const user = await prisma.user.findUnique({
 			where: { id: sessionUser.userId },
 			include: {
-				credentials: true
-			}
+				credentials: true,
+			},
 		});
 
 		if (!user) {
-			return json({ error: 'User not found' }, { status: 404 });
+			return json({ error: "User not found" }, { status: 404 });
 		}
 
 		const body: VerifyRegistrationRequest = await request.json();
@@ -44,22 +44,19 @@ export const POST: RequestHandler = async ({ request }) => {
 		// Validate challenge
 		const storedChallenge = await getAndValidateChallenge(user.id);
 		if (!storedChallenge) {
-			return json(
-				{ error: 'Invalid or expired challenge' },
-				{ status: 400 }
-			);
+			return json({ error: "Invalid or expired challenge" }, { status: 400 });
 		}
 
 		const verification = await verifyRegistrationResponse({
 			response: body as any,
 			expectedChallenge: storedChallenge,
 			expectedOrigin:
-				process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-			expectedRPID: process.env.NEXT_PUBLIC_RP_ID || 'localhost'
+				process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+			expectedRPID: process.env.NEXT_PUBLIC_RP_ID || "localhost",
 		});
 
 		if (!verification.verified || !verification.registrationInfo) {
-			return json({ error: 'Verification failed' }, { status: 400 });
+			return json({ error: "Verification failed" }, { status: 400 });
 		}
 
 		const { credential } = verification.registrationInfo;
@@ -71,8 +68,8 @@ export const POST: RequestHandler = async ({ request }) => {
 				credentialId: credentialIdFromBase64url(body.rawId),
 				credentialPublicKey: Buffer.from(credential.publicKey),
 				counter: credential.counter,
-				transports: body.response.transports || []
-			}
+				transports: body.response.transports || [],
+			},
 		});
 
 		// Clear login token after first passkey registration (bootstrap mode)
@@ -80,8 +77,8 @@ export const POST: RequestHandler = async ({ request }) => {
 			await prisma.user.update({
 				where: { id: user.id },
 				data: {
-					loginTokenHash: null
-				}
+					loginTokenHash: null,
+				},
 			});
 		}
 
@@ -90,10 +87,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		return json({ verified: true });
 	} catch (error) {
-		console.error('Error verifying registration:', error);
-		return json(
-			{ error: 'Failed to verify registration' },
-			{ status: 500 }
-		);
+		console.error("Error verifying registration:", error);
+		return json({ error: "Failed to verify registration" }, { status: 500 });
 	}
 };
