@@ -23,10 +23,9 @@ export const GET: RequestHandler = async ({ url }) => {
 	const currentPageHref =
 		archive.page > 1 ? `/feed.xml?page=${archive.page}` : "/feed.xml";
 	const items = archive.posts
-		.map(
-			(post) => {
-				const postUrl = absoluteUrl(`/posts/${post.slug}`);
-				return `<item>
+		.map((post) => {
+			const postUrl = absoluteUrl(`/posts/${post.slug}`);
+			return `<item>
 	<title>${escapeXml(post.title)}</title>
 	<link>${postUrl}</link>
 	<guid isPermaLink="true">${postUrl}</guid>
@@ -34,8 +33,7 @@ export const GET: RequestHandler = async ({ url }) => {
 	<content:encoded>${wrapCdata(renderMarkdown(post.content))}</content:encoded>
 	<pubDate>${post.publishedAt.toUTCString()}</pubDate>
 </item>`;
-			},
-		)
+		})
 		.join("\n");
 	const previousPageHref =
 		archive.page > 1
@@ -44,8 +42,11 @@ export const GET: RequestHandler = async ({ url }) => {
 				: `/feed.xml?page=${archive.page - 1}`
 			: null;
 	const nextPageHref =
-		archive.page < archive.totalPages ? `/feed.xml?page=${archive.page + 1}` : null;
-	const lastBuildDate = archive.posts[0]?.publishedAt.toUTCString() ?? new Date().toUTCString();
+		archive.page < archive.totalPages
+			? `/feed.xml?page=${archive.page + 1}`
+			: null;
+	const lastBuildDate =
+		archive.posts[0]?.publishedAt.toUTCString() ?? new Date().toUTCString();
 	const atomLinks = [
 		`<atom:link href="${absoluteUrl(currentPageHref)}" rel="self" type="application/rss+xml" />`,
 		previousPageHref

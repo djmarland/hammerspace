@@ -1,12 +1,12 @@
 <script lang="ts">
-    import {resolve} from "$app/paths";
-    import type {PageData} from "./$types";
-    import PostBody from "@/components/Blog/PostBody.svelte";
-    import ReadingTime from "@/components/Blog/ReadingTime.svelte";
-    import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate.svelte";
-    import Logo from "@/components/Atoms/Logo/Logo.svelte";
+	import { resolve } from "$app/paths";
+	import type { PageData } from "./$types";
+	import PostBody from "@/components/Blog/PostBody.svelte";
+	import ReadingTime from "@/components/Blog/ReadingTime.svelte";
+	import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate.svelte";
+	import Logo from "@/components/Atoms/Logo/Logo.svelte";
 
-    type Props = { data: PageData };
+	type Props = { data: PageData };
 	let { data }: Props = $props();
 	const posts = $derived(data.posts);
 
@@ -19,16 +19,16 @@
 	<title>Hammerspace Blog</title>
 </svelte:head>
 
-
 <SiteTemplate>
 	<header slot="header" class="hero">
 		<h1 class="logo">
 			<Logo />
 		</h1>
 		<p class="intro">
-			A blog about Web Development, Software Engineering, and Technology in general, and maybe other topics of interest.
-            <br />
-            by <b>David Marland</b>
+			A blog about Web Development, Software Engineering, and Technology in
+			general, and maybe other topics of interest.
+			<br />
+			by <b>David Marland</b>
 		</p>
 		<nav class="actions">
 			<a href={resolve("/posts")} class="secondaryLink">Browse archive</a>
@@ -68,7 +68,6 @@
 			</div>
 		</section>
 	</main>
-
 </SiteTemplate>
 
 <style>

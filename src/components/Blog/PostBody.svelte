@@ -15,7 +15,11 @@
 
 <div class="body">
 	{#if post.coverImageUrl}
-		<img src={post.coverImageUrl} alt={post.coverImageAlt || ""} class="image" />
+		<img
+			src={post.coverImageUrl}
+			alt={post.coverImageAlt || ""}
+			class="image"
+		/>
 	{/if}
 	<div class="markdown piko-prose">
 		<MarkdownContent content={post.content} />

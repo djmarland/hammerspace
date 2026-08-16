@@ -99,8 +99,9 @@
 				{#each data.posts as post (post.id)}
 					<tr>
 						<td class="title-cell">
-							<a href={resolve(`/admin/posts/${post.id}/edit`)} class="post-link"
-								>{post.title}</a
+							<a
+								href={resolve(`/admin/posts/${post.id}/edit`)}
+								class="post-link">{post.title}</a
 							>
 						</td>
 						<td class="slug-cell">{post.slug}</td>

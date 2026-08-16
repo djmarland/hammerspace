@@ -1,10 +1,10 @@
 <script lang="ts">
-    import {resolve} from "$app/paths";
-    import type {PageData} from "./$types";
-    import PostCard from "@/components/Blog/PostCard.svelte";
-    import PaginationNav from "@/components/PaginationNav.svelte";
+	import { resolve } from "$app/paths";
+	import type { PageData } from "./$types";
+	import PostCard from "@/components/Blog/PostCard.svelte";
+	import PaginationNav from "@/components/PaginationNav.svelte";
 
-    type Props = { data: PageData };
+	type Props = { data: PageData };
 	let { data }: Props = $props();
 	const archive = $derived(data.archive);
 

@@ -1,6 +1,6 @@
 <script lang="ts">
-    import Logo from "@/components/Atoms/Logo/Logo.svelte";
-    import {resolve} from "$app/paths";
+	import Logo from "@/components/Atoms/Logo/Logo.svelte";
+	import { resolve } from "$app/paths";
 </script>
 
 <header class="masthead">

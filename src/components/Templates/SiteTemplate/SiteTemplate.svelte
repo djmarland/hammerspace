@@ -1,10 +1,11 @@
 <script>
-    import Footer from "@/components/Organisms/Footer/Footer.svelte";
+	import Footer from "@/components/Organisms/Footer/Footer.svelte";
 </script>
 
 <div class="site-template">
 	<header>
-        <div class="header-content"><slot name="header" /></div></header>
+		<div class="header-content"><slot name="header" /></div>
+	</header>
 	<div class="content-column">
 		<main><slot /></main>
 		<Footer />
@@ -19,21 +20,21 @@
 	}
 	header {
 		background-color: var(--piko-palette-slate-8);
-      color: var(--piko-palette-slate-1);
-      box-shadow: 0 0 10px var(--piko-palette-dynamic-primary-4);
+		color: var(--piko-palette-slate-1);
+		box-shadow: 0 0 10px var(--piko-palette-dynamic-primary-4);
 	}
-    .header-content {
-      position: sticky;
-      top: 0;
-      height: 100vh;
+	.header-content {
+		position: sticky;
+		top: 0;
+		height: 100vh;
 		padding: var(--piko-unit-double);
-      place-content: center;
-    }
+		place-content: center;
+	}
 	.content-column {
-      margin-top: 30vh;
+		margin-top: 30vh;
 	}
 	main {
-        max-width: 75ch;
+		max-width: 75ch;
 		padding: var(--piko-unit-double);
 	}
 </style>

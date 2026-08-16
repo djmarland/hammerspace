@@ -360,7 +360,9 @@ export async function getRelatedPosts(
 	return relatedPosts;
 }
 
-export async function getPublicSyndicationPosts(filters: PublicPostFilters = {}) {
+export async function getPublicSyndicationPosts(
+	filters: PublicPostFilters = {},
+) {
 	return getPaginatedPublicPosts(buildDiscoverablePostWhere(nowDate()), {
 		...filters,
 		pageSize: SYNDICATION_POSTS_PER_PAGE,
