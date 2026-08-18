@@ -111,116 +111,61 @@
 				--piko-palette-pink-8: oklch(44.6% 0.142 342);
 				--piko-palette-pink-9: oklch(35.5% 0.118 342);
 
-				--piko-palette-dynamic-primary-hue: 40;
-				--piko-palette-dynamic-secondary-hue: 220;
-				--piko-palette-dynamic-primary-1: oklch(
-					97.2% 0.014 var(--piko-palette-dynamic-primary-hue)
+				--piko-palette-dynamic-hue: 40;
+				--piko-palette-dynamic-1: oklch(
+					97.2% 0.014 var(--piko-palette-dynamic-hue)
 				);
-				--piko-palette-dynamic-primary-2: oklch(
-					94.8% 0.034 var(--piko-palette-dynamic-primary-hue)
+				--piko-palette-dynamic-2: oklch(
+					94.8% 0.034 var(--piko-palette-dynamic-hue)
 				);
-				--piko-palette-dynamic-primary-3: oklch(
-					90.7% 0.065 var(--piko-palette-dynamic-primary-hue)
+				--piko-palette-dynamic-3: oklch(
+					90.7% 0.065 var(--piko-palette-dynamic-hue)
 				);
-				--piko-palette-dynamic-primary-4: oklch(
-					84.6% 0.105 var(--piko-palette-dynamic-primary-hue)
+				--piko-palette-dynamic-4: oklch(
+					84.6% 0.105 var(--piko-palette-dynamic-hue)
 				);
-				--piko-palette-dynamic-primary-5: oklch(
-					76.5% 0.151 var(--piko-palette-dynamic-primary-hue)
+				--piko-palette-dynamic-5: oklch(
+					76.5% 0.151 var(--piko-palette-dynamic-hue)
 				);
-				--piko-palette-dynamic-primary-6: oklch(
-					66.1% 0.184 var(--piko-palette-dynamic-primary-hue)
+				--piko-palette-dynamic-6: oklch(
+					66.1% 0.184 var(--piko-palette-dynamic-hue)
 				);
-				--piko-palette-dynamic-primary-7: oklch(
-					54.5% 0.182 var(--piko-palette-dynamic-primary-hue)
+				--piko-palette-dynamic-7: oklch(
+					54.5% 0.182 var(--piko-palette-dynamic-hue)
 				);
-				--piko-palette-dynamic-primary-8: oklch(
-					42.3% 0.154 var(--piko-palette-dynamic-primary-hue)
+				--piko-palette-dynamic-8: oklch(
+					42.3% 0.154 var(--piko-palette-dynamic-hue)
 				);
-				--piko-palette-dynamic-primary-9: oklch(
-					32.8% 0.129 var(--piko-palette-dynamic-primary-hue)
-				);
-				--piko-palette-dynamic-secondary-1: oklch(
-					97.2% 0.014 var(--piko-palette-dynamic-secondary-hue)
-				);
-				--piko-palette-dynamic-secondary-2: oklch(
-					94.8% 0.034 var(--piko-palette-dynamic-secondary-hue)
-				);
-				--piko-palette-dynamic-secondary-3: oklch(
-					90.7% 0.065 var(--piko-palette-dynamic-secondary-hue)
-				);
-				--piko-palette-dynamic-secondary-4: oklch(
-					84.6% 0.105 var(--piko-palette-dynamic-secondary-hue)
-				);
-				--piko-palette-dynamic-secondary-5: oklch(
-					76.5% 0.151 var(--piko-palette-dynamic-secondary-hue)
-				);
-				--piko-palette-dynamic-secondary-6: oklch(
-					66.1% 0.184 var(--piko-palette-dynamic-secondary-hue)
-				);
-				--piko-palette-dynamic-secondary-7: oklch(
-					54.5% 0.182 var(--piko-palette-dynamic-secondary-hue)
-				);
-				--piko-palette-dynamic-secondary-8: oklch(
-					42.3% 0.154 var(--piko-palette-dynamic-secondary-hue)
-				);
-				--piko-palette-dynamic-secondary-9: oklch(
-					32.8% 0.129 var(--piko-palette-dynamic-secondary-hue)
+				--piko-palette-dynamic-9: oklch(
+					32.8% 0.129 var(--piko-palette-dynamic-hue)
 				);
 				@media (color-gamut: p3) {
-					--piko-palette-dynamic-primary-1: oklch(
-						97.2% 0.039 var(--piko-palette-dynamic-primary-hue)
+					--piko-palette-dynamic-1: oklch(
+						97.2% 0.039 var(--piko-palette-dynamic-hue)
 					);
-					--piko-palette-dynamic-primary-2: oklch(
-						94.8% 0.081 var(--piko-palette-dynamic-primary-hue)
+					--piko-palette-dynamic-2: oklch(
+						94.8% 0.081 var(--piko-palette-dynamic-hue)
 					);
-					--piko-palette-dynamic-primary-3: oklch(
-						90.7% 0.124 var(--piko-palette-dynamic-primary-hue)
+					--piko-palette-dynamic-3: oklch(
+						90.7% 0.124 var(--piko-palette-dynamic-hue)
 					);
-					--piko-palette-dynamic-primary-4: oklch(
-						84.6% 0.163 var(--piko-palette-dynamic-primary-hue)
+					--piko-palette-dynamic-4: oklch(
+						84.6% 0.163 var(--piko-palette-dynamic-hue)
 					);
-					--piko-palette-dynamic-primary-5: oklch(
-						76.5% 0.198 var(--piko-palette-dynamic-primary-hue)
+					--piko-palette-dynamic-5: oklch(
+						76.5% 0.198 var(--piko-palette-dynamic-hue)
 					);
-					--piko-palette-dynamic-primary-6: oklch(
-						66.1% 0.224 var(--piko-palette-dynamic-primary-hue)
+					--piko-palette-dynamic-6: oklch(
+						66.1% 0.224 var(--piko-palette-dynamic-hue)
 					);
-					--piko-palette-dynamic-primary-7: oklch(
-						54.5% 0.241 var(--piko-palette-dynamic-primary-hue)
+					--piko-palette-dynamic-7: oklch(
+						54.5% 0.241 var(--piko-palette-dynamic-hue)
 					);
-					--piko-palette-dynamic-primary-8: oklch(
-						42.3% 0.253 var(--piko-palette-dynamic-primary-hue)
+					--piko-palette-dynamic-8: oklch(
+						42.3% 0.253 var(--piko-palette-dynamic-hue)
 					);
-					--piko-palette-dynamic-primary-9: oklch(
-						32.8% 0.26 var(--piko-palette-dynamic-primary-hue)
-					);
-					--piko-palette-dynamic-secondary-1: oklch(
-						97.2% 0.039 var(--piko-palette-dynamic-secondary-hue)
-					);
-					--piko-palette-dynamic-secondary-2: oklch(
-						94.8% 0.081 var(--piko-palette-dynamic-secondary-hue)
-					);
-					--piko-palette-dynamic-secondary-3: oklch(
-						90.7% 0.124 var(--piko-palette-dynamic-secondary-hue)
-					);
-					--piko-palette-dynamic-secondary-4: oklch(
-						84.6% 0.163 var(--piko-palette-dynamic-secondary-hue)
-					);
-					--piko-palette-dynamic-secondary-5: oklch(
-						76.5% 0.198 var(--piko-palette-dynamic-secondary-hue)
-					);
-					--piko-palette-dynamic-secondary-6: oklch(
-						66.1% 0.224 var(--piko-palette-dynamic-secondary-hue)
-					);
-					--piko-palette-dynamic-secondary-7: oklch(
-						54.5% 0.241 var(--piko-palette-dynamic-secondary-hue)
-					);
-					--piko-palette-dynamic-secondary-8: oklch(
-						42.3% 0.253 var(--piko-palette-dynamic-secondary-hue)
-					);
-					--piko-palette-dynamic-secondary-9: oklch(
-						32.8% 0.26 var(--piko-palette-dynamic-secondary-hue)
+					--piko-palette-dynamic-9: oklch(
+						32.8% 0.26 var(--piko-palette-dynamic-hue)
 					);
 				}
 			}
@@ -232,65 +177,27 @@
 					var(--piko-palette-slate-1),
 					var(--piko-palette-slate-9)
 				);
-				--piko-color-surface: light-dark(
-					var(--piko-palette-white),
+				--piko-color-background-secondary: light-dark(
+					var(--piko-palette-slate-2),
 					var(--piko-palette-slate-8)
 				);
+
 				--piko-color-text: light-dark(
 					var(--piko-palette-slate-9),
 					var(--piko-palette-slate-1)
 				);
-				--piko-color-text-muted: light-dark(
+				--piko-color-text-subtle: light-dark(
 					var(--piko-palette-slate-7),
 					var(--piko-palette-slate-3)
 				);
-				--piko-color-border: light-dark(
-					var(--piko-palette-slate-4),
-					var(--piko-palette-slate-7)
-				);
+
 				--piko-color-link: light-dark(
-					var(--piko-palette-dynamic-primary-4),
-					/* todo - dynamic dark mode */ var(--piko-palette-blue-3)
+					var(--piko-palette-dynamic-7),
+					var(--piko-palette-dynamic-4)
 				);
 				--piko-color-link-hover: light-dark(
-					var(--piko-palette-blue-8),
-					var(--piko-palette-blue-2)
-				);
-
-				--piko-color-primary-text: light-dark(
-					var(--piko-palette-dynamic-primary-9),
-					var(--piko-palette-dynamic-primary-2)
-				);
-				--piko-color-primary-bg: light-dark(
-					var(--piko-palette-dynamic-primary-2),
-					var(--piko-palette-dynamic-primary-8)
-				);
-				--piko-color-primary-border: light-dark(
-					var(--piko-palette-dynamic-primary-6),
-					var(--piko-palette-dynamic-primary-5)
-				);
-
-				--piko-color-secondary-text: light-dark(
-					var(--piko-palette-dynamic-secondary-9),
-					var(--piko-palette-dynamic-secondary-2)
-				);
-				--piko-color-secondary-bg: light-dark(
-					var(--piko-palette-dynamic-secondary-2),
-					var(--piko-palette-dynamic-secondary-8)
-				);
-				--piko-color-secondary-border: light-dark(
-					var(--piko-palette-dynamic-secondary-6),
-					var(--piko-palette-dynamic-secondary-5)
-				);
-
-				--piko-color-tertiary-text: light-dark(
-					var(--piko-palette-slate-8),
-					var(--piko-palette-slate-3)
-				);
-				--piko-color-tertiary-bg: transparent;
-				--piko-color-tertiary-border: light-dark(
-					var(--piko-palette-slate-5),
-					var(--piko-palette-slate-5)
+					var(--piko-palette-dynamic-9),
+					var(--piko-palette-dynamic-3)
 				);
 
 				--piko-color-success-text: light-dark(
@@ -439,18 +346,33 @@
 		html {
 			color-scheme: light dark;
 			font-family:
-				-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-				"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-				sans-serif;
+				ui-sans-serif,
+				system-ui,
+				sans-serif,
+				Apple Color Emoji,
+				Segoe UI Emoji,
+				Segoe UI Symbol,
+				Noto Color Emoji;
 			-webkit-font-smoothing: antialiased;
 			-moz-osx-font-smoothing: grayscale;
 		}
 
 		body {
-			background-color: var(--piko-color-background);
-			color: var(--piko-color-text);
 			font-size: var(--piko-type-body);
 			line-height: 1.4;
+		}
+
+		body,
+		[data-theme] {
+			background-color: var(--piko-color-background);
+			color: var(--piko-color-text);
+		}
+
+		[data-theme="dark"] {
+			color-scheme: dark;
+		}
+		[data-theme="light"] {
+			color-scheme: light;
 		}
 
 		small {
@@ -598,7 +520,7 @@
 		}
 
 		:where(input, textarea)::placeholder {
-			color: var(--piko-color-text-muted);
+			color: var(--piko-color-text-subtle);
 			opacity: 1;
 		}
 
@@ -640,9 +562,6 @@
 		}
 
 		:where(.piko-button--primary, .button.primary, .button.positive) {
-			background: var(--piko-color-primary-bg);
-			border-color: var(--piko-color-primary-border);
-			color: var(--piko-color-primary-text);
 		}
 
 		:where(.piko-button--secondary, .button.secondary) {
@@ -670,197 +589,10 @@
 		}
 
 		.container {
+			/* todo - does it need to be used */
 			max-width: var(--piko-page-max);
 			margin-inline: auto;
 			padding-inline: var(--piko-page-gutter);
-		}
-
-		.piko-docs-layout {
-			display: grid;
-			gap: var(--piko-space-grid-gap);
-		}
-
-		.piko-docs-sidebar {
-			border: 1px solid var(--piko-color-border);
-			background: var(--piko-color-surface);
-			padding: var(--piko-space-card-padding);
-			height: fit-content;
-		}
-
-		.piko-docs-nav-groups {
-			display: grid;
-			gap: var(--piko-space-stack-gap);
-		}
-
-		.piko-docs-nav-title {
-			margin: 0 0 var(--piko-space-control-padding-y);
-			font-size: var(--piko-type-caption);
-			font-weight: 700;
-			text-transform: uppercase;
-			letter-spacing: 0.04em;
-			color: var(--piko-color-text-muted);
-		}
-
-		.piko-docs-nav {
-			display: grid;
-			gap: var(--piko-space-cluster-gap);
-			list-style: none;
-			margin: 0;
-			padding: 0;
-			font-size: var(--piko-type-small);
-		}
-
-		.piko-docs-nav a {
-			color: var(--piko-color-text);
-			text-decoration: none;
-		}
-
-		.piko-docs-nav a:hover,
-		.piko-docs-nav a:focus-visible {
-			text-decoration: underline;
-		}
-
-		@media (min-width: 64rem) {
-			.piko-docs-layout {
-				grid-template-columns: 14rem minmax(0, 1fr);
-				align-items: start;
-			}
-
-			.piko-docs-sidebar {
-				position: sticky;
-				top: var(--piko-space-grid-gap);
-			}
-		}
-
-		.piko-docs-section {
-			margin-block: var(--piko-space-section-gap);
-		}
-
-		.piko-docs-section > section + section {
-			margin-top: var(--piko-space-section-gap);
-		}
-
-		.piko-token-grid {
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-			gap: var(--piko-space-grid-gap);
-		}
-
-		.piko-swatch-scale {
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
-			gap: var(--piko-space-cluster-gap);
-		}
-
-		.piko-swatch {
-			border: 1px solid var(--piko-color-border);
-			border-radius: 0;
-			min-height: 4.5rem;
-			padding: var(--piko-space-card-padding);
-			display: flex;
-			align-items: flex-end;
-			font-size: var(--piko-type-caption);
-			color: var(--piko-palette-slate-9);
-			background: var(--piko-color-surface);
-		}
-
-		.piko-swatch code {
-			overflow-wrap: anywhere;
-		}
-
-		.piko-token-list {
-			display: grid;
-			gap: var(--piko-space-stack-gap);
-		}
-
-		.piko-token-chip {
-			border: 1px solid var(--piko-color-border);
-			border-radius: 0;
-			padding: var(--piko-space-control-padding-y)
-				var(--piko-space-control-padding-x);
-			background: var(--piko-color-surface);
-			font-size: var(--piko-type-small);
-		}
-
-		.piko-token-chip :where(p) {
-			margin: 0;
-		}
-
-		.piko-space-table {
-			width: 100%;
-			border: 1px solid var(--piko-color-border);
-			border-collapse: collapse;
-			font-size: var(--piko-type-small);
-		}
-
-		.piko-space-table th,
-		.piko-space-table td {
-			border: 1px solid var(--piko-color-border);
-			padding: var(--piko-space-control-padding-y)
-				var(--piko-space-control-padding-x);
-			text-align: left;
-			vertical-align: middle;
-		}
-
-		.piko-space-table th {
-			font-weight: 700;
-			background: var(--piko-color-surface);
-		}
-
-		.piko-space-table td:last-child {
-			min-width: 12rem;
-		}
-
-		.piko-space-bar {
-			height: 1rem;
-			background: var(--piko-color-primary-bg);
-			border: 1px solid var(--piko-color-primary-border);
-			border-radius: 0;
-		}
-
-		.piko-state {
-			--piko-state-text: var(--piko-color-text);
-			--piko-state-bg: var(--piko-color-surface);
-			--piko-state-border: var(--piko-color-border);
-			border-radius: 0;
-		}
-
-		.piko-state[data-state="primary"] {
-			--piko-state-text: var(--piko-color-primary-text);
-			--piko-state-bg: var(--piko-color-primary-bg);
-			--piko-state-border: var(--piko-color-primary-border);
-		}
-
-		.piko-state[data-state="success"] {
-			--piko-state-text: var(--piko-color-success-text);
-			--piko-state-bg: var(--piko-color-success-bg);
-			--piko-state-border: var(--piko-color-success-border);
-		}
-
-		.piko-state[data-state="warning"] {
-			--piko-state-text: var(--piko-color-warning-text);
-			--piko-state-bg: var(--piko-color-warning-bg);
-			--piko-state-border: var(--piko-color-warning-border);
-		}
-
-		.piko-state[data-state="error"] {
-			--piko-state-text: var(--piko-color-error-text);
-			--piko-state-bg: var(--piko-color-error-bg);
-			--piko-state-border: var(--piko-color-error-border);
-		}
-
-		.piko-state--box {
-			background: var(--piko-state-bg);
-			border: 1px solid var(--piko-state-border);
-			color: var(--piko-state-text);
-			padding: var(--piko-space-card-padding);
-		}
-
-		.piko-state--text {
-			color: var(--piko-state-text);
-			font-size: var(--piko-type-small);
-			font-weight: 600;
-			padding: 0;
 		}
 	}
 }

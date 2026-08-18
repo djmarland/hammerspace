@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { resolve } from "$app/paths";
-	import PikoToken from "@/components/PikoToken.svelte";
+    import {resolve} from "$app/paths";
+    import PikoToken from "@/components/PikoToken.svelte";
 
-	const corePalettes = [
+    const corePalettes = [
 		{ label: "Slate", token: "slate" },
 		{ label: "Red", token: "red" },
 		{ label: "Orange", token: "orange" },
@@ -19,9 +19,9 @@
 
 	const semanticColors = [
 		"--piko-color-background",
-		"--piko-color-surface",
+		"--piko-color-background-secondary",
 		"--piko-color-text",
-		"--piko-color-text-muted",
+		"--piko-color-text-subtle",
 		"--piko-color-border",
 		"--piko-color-link",
 		"--piko-color-primary-bg",
@@ -84,6 +84,10 @@
 			],
 		},
 		{
+			title: "Components",
+			sections: [{ id: "form-elements", label: "Form elements" }],
+		},
+		{
 			title: "Reference",
 			sections: [{ id: "html-kitchen-sink", label: "HTML Kitchen Sink" }],
 		},
@@ -98,7 +102,7 @@
 	<h1 class="piko-type-h1">Piko</h1>
 	<p>Piko is the design system for Hammerspace</p>
 
-	<div class="piko-docs-layout">
+	<div class="layout">
 		<aside class="piko-docs-sidebar" aria-label="Section navigation">
 			<nav>
 				<div class="piko-docs-nav-groups">
@@ -252,6 +256,190 @@
 							</div>
 						{/each}
 					</div>
+				</section>
+			</section>
+
+			<section class="piko-docs-section piko-prose" id="form-elements">
+				<h2>Form elements</h2>
+				<p>Examples of common form controls with labels, fieldsets, and various states.</p>
+
+				<section id="form-text-inputs">
+					<h3>Text inputs</h3>
+					<div class="piko-form-demo">
+						<div class="piko-form-field">
+							<label for="demo-text">Full name</label>
+							<input type="text" id="demo-text" placeholder="e.g. Jane Smith" />
+						</div>
+						<div class="piko-form-field">
+							<label for="demo-email">Email address</label>
+							<input type="email" id="demo-email" placeholder="you@example.com" />
+						</div>
+						<div class="piko-form-field">
+							<label for="demo-password">Password</label>
+							<input type="password" id="demo-password" placeholder="••••••••" />
+						</div>
+						<div class="piko-form-field">
+							<label for="demo-number">Quantity</label>
+							<input type="number" id="demo-number" value="1" min="1" max="99" />
+						</div>
+					</div>
+				</section>
+
+				<section id="form-helper-error">
+					<h3>With helper text and errors</h3>
+					<div class="piko-form-demo">
+						<div class="piko-form-field">
+							<label for="demo-hint">Username</label>
+							<p class="piko-form-hint" id="demo-hint-description">
+								Must be 3–20 characters. Letters, numbers, and underscores only.
+							</p>
+							<input
+								type="text"
+								id="demo-hint"
+								aria-describedby="demo-hint-description"
+								value="jane_smith"
+							/>
+						</div>
+						<div class="piko-form-field" data-state="error">
+							<label for="demo-error">Email address</label>
+							<p class="piko-form-hint piko-state piko-state--text" data-state="error" id="demo-error-description">
+								Enter a valid email address.
+							</p>
+							<input
+								type="email"
+								id="demo-error"
+								aria-describedby="demo-error-description"
+								aria-invalid="true"
+								value="not-an-email"
+							/>
+						</div>
+					</div>
+				</section>
+
+				<section id="form-disabled">
+					<h3>Disabled state</h3>
+					<div class="piko-form-demo">
+						<div class="piko-form-field">
+							<label for="demo-disabled">Account ID</label>
+							<input type="text" id="demo-disabled" value="ACC-00042" disabled />
+						</div>
+						<div class="piko-form-field">
+							<label for="demo-disabled-select">Region</label>
+							<select id="demo-disabled-select" disabled>
+								<option>Europe (EU-West)</option>
+							</select>
+						</div>
+					</div>
+				</section>
+
+				<section id="form-select-textarea">
+					<h3>Select and textarea</h3>
+					<div class="piko-form-demo">
+						<div class="piko-form-field">
+							<label for="demo-select">Country</label>
+							<select id="demo-select">
+								<option value="">Choose a country…</option>
+								<option value="gb">United Kingdom</option>
+								<option value="us">United States</option>
+								<option value="de">Germany</option>
+								<option value="fr">France</option>
+							</select>
+						</div>
+						<div class="piko-form-field">
+							<label for="demo-textarea">Message</label>
+							<p class="piko-form-hint" id="demo-textarea-description">
+								Max 500 characters.
+							</p>
+							<textarea
+								id="demo-textarea"
+								rows={4}
+								aria-describedby="demo-textarea-description"
+								placeholder="Write your message here…"
+							></textarea>
+						</div>
+					</div>
+				</section>
+
+				<section id="form-checkboxes">
+					<h3>Checkboxes</h3>
+					<fieldset class="piko-fieldset">
+						<legend>Notification preferences</legend>
+						<p class="piko-form-hint">Choose which emails you'd like to receive.</p>
+						<div class="piko-check-group">
+							<div class="piko-check-item">
+								<input type="checkbox" id="cb-product" checked />
+								<label for="cb-product">Product updates</label>
+							</div>
+							<div class="piko-check-item">
+								<input type="checkbox" id="cb-security" checked />
+								<label for="cb-security">Security alerts</label>
+							</div>
+							<div class="piko-check-item">
+								<input type="checkbox" id="cb-newsletter" />
+								<label for="cb-newsletter">Newsletter</label>
+							</div>
+							<div class="piko-check-item">
+								<input type="checkbox" id="cb-disabled" disabled />
+								<label for="cb-disabled">Promotional offers (unavailable)</label>
+							</div>
+						</div>
+					</fieldset>
+				</section>
+
+				<section id="form-radios">
+					<h3>Radio buttons</h3>
+					<fieldset class="piko-fieldset">
+						<legend>Billing cycle</legend>
+						<p class="piko-form-hint">Select how often you'd like to be billed.</p>
+						<div class="piko-check-group">
+							<div class="piko-check-item">
+								<input type="radio" name="billing" id="r-monthly" value="monthly" checked />
+								<label for="r-monthly">Monthly</label>
+							</div>
+							<div class="piko-check-item">
+								<input type="radio" name="billing" id="r-annual" value="annual" />
+								<label for="r-annual">Annual <span class="small quiet">(save 20%)</span></label>
+							</div>
+							<div class="piko-check-item">
+								<input type="radio" name="billing" id="r-disabled" value="lifetime" disabled />
+								<label for="r-disabled">Lifetime (coming soon)</label>
+							</div>
+						</div>
+					</fieldset>
+				</section>
+
+				<section id="form-full-example">
+					<h3>Full form example</h3>
+					<form class="piko-form-demo" action="#">
+						<fieldset class="piko-fieldset">
+							<legend>Account details</legend>
+							<div class="piko-form-field">
+								<label for="full-name">Full name</label>
+								<input type="text" id="full-name" autocomplete="name" />
+							</div>
+							<div class="piko-form-field">
+								<label for="full-email">Email address</label>
+								<input type="email" id="full-email" autocomplete="email" />
+							</div>
+						</fieldset>
+						<fieldset class="piko-fieldset">
+							<legend>Communication preferences</legend>
+							<div class="piko-check-group">
+								<div class="piko-check-item">
+									<input type="checkbox" id="full-cb-1" />
+									<label for="full-cb-1">Email me about new features</label>
+								</div>
+								<div class="piko-check-item">
+									<input type="checkbox" id="full-cb-2" checked />
+									<label for="full-cb-2">Send me security alerts</label>
+								</div>
+							</div>
+						</fieldset>
+						<div class="piko-form-actions">
+							<button type="submit" class="button primary">Save changes</button>
+							<button type="reset" class="button secondary">Cancel</button>
+						</div>
+					</form>
 				</section>
 			</section>
 
@@ -460,17 +648,6 @@
 						luctus turpis elit sit amet quam. Vivamus pretium ornare est.”
 					</p>
 				</blockquote>
-				<pre>
-							<code
-						>{`
-					#header h1 a {
-						display: block; 
-						width: 300px;
-					 	height: 80px;
-					}
-					`}</code
-					>
-						</pre>
 				<h5>
 					A sub heading which is not as important as the second, but should be
 					used with consideration
@@ -793,3 +970,222 @@
 		</div>
 	</div>
 </div>
+
+<style>
+    .layout {
+      display: grid;
+      gap: var(--piko-unit);
+    }
+    .piko-docs-sidebar {
+			border: 1px solid var(--piko-color-border);
+			background: var(--piko-color-surface);
+			padding: var(--piko-space-card-padding);
+			height: fit-content;
+		}
+
+    .piko-docs-nav-groups {
+			display: grid;
+			gap: var(--piko-space-stack-gap);
+		}
+
+		.piko-docs-nav-title {
+			margin: 0 0 var(--piko-space-control-padding-y);
+			font-size: var(--piko-type-caption);
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: 0.04em;
+			color: var(--piko-color-text-subtle);
+		}
+
+		.piko-docs-nav {
+			display: grid;
+			gap: var(--piko-space-cluster-gap);
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			font-size: var(--piko-type-small);
+		}
+
+		.piko-docs-nav a {
+			color: var(--piko-color-text);
+			text-decoration: none;
+		}
+
+		.piko-docs-nav a:hover,
+		.piko-docs-nav a:focus-visible {
+			text-decoration: underline;
+		}
+
+        .piko-docs-section {
+			margin-block: var(--piko-space-section-gap);
+		}
+
+		.piko-docs-section > section + section {
+			margin-top: var(--piko-space-section-gap);
+		}
+
+		.piko-token-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+			gap: var(--piko-space-grid-gap);
+		}
+
+		.piko-swatch-scale {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+			gap: var(--piko-space-cluster-gap);
+		}
+
+		.piko-swatch {
+			border: 1px solid var(--piko-color-border);
+			border-radius: 0;
+			min-height: 4.5rem;
+			padding: var(--piko-space-card-padding);
+			display: flex;
+			align-items: flex-end;
+			font-size: var(--piko-type-caption);
+			color: var(--piko-palette-slate-9);
+			background: var(--piko-color-surface);
+		}
+
+		.piko-swatch code {
+			overflow-wrap: anywhere;
+		}
+
+		.piko-token-list {
+			display: grid;
+			gap: var(--piko-space-stack-gap);
+		}
+
+		.piko-token-chip {
+			border: 1px solid var(--piko-color-border);
+			border-radius: 0;
+			padding: var(--piko-space-control-padding-y)
+				var(--piko-space-control-padding-x);
+			background: var(--piko-color-surface);
+			font-size: var(--piko-type-small);
+		}
+
+		.piko-token-chip :where(p) {
+			margin: 0;
+		}
+
+		.piko-space-table {
+			width: 100%;
+			border: 1px solid var(--piko-color-border);
+			border-collapse: collapse;
+			font-size: var(--piko-type-small);
+		}
+
+		.piko-space-table th,
+		.piko-space-table td {
+			border: 1px solid var(--piko-color-border);
+			padding: var(--piko-space-control-padding-y)
+				var(--piko-space-control-padding-x);
+			text-align: left;
+			vertical-align: middle;
+		}
+
+		.piko-space-table th {
+			font-weight: 700;
+			background: var(--piko-color-surface);
+		}
+
+		.piko-space-table td:last-child {
+			min-width: 12rem;
+		}
+
+		.piko-space-bar {
+			height: 1rem;
+		}
+
+		.piko-state {
+			--piko-state-text: var(--piko-color-text);
+			--piko-state-bg: var(--piko-color-surface);
+			--piko-state-border: var(--piko-color-border);
+			border-radius: 0;
+		}
+
+		.piko-state[data-state="success"] {
+			--piko-state-text: var(--piko-color-success-text);
+			--piko-state-bg: var(--piko-color-success-bg);
+			--piko-state-border: var(--piko-color-success-border);
+		}
+
+		.piko-state[data-state="warning"] {
+			--piko-state-text: var(--piko-color-warning-text);
+			--piko-state-bg: var(--piko-color-warning-bg);
+			--piko-state-border: var(--piko-color-warning-border);
+		}
+
+		.piko-state[data-state="error"] {
+			--piko-state-text: var(--piko-color-error-text);
+			--piko-state-bg: var(--piko-color-error-bg);
+			--piko-state-border: var(--piko-color-error-border);
+		}
+
+		.piko-state--box {
+			background: var(--piko-state-bg);
+			border: 1px solid var(--piko-state-border);
+			color: var(--piko-state-text);
+			padding: var(--piko-space-card-padding);
+		}
+
+		.piko-state--text {
+			color: var(--piko-state-text);
+			font-size: var(--piko-type-small);
+			font-weight: 600;
+			padding: 0;
+		}
+
+		.piko-form-demo {
+			display: grid;
+			gap: var(--piko-space-stack-gap);
+		}
+
+		.piko-form-field {
+			display: grid;
+			gap: var(--piko-unit-quarter);
+		}
+
+		.piko-form-hint {
+			margin: 0;
+			font-size: var(--piko-type-small);
+			color: var(--piko-color-text-subtle);
+		}
+
+		.piko-fieldset {
+			border: 1px solid var(--piko-color-border);
+			padding: var(--piko-space-card-padding);
+			margin: 0;
+			display: grid;
+			gap: var(--piko-space-stack-gap);
+		}
+
+		.piko-fieldset legend {
+			font-weight: 700;
+			padding-inline: var(--piko-unit-quarter);
+		}
+
+		.piko-check-group {
+			display: grid;
+			gap: var(--piko-space-cluster-gap);
+		}
+
+		.piko-check-item {
+			display: flex;
+			align-items: baseline;
+			gap: var(--piko-unit-half);
+		}
+
+		.piko-check-item input[type="checkbox"],
+		.piko-check-item input[type="radio"] {
+			flex-shrink: 0;
+		}
+
+		.piko-form-actions {
+			display: flex;
+			gap: var(--piko-space-cluster-gap);
+			flex-wrap: wrap;
+		}
+</style>

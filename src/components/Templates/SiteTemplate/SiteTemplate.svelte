@@ -1,9 +1,9 @@
 <script>
-	import Footer from "@/components/Organisms/Footer/Footer.svelte";
+    import Footer from "@/components/Organisms/Footer/Footer.svelte";
 </script>
 
 <div class="site-template">
-	<header>
+	<header data-theme="dark">
 		<div class="header-content"><slot name="header" /></div>
 	</header>
 	<div class="content-column">
@@ -19,9 +19,7 @@
 		grid-template-columns: 5fr 7fr;
 	}
 	header {
-		background-color: var(--piko-palette-slate-8);
-		color: var(--piko-palette-slate-1);
-		box-shadow: 0 0 10px var(--piko-palette-dynamic-primary-4);
+		background-color: color-mix(in srgb, var(--piko-palette-dynamic-8) 10%, var(--piko-color-background) 90%);
 	}
 	.header-content {
 		position: sticky;

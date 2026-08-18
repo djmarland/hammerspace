@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { resolve } from "$app/paths";
+    import {resolve} from "$app/paths";
 </script>
 
 <footer class="footer">
@@ -38,7 +38,7 @@
 	.footer {
 		text-align: justify;
 		margin-top: var(--piko-space-6);
-		background: var(--piko-color-surface);
+		background: var(--piko-color-background-secondary);
 		padding: var(--piko-space-4);
 	}
 </style>

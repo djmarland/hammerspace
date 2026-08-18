@@ -1,14 +1,11 @@
 <script lang="ts">
-	import { browser } from "$app/environment";
-	import { goto } from "$app/navigation";
-	import { resolve } from "$app/paths";
-	import { page } from "$app/state";
-	import {
-		startAuthentication,
-		verifyAuthentication,
-	} from "@/lib/webauthn-client";
+    import {browser} from "$app/environment";
+    import {goto} from "$app/navigation";
+    import {resolve} from "$app/paths";
+    import {page} from "$app/state";
+    import {startAuthentication, verifyAuthentication,} from "@/lib/webauthn-client";
 
-	const PASSKEY_TIMEOUT_MS = 12000;
+    const PASSKEY_TIMEOUT_MS = 12000;
 
 	function withTimeout<T>(
 		promise: Promise<T>,
@@ -203,7 +200,6 @@
 		background: var(--piko-color-surface);
 		padding: calc(var(--piko-space-6) + var(--piko-space-2));
 		border: 1px solid var(--piko-color-border);
-		border-radius: 0;
 		box-shadow: var(--piko-shadow-2);
 		width: 100%;
 		max-width: 400px;
@@ -251,6 +247,6 @@
 		margin-top: 20px;
 		text-align: center;
 		font-size: 0.9rem;
-		color: var(--piko-color-text-muted);
+		color: var(--piko-color-text-subtle);
 	}
 </style>

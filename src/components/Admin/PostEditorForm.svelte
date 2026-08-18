@@ -1,9 +1,9 @@
 <script lang="ts">
-	import MarkdownContent from "../Blog/MarkdownContent.svelte";
+    import MarkdownContent from "../Blog/MarkdownContent.svelte";
 
-	import { formatDateTimeLocalValue } from "@/lib/temporal";
+    import {formatDateTimeLocalValue} from "@/lib/temporal";
 
-	interface Props {
+    interface Props {
 		action?: string;
 		submitLabel: string;
 		initialValues?: {
@@ -231,7 +231,6 @@
 	.fieldset {
 		padding: 1rem;
 		border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
-		border-radius: 0.75rem;
 	}
 
 	.field span,
@@ -244,7 +243,6 @@
 	.field textarea {
 		padding: 0.75rem 0.85rem;
 		border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
-		border-radius: 0.75rem;
 		background: transparent;
 		color: inherit;
 		font: inherit;
@@ -283,7 +281,6 @@
 		gap: 0.75rem;
 		padding: 1rem;
 		border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
-		border-radius: 1rem;
 	}
 
 	.previewHeader {
@@ -298,7 +295,6 @@
 
 	.previewBody {
 		padding: 1rem;
-		border-radius: 0.75rem;
 		background: color-mix(
 			in srgb,
 			var(--piko-color-background) 92%,
@@ -312,22 +308,6 @@
 
 	.previewBody > :last-child {
 		margin-bottom: 0;
-	}
-
-	.submitButton {
-		width: fit-content;
-		padding: 0.75rem 1.2rem;
-		border: 1px solid #0066cc;
-		border-radius: 999px;
-		background: #0066cc;
-		color: #fff;
-		cursor: pointer;
-		font: inherit;
-	}
-
-	.submitButton:disabled {
-		opacity: 0.7;
-		cursor: not-allowed;
 	}
 
 	.error {

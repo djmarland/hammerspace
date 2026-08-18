@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { PageData } from "./$types";
-	import { enhance } from "$app/forms";
+    import type {PageData} from "./$types";
+    import {enhance} from "$app/forms";
 
-	interface Props {
+    interface Props {
 		data: PageData;
 	}
 
@@ -291,7 +291,7 @@
 	.empty-state {
 		padding: var(--piko-space-7);
 		text-align: center;
-		color: var(--piko-color-text-muted);
+		color: var(--piko-color-text-subtle);
 	}
 
 	.tags-list {
@@ -332,7 +332,7 @@
 		background-color: color-mix(in srgb, currentColor 12%, transparent);
 		border-radius: 999px;
 		font-size: 0.85rem;
-		color: var(--piko-color-text-muted);
+		color: var(--piko-color-text-subtle);
 	}
 
 	.tag-actions {

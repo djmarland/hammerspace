@@ -1,15 +1,10 @@
 <script lang="ts">
-	import { browser } from "$app/environment";
-	import { onMount } from "svelte";
-	import { readLocalStorage, writeLocalStorage } from "@/lib/local-storage";
-	import {
-		calculateWordsPerMinute,
-		readingSpeedStore,
-		readingTimerStore,
-		setReadingSpeed,
-	} from "@/lib/reading-timer";
+    import {browser} from "$app/environment";
+    import {onMount} from "svelte";
+    import {readLocalStorage, writeLocalStorage} from "@/lib/local-storage";
+    import {calculateWordsPerMinute, readingSpeedStore, readingTimerStore, setReadingSpeed,} from "@/lib/reading-timer";
 
-	let {
+    let {
 		wordCount,
 		defaultWordsPerMinute = 200,
 		storageKey = ["reader", "blog", "reading-speed-wpm"],
@@ -316,29 +311,8 @@
 		margin-top: 1rem;
 	}
 
-	.footerStopButton,
-	.primaryButton,
-	.secondaryButton,
-	.dialogActions button {
-		padding: 0.65rem 1rem;
-		border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
-		border-radius: 0.5rem;
-		font: inherit;
-		cursor: pointer;
-	}
-
-	.footerStopButton,
-	.primaryButton {
-		background: color-mix(in srgb, currentColor 12%, transparent);
-	}
-
-	.secondaryButton {
-		background: transparent;
-	}
-
 	.dialog {
 		border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
-		border-radius: 1rem;
 		padding: 1.25rem;
 		background: var(--piko-color-background, #fff);
 		color: inherit;
@@ -368,15 +342,7 @@
 	.dialogContent label {
 		font-weight: 600;
 	}
-
-	.dialogContent input {
-		width: 100%;
-		padding: 0.65rem 0.75rem;
-		border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
-		border-radius: 0.5rem;
-		font: inherit;
-	}
-
+    
 	.dialogActions {
 		display: flex;
 		justify-content: flex-end;

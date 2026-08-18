@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Logo from "@/components/Atoms/Logo/Logo.svelte";
-	import { resolve } from "$app/paths";
+    import Logo from "@/components/Atoms/Logo/Logo.svelte";
+    import {resolve} from "$app/paths";
 </script>
 
 <header class="masthead">
@@ -15,13 +15,13 @@
 
 <style>
 	.logo {
-		fill: var(--piko-palette-dynamic-primary-4);
+		fill: var(--piko-palette-dynamic-4);
 		max-width: 140px;
 		transition: fill 180ms ease;
 	}
 
 	.logo:hover {
-		fill: var(--piko-palette-dynamic-secondary-4);
+		fill: var(--piko-palette-dynamic-6);
 	}
 
 	.masthead {
@@ -30,7 +30,7 @@
 				circle at 15% 20%,
 				color-mix(
 						in srgb,
-						var(--piko-palette-dynamic-primary-4) 42%,
+						var(--piko-palette-dynamic-4) 42%,
 						transparent
 					)
 					0%,
@@ -40,7 +40,7 @@
 				circle at 85% 80%,
 				color-mix(
 						in srgb,
-						var(--piko-palette-dynamic-secondary-4) 38%,
+						var(--piko-palette-dynamic-4) 38%,
 						transparent
 					)
 					0%,
@@ -55,7 +55,7 @@
 				ellipse at 25% 80%,
 				color-mix(
 						in srgb,
-						var(--piko-palette-dynamic-primary-3) 24%,
+						var(--piko-palette-dynamic-3) 24%,
 						transparent
 					)
 					0%,
@@ -65,7 +65,7 @@
 				ellipse at 78% 12%,
 				color-mix(
 						in srgb,
-						var(--piko-palette-dynamic-secondary-3) 22%,
+						var(--piko-palette-dynamic-3) 22%,
 						transparent
 					)
 					0%,
@@ -75,10 +75,9 @@
 		border-bottom: 1px solid
 			color-mix(
 				in srgb,
-				var(--piko-palette-dynamic-secondary-5) 65%,
+				var(--piko-palette-dynamic-5) 65%,
 				var(--piko-palette-slate-7)
 			);
-		color: var(--piko-color-primary-text);
 		padding: var(--piko-unit) var(--piko-space-4);
 		position: sticky;
 		top: 0;

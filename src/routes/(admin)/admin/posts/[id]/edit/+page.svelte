@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { resolve } from "$app/paths";
-	import PostEditorForm from "@/components/Admin/PostEditorForm.svelte";
-	import ConfirmSubmitButton from "@/components/Admin/ConfirmSubmitButton.svelte";
-	import { formatDateTimeLocalValue } from "@/lib/temporal";
-	import { enhance } from "$app/forms";
-	import type { PageData } from "./$types";
+    import {resolve} from "$app/paths";
+    import PostEditorForm from "@/components/Admin/PostEditorForm.svelte";
+    import {formatDateTimeLocalValue} from "@/lib/temporal";
+    import {enhance} from "$app/forms";
+    import type {PageData} from "./$types";
 
-	interface Props {
+    interface Props {
 		data: PageData;
 	}
 
@@ -189,7 +188,7 @@
 	.date-info {
 		margin: 0;
 		font-size: 0.9rem;
-		color: var(--piko-color-text-muted);
+		color: var(--piko-color-text-subtle);
 	}
 
 	.date-info .label {
@@ -218,7 +217,6 @@
 		margin-top: var(--piko-space-7);
 		padding: var(--piko-space-5);
 		border: 2px solid #cc0000;
-		border-radius: 0.5rem;
 		background: color-mix(in srgb, #cc0000 2%, transparent);
 	}
 
@@ -230,7 +228,7 @@
 
 	.danger-zone-intro {
 		margin: 0 0 var(--piko-space-5) 0;
-		color: var(--piko-color-text-muted);
+		color: var(--piko-color-text-subtle);
 		font-size: 0.95rem;
 	}
 
@@ -266,7 +264,7 @@
 
 	.action-info p {
 		margin: 0;
-		color: var(--piko-color-text-muted);
+		color: var(--piko-color-text-subtle);
 		font-size: 0.9rem;
 	}
 

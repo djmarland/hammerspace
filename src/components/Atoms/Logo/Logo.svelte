@@ -10,6 +10,6 @@
 
 <style>
 	svg {
-		fill: var(--piko-palette-dynamic-primary-4);
+		fill: var(--piko-palette-dynamic-4);
 	}
 </style>

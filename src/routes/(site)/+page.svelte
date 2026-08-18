@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { resolve } from "$app/paths";
-	import type { PageData } from "./$types";
-	import PostBody from "@/components/Blog/PostBody.svelte";
-	import ReadingTime from "@/components/Blog/ReadingTime.svelte";
-	import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate.svelte";
-	import Logo from "@/components/Atoms/Logo/Logo.svelte";
+    import {resolve} from "$app/paths";
+    import type {PageData} from "./$types";
+    import PostBody from "@/components/Blog/PostBody.svelte";
+    import ReadingTime from "@/components/Blog/ReadingTime.svelte";
+    import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate.svelte";
+    import Logo from "@/components/Atoms/Logo/Logo.svelte";
 
-	type Props = { data: PageData };
+    type Props = { data: PageData };
 	let { data }: Props = $props();
 	const posts = $derived(data.posts);
 
@@ -31,8 +31,8 @@
 			by <b>David Marland</b>
 		</p>
 		<nav class="actions">
-			<a href={resolve("/posts")} class="secondaryLink">Browse archive</a>
-			<a href={resolve("/feed.xml")} class="secondaryLink">RSS feed</a>
+			<a href={resolve("/posts")}>Browse archive</a>
+			<a href={resolve("/feed.xml")}>RSS feed</a>
 		</nav>
 	</header>
 
@@ -97,19 +97,6 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.75rem;
-	}
-
-	.secondaryLink {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		padding: 0.7rem 1rem;
-		border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
-		border-radius: 999px;
-		text-decoration: none;
-		background: transparent;
-		font: inherit;
-		cursor: pointer;
 	}
 
 	.postList {

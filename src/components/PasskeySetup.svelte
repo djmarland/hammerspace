@@ -1,13 +1,9 @@
 <script lang="ts">
-	import { goto } from "$app/navigation";
-	import { resolve } from "$app/paths";
-	import {
-		startRegistration,
-		verifyRegistration,
-		isWebAuthnSupported,
-	} from "@/lib/webauthn-client";
+    import {goto} from "$app/navigation";
+    import {resolve} from "$app/paths";
+    import {isWebAuthnSupported, startRegistration, verifyRegistration,} from "@/lib/webauthn-client";
 
-	interface Props {
+    interface Props {
 		hasPasskey: boolean;
 	}
 
@@ -96,7 +92,7 @@
 	}
 
 	.card p {
-		color: var(--piko-color-text-muted);
+		color: var(--piko-color-text-subtle);
 		line-height: 1.6;
 	}
 
@@ -143,7 +139,7 @@
 	.skip {
 		margin-top: 1rem;
 		font-size: 0.875rem;
-		color: var(--piko-color-text-muted);
+		color: var(--piko-color-text-subtle);
 		text-align: center;
 	}
 </style>

@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { resolve } from "$app/paths";
-	import type { PublicPostSummary } from "@/lib/posts";
+    import {resolve} from "$app/paths";
+    import type {PublicPostSummary} from "@/lib/posts";
 
-	type Props = {
+    type Props = {
 		post: PublicPostSummary;
 		headingLevel?: "h2" | "h3";
 	};
@@ -54,7 +54,6 @@
 		gap: 1rem;
 		padding: 1.25rem;
 		border: 1px solid color-mix(in srgb, currentColor 15%, transparent);
-		border-radius: 1rem;
 		background: color-mix(
 			in srgb,
 			var(--piko-color-background) 92%,
@@ -65,7 +64,6 @@
 	.image {
 		width: 100%;
 		height: auto;
-		border-radius: 0.75rem;
 		object-fit: cover;
 	}
 

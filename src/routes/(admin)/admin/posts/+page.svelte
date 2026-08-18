@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { resolve } from "$app/paths";
-	import PaginationNav from "@/components/PaginationNav.svelte";
-	import type { PageData } from "./$types";
-	import { enhance } from "$app/forms";
+    import {resolve} from "$app/paths";
+    import PaginationNav from "@/components/PaginationNav.svelte";
+    import type {PageData} from "./$types";
+    import {enhance} from "$app/forms";
 
-	interface Props {
+    interface Props {
 		data: PageData;
 	}
 
@@ -281,7 +281,7 @@
 		padding: var(--piko-space-3);
 		background-color: var(--piko-color-surface);
 		font-size: 0.9rem;
-		color: var(--piko-color-text-muted);
+		color: var(--piko-color-text-subtle);
 	}
 
 	.results-info p {
@@ -291,7 +291,7 @@
 	.empty-state {
 		padding: var(--piko-space-7);
 		text-align: center;
-		color: var(--piko-color-text-muted);
+		color: var(--piko-color-text-subtle);
 	}
 
 	.posts-table {
@@ -341,7 +341,7 @@
 	}
 
 	.slug-cell {
-		color: var(--piko-color-text-muted);
+		color: var(--piko-color-text-subtle);
 		font-size: 0.85rem;
 		font-family: monospace;
 	}
@@ -372,12 +372,12 @@
 
 	.updated-cell {
 		font-size: 0.85rem;
-		color: var(--piko-color-text-muted);
+		color: var(--piko-color-text-subtle);
 	}
 
 	.author-cell {
 		font-size: 0.85rem;
-		color: var(--piko-color-text-muted);
+		color: var(--piko-color-text-subtle);
 	}
 
 	.actions-cell {
