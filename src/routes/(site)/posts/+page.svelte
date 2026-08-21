@@ -1,10 +1,12 @@
 <script lang="ts">
-	import { resolve } from "$app/paths";
-	import type { PageData } from "./$types";
-	import PostCard from "@/components/Blog/PostCard.svelte";
-	import PaginationNav from "@/components/PaginationNav.svelte";
+    import {resolve} from "$app/paths";
+    import type {PageData} from "./$types";
+    import PostCard from "@/components/Blog/PostCard.svelte";
+    import SidePageHeader from "@/components/Blog/SidePageHeader.svelte";
+    import PaginationNav from "@/components/PaginationNav.svelte";
+    import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate.svelte";
 
-	type Props = { data: PageData };
+    type Props = { data: PageData };
 	let { data }: Props = $props();
 	const archive = $derived(data.archive);
 
@@ -14,50 +16,37 @@
 </script>
 
 <svelte:head>
-	<title>Blog archive - Hammerspace Blog</title>
+	<title>Archive - Hammerspace Blog</title>
 </svelte:head>
 
-<main class="container">
-	<header class="header">
-		<h1>Blog archive</h1>
-		<p class="intro">Browse every published post.</p>
-		<div class="actions">
-			<a href={resolve("/")} class="actionLink"> Home </a>
-			<a href={resolve("/feed.xml")} class="actionLink"> RSS feed </a>
-		</div>
-	</header>
+<SiteTemplate>
+	<SidePageHeader slot="header" title="Archive">
+        <a href={resolve("/feed.xml")} class="actionLink">RSS feed</a>
+	</SidePageHeader>
 
-	<p class="filterMeta">
-		Showing {archive.posts.length} of {archive.totalCount} posts.
-	</p>
-	<div class="list">
-		{#each archive.posts as post (post.id)}
-			<PostCard {post} />
-		{/each}
+	<div class="content">
+		<p class="filterMeta">
+			Showing {archive.posts.length} of {archive.totalCount} posts.
+		</p>
+		<div class="list">
+			{#each archive.posts as post (post.id)}
+				<PostCard {post} />
+			{/each}
+		</div>
+		<PaginationNav
+			page={archive.page}
+			totalPages={archive.totalPages}
+			buildHref={buildArchiveHref}
+		/>
 	</div>
-	<PaginationNav
-		page={archive.page}
-		totalPages={archive.totalPages}
-		buildHref={buildArchiveHref}
-	/>
-</main>
+</SiteTemplate>
 
 <style>
-	.container {
-		max-width: 960px;
-		margin: 0 auto;
-		padding: 2rem 0 3rem;
-	}
-
-	.header {
+	.content {
 		display: grid;
-		gap: 1rem;
-		margin-bottom: 2rem;
-	}
-
-	.header h1 {
-		margin: 0;
-		font-size: clamp(2rem, 1.7rem + 1vw, 3rem);
+		gap: 1.5rem;
+		max-width: 75ch;
+		padding: var(--piko-unit-double);
 	}
 
 	.intro {
@@ -65,23 +54,9 @@
 		color: color-mix(in srgb, currentColor 75%, transparent);
 	}
 
-	.actions {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.75rem;
-	}
-
-	.actionLink {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		padding: 0.7rem 1rem;
-		border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
-		border-radius: 999px;
-		text-decoration: none;
-		background: transparent;
-		font: inherit;
-		cursor: pointer;
+	.filterMeta {
+		margin: 0;
+		color: color-mix(in srgb, currentColor 75%, transparent);
 	}
 
 	:global(.searchForm) {

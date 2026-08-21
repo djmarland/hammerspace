@@ -1,3 +1,85 @@
+@view-transition {
+	navigation: auto;
+}
+
+@keyframes vt-slide-out-right {
+	from {
+		transform: translateX(0);
+		opacity: 1;
+	}
+	to {
+		transform: translateX(100%);
+		opacity: 0.5;
+	}
+}
+@keyframes vt-slide-in-from-right {
+	from {
+		transform: translateX(100%);
+		opacity: 0.5;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+@keyframes vt-slide-out-left {
+	from {
+		transform: translateX(0);
+		opacity: 1;
+	}
+	to {
+		transform: translateX(-100%);
+		opacity: 0.5;
+	}
+}
+@keyframes vt-slide-in-from-left {
+	from {
+		transform: translateX(-100%);
+		opacity: 0.5;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+
+/* Suppress default root crossfade — the named columns cover the whole viewport */
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation: none;
+}
+
+/* Keep each transitioning column clipped to its own original bounds. */
+::view-transition-group(site-header-content),
+::view-transition-group(site-content) {
+	overflow: clip;
+}
+
+/* Left column: exits rightward into the seam, enters from the seam (rightward) */
+::view-transition-old(site-header-content) {
+	animation: vt-slide-out-right 0.25s ease-in both;
+}
+::view-transition-new(site-header-content) {
+	animation: vt-slide-in-from-right 0.25s 0.25s ease-out both;
+}
+
+/* Right column: exits leftward into the seam, enters from the seam (leftward) */
+::view-transition-old(site-content) {
+	animation: vt-slide-out-left 0.25s ease-in both;
+}
+::view-transition-new(site-content) {
+	animation: vt-slide-in-from-left 0.25s 0.25s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	::view-transition-old(site-header-content),
+	::view-transition-new(site-header-content),
+	::view-transition-old(site-content),
+	::view-transition-new(site-content) {
+		animation: none;
+	}
+}
+
 @layer piko {
 	@layer tokens {
 		@layer core {
@@ -388,11 +470,13 @@
 		.piko-type-h1 {
 			font-size: var(--piko-type-h1);
 			line-height: 1.1;
+			font-weight: lighter;
 		}
 
 		.piko-type-h2 {
 			font-size: var(--piko-type-h2);
 			line-height: 1.15;
+			font-weight: lighter;
 		}
 
 		.piko-type-h3 {
@@ -526,7 +610,7 @@
 
 		input[type="checkbox"],
 		input[type="radio"] {
-			accent-color: var(--piko-color-primary-border);
+			accent-color: var(--piko-palette-dynamic-6);
 		}
 
 		:where(

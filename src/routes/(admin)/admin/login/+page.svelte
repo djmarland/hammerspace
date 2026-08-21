@@ -202,7 +202,7 @@
 		border: 1px solid var(--piko-color-border);
 		box-shadow: var(--piko-shadow-2);
 		width: 100%;
-		max-width: 400px;
+		max-width: 480px;
 	}
 
 	.form h1 {

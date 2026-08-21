@@ -14,16 +14,6 @@
 </header>
 
 <style>
-	.logo {
-		fill: var(--piko-palette-dynamic-4);
-		max-width: 140px;
-		transition: fill 180ms ease;
-	}
-
-	.logo:hover {
-		fill: var(--piko-palette-dynamic-6);
-	}
-
 	.masthead {
 		background:
 			radial-gradient(

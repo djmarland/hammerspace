@@ -42,9 +42,9 @@
 				{#each posts as post (post.id)}
 					<article class="post">
 						<header class="postHeader">
-							<h3 class="postTitle">
+							<h2 class="postTitle piko-type-h2">
 								<a href={resolve(`/posts/${post.slug}`)}>{post.title}</a>
-							</h3>
+							</h2>
 							<div class="meta">
 								By {post.authorName} ·
 								<time dateTime={post.publishedAt.toISOString()}>
@@ -78,14 +78,27 @@
 	}
 
 	.hero {
-		display: grid;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
 		gap: 1rem;
 		margin-bottom: 2rem;
+		text-align: right;
 	}
 
 	.hero h1 {
 		margin: 0;
 		font-size: clamp(2rem, 1.7rem + 1vw, 3rem);
+	}
+
+	.logo {
+		width: min(100%, 320px);
+	}
+
+	.logo :global(svg) {
+		display: block;
+		width: 100%;
+		height: auto;
 	}
 
 	.intro {
@@ -97,6 +110,8 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.75rem;
+		width: 100%;
+		justify-content: flex-end;
 	}
 
 	.postList {
@@ -111,18 +126,9 @@
 		border-bottom: 1px solid color-mix(in srgb, currentColor 15%, transparent);
 	}
 
-	.section {
-		margin-top: 2rem;
-	}
-
 	.postHeader {
 		display: grid;
 		gap: 0.75rem;
-	}
-
-	.postTitle {
-		margin: 0;
-		font-size: clamp(1.4rem, 1.2rem + 0.7vw, 1.9rem);
 	}
 
 	.postTitle a {

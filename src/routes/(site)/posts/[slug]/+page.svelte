@@ -1,13 +1,13 @@
 <script lang="ts">
-    import type {PageData} from "./$types";
-    import PostCard from "@/components/Blog/PostCard.svelte";
-    import PostBody from "@/components/Blog/PostBody.svelte";
-    import ReadingTime from "@/components/Blog/ReadingTime.svelte";
-    import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate.svelte";
-    import {resolve} from "$app/paths";
-    import Logo from "@/components/Atoms/Logo/Logo.svelte";
+	import type { PageData } from "./$types";
+	import PostCard from "@/components/Blog/PostCard.svelte";
+	import PostBody from "@/components/Blog/PostBody.svelte";
+	import SidePageHeader from "@/components/Blog/SidePageHeader.svelte";
+	import ReadingTime from "@/components/Blog/ReadingTime.svelte";
+	import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate.svelte";
+	import { resolve } from "$app/paths";
 
-    type Props = { data: PageData };
+	type Props = { data: PageData };
 	let { data }: Props = $props();
 	const post = $derived(data.post);
 	const relatedPosts = $derived(data.relatedPosts);
@@ -32,13 +32,7 @@
 
 <article class="article">
 	<SiteTemplate>
-		<header slot="header" class="header">
-			<div class="logo">
-				<a href={resolve("/")}>
-					<Logo />
-				</a>
-			</div>
-			<h1 class="piko-type-h1">{post.title}</h1>
+		<SidePageHeader slot="header" title={post.title}>
 			<div class="metaRow">
 				<div class="meta">
 					By <b>David Marland</b><br />
@@ -57,7 +51,7 @@
 					{/each}
 				</ul>
 			{/if}
-		</header>
+		</SidePageHeader>
 
 		<PostBody {post} />
 
@@ -78,22 +72,12 @@
 </article>
 
 <style>
-	.logo {
-		max-width: 40%;
-	}
-
 	.article,
 	.relatedSection {
 		display: grid;
 		gap: 1.25rem;
 	}
 
-	.header {
-		display: grid;
-		gap: 0.85rem;
-	}
-
-	.header h1,
 	.relatedHeader h2 {
 		margin: 0;
 	}
@@ -102,7 +86,7 @@
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
-		justify-content: space-between;
+		justify-content: flex-end;
 		gap: 0.75rem;
 	}
 
@@ -119,6 +103,7 @@
 		list-style: none;
 		padding: 0;
 		margin: 0;
+		justify-content: flex-end;
 	}
 
 	.tags a {
