@@ -155,4 +155,20 @@
 		border-radius: 999px;
 		background: color-mix(in srgb, currentColor 10%, transparent);
 	}
+
+	@media (max-width: 56rem) {
+		.hero {
+			align-items: center;
+			text-align: center;
+		}
+
+		.logo {
+			width: min(100%, 220px);
+			view-transition-name: site-logo;
+		}
+
+		.actions {
+			justify-content: center;
+		}
+	}
 </style>

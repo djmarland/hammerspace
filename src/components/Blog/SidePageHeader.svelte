@@ -42,4 +42,15 @@
 	.header h1 {
 		margin: 0;
 	}
+
+	@media (max-width: 56rem) {
+		.header {
+			align-items: center;
+			text-align: center;
+		}
+
+		.logo {
+			view-transition-name: site-logo;
+		}
+	}
 </style>

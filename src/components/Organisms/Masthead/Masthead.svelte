@@ -94,4 +94,16 @@
 			animation: none;
 		}
 	}
+
+	@media (max-width: 56rem) {
+		.container {
+			display: flex;
+			justify-content: center;
+			text-align: center;
+		}
+
+		.container p {
+			margin: 0;
+		}
+	}
 </style>

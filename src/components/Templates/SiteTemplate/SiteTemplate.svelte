@@ -42,4 +42,27 @@
 		max-width: 75ch;
 		padding: var(--piko-unit-double);
 	}
+
+	@media (max-width: 56rem) {
+		.site-template {
+			grid-template-columns: 1fr;
+			grid-template-rows: auto 1fr;
+		}
+
+		.header-content {
+			position: static;
+			height: auto;
+			width: 100%;
+			max-width: none;
+			margin-left: 0;
+			padding-block: var(--piko-unit);
+			align-content: start;
+			view-transition-name: none;
+		}
+
+		.content-column {
+			margin-top: 0;
+			view-transition-name: none;
+		}
+	}
 </style>

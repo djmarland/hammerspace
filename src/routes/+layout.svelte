@@ -36,4 +36,32 @@
 		min-height: 100vh;
 		display: grid;
 	}
+
+	@media (max-width: 56rem) {
+		::view-transition-old(root) {
+			animation: mobile-view-fade-out 180ms ease both;
+		}
+
+		::view-transition-new(root) {
+			animation: mobile-view-fade-in 180ms ease both;
+		}
+	}
+
+	@keyframes mobile-view-fade-out {
+		from {
+			opacity: 1;
+		}
+		to {
+			opacity: 0;
+		}
+	}
+
+	@keyframes mobile-view-fade-in {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
 </style>
