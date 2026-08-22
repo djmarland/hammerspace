@@ -42,7 +42,7 @@
 				{#each posts as post (post.id)}
 					<article class="post">
 						<header class="postHeader">
-							<h2 class="postTitle piko-type-h2">
+							<h2 class="postTitle piko-t-h2">
 								<a href={resolve(`/posts/${post.slug}`)}>{post.title}</a>
 							</h2>
 							<div class="meta">

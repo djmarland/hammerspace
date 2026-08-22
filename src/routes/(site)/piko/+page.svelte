@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { resolve } from "$app/paths";
-	import PikoToken from "@/components/PikoToken.svelte";
-	import SidePageHeader from "@/components/Blog/SidePageHeader.svelte";
-	import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate.svelte";
+    import {resolve} from "$app/paths";
+    import PikoToken from "@/components/PikoToken.svelte";
+    import SidePageHeader from "@/components/Blog/SidePageHeader.svelte";
+    import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate.svelte";
 
-	const corePalettes = [
+    const corePalettes = [
 		{ label: "Slate", token: "slate" },
 		{ label: "Red", token: "red" },
 		{ label: "Orange", token: "orange" },
@@ -19,6 +19,7 @@
 
 	const paletteSteps = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
 
+    //todo
 	const semanticColors = [
 		"--piko-color-background",
 		"--piko-color-background-secondary",
@@ -33,34 +34,32 @@
 	] as const;
 
 	const typographyTokens = [
-		"--piko-type-h1",
-		"--piko-type-h2",
-		"--piko-type-h3",
-		"--piko-type-h4",
-		"--piko-type-h5",
-		"--piko-type-h6",
-		"--piko-type-lead",
-		"--piko-type-body",
-		"--piko-type-small",
-		"--piko-type-caption",
+		"--piko-t-h1",
+		"--piko-t-h2",
+		"--piko-t-h3",
+		"--piko-t-h4",
+		"--piko-t-h5",
+		"--piko-t-h6",
+		"--piko-t-body",
+		"--piko-t-small",
+		"--piko-t-caption",
 	] as const;
 
 	const coreSpacingTokens = [
 		{ label: "Unit", token: "--piko-unit" },
 		{ label: "Quarter unit", token: "--piko-unit-quarter" },
 		{ label: "Half unit", token: "--piko-unit-half" },
-		{ label: "Three-quarter unit", token: "--piko-unit-three-quarter" },
 		{ label: "Double unit", token: "--piko-unit-double" },
 		{ label: "Triple unit", token: "--piko-unit-triple" },
 		{ label: "Quad unit", token: "--piko-unit-quad" },
 	] as const;
 
 	const semanticSpacingTokens = [
-		{ label: "Grid gap", token: "--piko-space-grid-gap" },
-		{ label: "Stack gap", token: "--piko-space-stack-gap" },
+		{ label: "Grid gap", token: "--piko-gap-grid" },
+		{ label: "Stack gap", token: "--piko-gap-stack" },
 		{ label: "Cluster gap", token: "--piko-space-cluster-gap" },
 		{ label: "Section gap", token: "--piko-space-section-gap" },
-		{ label: "Card padding", token: "--piko-space-card-padding" },
+		{ label: "Card padding", token: "--piko-space-panel-padding" },
 		{ label: "Control padding (x)", token: "--piko-space-control-padding-x" },
 		{ label: "Control padding (y)", token: "--piko-space-control-padding-y" },
 		{ label: "Page gutter", token: "--piko-space-page-gutter" },
@@ -74,6 +73,7 @@
 			sections: [
 				{ id: "core-colours", label: "Colours" },
 				{ id: "core-spacing", label: "Spacing units" },
+				{ id: "core-font", label: "Font" },
 			],
 		},
 		{
@@ -87,7 +87,10 @@
 		},
 		{
 			title: "Components",
-			sections: [{ id: "form-elements", label: "Form elements" }],
+			sections: [
+				{ id: "buttons", label: "Buttons" },
+				{ id: "form-elements", label: "Form elements" }
+			],
 		},
 		{
 			title: "Reference",
@@ -103,10 +106,10 @@
 <SiteTemplate>
 	<SidePageHeader slot="header" title="Piko">
 		<p class="intro">Piko is the design system for Hammerspace</p>
-		<nav class="piko-docs-nav-container" aria-label="Section navigation">
-			<div class="piko-docs-nav-groups">
+		<nav>
+			<ul class="piko-docs-nav">
 				{#each docsNavGroups as group (group.title)}
-					<div class="piko-docs-nav-group">
+					<li>
 						<p class="piko-docs-nav-title">{group.title}</p>
 						<ul class="piko-docs-nav">
 							{#each group.sections as section (section.id)}
@@ -115,9 +118,9 @@
 								</li>
 							{/each}
 						</ul>
-					</div>
+					</li>
 				{/each}
-			</div>
+			</ul>
 		</nav>
 	</SidePageHeader>
 
@@ -257,6 +260,15 @@
 				</div>
 			</section>
 		</section>
+
+        <section class="piko-docs-section piko-prose" id="buttons">
+			<h2>Buttons</h2>
+
+            <p><button>A default button (secondary)</button></p>
+            <p><button class="piko-button--primary">A primary button</button></p>
+            <p><button class="piko-button--tertiary">A tertiary button</button></p>
+            <p><button class="piko-button--danger">A danger button</button></p>
+        </section>
 
 		<section class="piko-docs-section piko-prose" id="form-elements">
 			<h2>Form elements</h2>
@@ -996,12 +1008,10 @@
 		color: color-mix(in srgb, currentColor 75%, transparent);
 	}
 
-	.piko-docs-nav-container {
-		border: 1px solid var(--piko-color-border);
-		background: var(--piko-color-surface);
-		padding: var(--piko-space-card-padding);
-		height: fit-content;
-		width: min(100%, 28rem);
+	.piko-docs-nav {
+		& > li:not(:last-child) {
+            margin-bottom: var(--piko-space-stack-gap);
+        }
 	}
 
 	.piko-docs-nav-groups {
@@ -1011,7 +1021,7 @@
 
 	.piko-docs-nav-title {
 		margin: 0 0 var(--piko-space-control-padding-y);
-		font-size: var(--piko-type-caption);
+		font-size: var(--piko-t-caption);
 		font-weight: 700;
 		text-transform: uppercase;
 		letter-spacing: 0.04em;
@@ -1024,7 +1034,7 @@
 		list-style: none;
 		margin: 0;
 		padding: 0;
-		font-size: var(--piko-type-small);
+		font-size: var(--piko-t-small);
 	}
 
 	.piko-docs-nav a {
@@ -1047,7 +1057,7 @@
 
 	.piko-token-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(224px, 1fr));
 		gap: var(--piko-space-grid-gap);
 	}
 
@@ -1061,10 +1071,10 @@
 		border: 1px solid var(--piko-color-border);
 		border-radius: 0;
 		min-height: 4.5rem;
-		padding: var(--piko-space-card-padding);
+		padding: var(--piko-space-panel-padding);
 		display: flex;
 		align-items: flex-end;
-		font-size: var(--piko-type-caption);
+		font-size: var(--piko-t-caption);
 		color: var(--piko-palette-slate-9);
 		background: var(--piko-color-surface);
 	}
@@ -1084,7 +1094,7 @@
 		padding: var(--piko-space-control-padding-y)
 			var(--piko-space-control-padding-x);
 		background: var(--piko-color-surface);
-		font-size: var(--piko-type-small);
+		font-size: var(--piko-t-small);
 	}
 
 	.piko-token-chip :where(p) {
@@ -1095,7 +1105,7 @@
 		width: 100%;
 		border: 1px solid var(--piko-color-border);
 		border-collapse: collapse;
-		font-size: var(--piko-type-small);
+		font-size: var(--piko-t-small);
 	}
 
 	.piko-space-table th,
@@ -1149,12 +1159,12 @@
 		background: var(--piko-state-bg);
 		border: 1px solid var(--piko-state-border);
 		color: var(--piko-state-text);
-		padding: var(--piko-space-card-padding);
+		padding: var(--piko-space-panel-padding);
 	}
 
 	.piko-state--text {
 		color: var(--piko-state-text);
-		font-size: var(--piko-type-small);
+		font-size: var(--piko-t-small);
 		font-weight: 600;
 		padding: 0;
 	}
@@ -1171,13 +1181,13 @@
 
 	.piko-form-hint {
 		margin: 0;
-		font-size: var(--piko-type-small);
+		font-size: var(--piko-t-small);
 		color: var(--piko-color-text-subtle);
 	}
 
 	.piko-fieldset {
 		border: 1px solid var(--piko-color-border);
-		padding: var(--piko-space-card-padding);
+		padding: var(--piko-space-panel-padding);
 		margin: 0;
 		display: grid;
 		gap: var(--piko-space-stack-gap);

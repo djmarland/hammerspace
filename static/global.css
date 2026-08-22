@@ -1,85 +1,3 @@
-@view-transition {
-	navigation: auto;
-}
-
-@keyframes vt-slide-out-right {
-	from {
-		transform: translateX(0);
-		opacity: 1;
-	}
-	to {
-		transform: translateX(100%);
-		opacity: 0.5;
-	}
-}
-@keyframes vt-slide-in-from-right {
-	from {
-		transform: translateX(100%);
-		opacity: 0.5;
-	}
-	to {
-		transform: translateX(0);
-		opacity: 1;
-	}
-}
-@keyframes vt-slide-out-left {
-	from {
-		transform: translateX(0);
-		opacity: 1;
-	}
-	to {
-		transform: translateX(-100%);
-		opacity: 0.5;
-	}
-}
-@keyframes vt-slide-in-from-left {
-	from {
-		transform: translateX(-100%);
-		opacity: 0.5;
-	}
-	to {
-		transform: translateX(0);
-		opacity: 1;
-	}
-}
-
-/* Suppress default root crossfade — the named columns cover the whole viewport */
-::view-transition-old(root),
-::view-transition-new(root) {
-	animation: none;
-}
-
-/* Keep each transitioning column clipped to its own original bounds. */
-::view-transition-group(site-header-content),
-::view-transition-group(site-content) {
-	overflow: clip;
-}
-
-/* Left column: exits rightward into the seam, enters from the seam (rightward) */
-::view-transition-old(site-header-content) {
-	animation: vt-slide-out-right 0.25s ease-in both;
-}
-::view-transition-new(site-header-content) {
-	animation: vt-slide-in-from-right 0.25s 0.25s ease-out both;
-}
-
-/* Right column: exits leftward into the seam, enters from the seam (leftward) */
-::view-transition-old(site-content) {
-	animation: vt-slide-out-left 0.25s ease-in both;
-}
-::view-transition-new(site-content) {
-	animation: vt-slide-in-from-left 0.25s 0.25s ease-out both;
-}
-
-@media (prefers-reduced-motion: reduce) {
-	::view-transition-old(site-header-content),
-	::view-transition-new(site-header-content),
-	::view-transition-old(site-content),
-	::view-transition-new(site-content) {
-		animation: none;
-	}
-}
-
 @layer piko {
 	@layer tokens {
 		@layer core {
@@ -87,7 +5,6 @@
 				--piko-unit: 16px;
 				--piko-unit-half: calc(var(--piko-unit) / 2);
 				--piko-unit-quarter: calc(var(--piko-unit) / 4);
-				--piko-unit-three-quarter: calc(var(--piko-unit) * 0.75);
 				--piko-unit-double: calc(var(--piko-unit) * 2);
 				--piko-unit-triple: calc(var(--piko-unit) * 3);
 				--piko-unit-quad: calc(var(--piko-unit) * 4);
@@ -263,6 +180,14 @@
 					var(--piko-palette-slate-2),
 					var(--piko-palette-slate-8)
 				);
+				--piko-color-background-inactive: light-dark(
+					var(--piko-palette-slate-4),
+					var(--piko-palette-slate-6)
+				);
+				--piko-color-background-dynamic: light-dark(
+					var(--piko-palette-dynamic-2),
+					var(--piko-palette-dynamic-8)
+				);
 
 				--piko-color-text: light-dark(
 					var(--piko-palette-slate-9),
@@ -272,90 +197,197 @@
 					var(--piko-palette-slate-7),
 					var(--piko-palette-slate-3)
 				);
+				--piko-color-text-dynamic: light-dark(
+					var(--piko-palette-dynamic-9),
+					var(--piko-palette-dynamic-1)
+				);
 
 				--piko-color-link: light-dark(
 					var(--piko-palette-dynamic-7),
 					var(--piko-palette-dynamic-4)
+				);
+				--piko-color-link-visited: light-dark(
+					var(--piko-palette-dynamic-6),
+					var(--piko-palette-dynamic-5)
 				);
 				--piko-color-link-hover: light-dark(
 					var(--piko-palette-dynamic-9),
 					var(--piko-palette-dynamic-3)
 				);
 
-				--piko-color-success-text: light-dark(
+				--piko-color-border: light-dark(
+					var(--piko-palette-slate-4),
+					var(--piko-palette-slate-6)
+				);
+				--piko-color-border-subtle: light-dark(
+					var(--piko-palette-slate-3),
+					var(--piko-palette-slate-7)
+				);
+				--piko-color-border-strong: light-dark(
+					var(--piko-palette-slate-5),
+					var(--piko-palette-slate-5)
+				);
+
+				--piko-color-focus: light-dark(
+					var(--piko-palette-dynamic-7),
+					var(--piko-palette-dynamic-2)
+				);
+
+				--piko-color-state-success-text: light-dark(
 					var(--piko-palette-green-8),
 					var(--piko-palette-green-3)
 				);
-				--piko-color-success-bg: light-dark(
+				--piko-color-state-success-bg: light-dark(
 					var(--piko-palette-green-2),
 					var(--piko-palette-green-8)
 				);
-				--piko-color-success-border: light-dark(
+				--piko-color-state-success-border: light-dark(
 					var(--piko-palette-green-5),
 					var(--piko-palette-green-6)
 				);
 
-				--piko-color-warning-text: light-dark(
-					var(--piko-palette-orange-8),
+				--piko-color-state-warning-text: light-dark(
+					var(--piko-palette-yellow-8),
 					var(--piko-palette-yellow-3)
 				);
-				--piko-color-warning-bg: light-dark(
+				--piko-color-state-warning-bg: light-dark(
 					var(--piko-palette-yellow-2),
-					var(--piko-palette-orange-8)
+					var(--piko-palette-yellow-8)
 				);
-				--piko-color-warning-border: light-dark(
-					var(--piko-palette-orange-5),
+				--piko-color-state-warning-border: light-dark(
+					var(--piko-palette-yellow-5),
 					var(--piko-palette-yellow-6)
 				);
 
-				--piko-color-error-text: light-dark(
+				--piko-color-state-danger-text: light-dark(
 					var(--piko-palette-red-8),
 					var(--piko-palette-red-3)
 				);
-				--piko-color-error-bg: light-dark(
+				--piko-color-state-danger-bg: light-dark(
 					var(--piko-palette-red-2),
 					var(--piko-palette-red-8)
 				);
-				--piko-color-error-border: light-dark(
+				--piko-color-state-danger-border: light-dark(
 					var(--piko-palette-red-5),
 					var(--piko-palette-red-6)
 				);
-				--piko-color-danger-text: var(--piko-color-error-text);
-				--piko-color-danger-bg: var(--piko-color-error-bg);
-				--piko-color-danger-border: var(--piko-color-error-border);
-				--piko-shadow-1: 0 1px 3px rgb(0 0 0 / 0.1);
-				--piko-shadow-2: 0 2px 10px rgb(0 0 0 / 0.1);
 
-				--piko-type-body: var(--piko-font-base);
-				--piko-type-small: var(--piko-font--2);
-				--piko-type-caption: var(--piko-font--2);
-				--piko-type-lead: var(--piko-font-1);
-				--piko-type-h1: var(--piko-font-5);
-				--piko-type-h2: var(--piko-font-4);
-				--piko-type-h3: var(--piko-font-3);
-				--piko-type-h4: var(--piko-font-2);
-				--piko-type-h5: var(--piko-font-1);
-				--piko-type-h6: var(--piko-font-base);
-				--piko-type-code: var(--piko-font--1);
+				--piko-button-primary-color-text: light-dark(
+					var(--piko-palette-white),
+					var(--piko-palette-white)
+				);
+				--piko-button-primary-color-text-hover: var(--piko-palette-white);
+				--piko-button-primary-color-text-active: var(--piko-palette-white);
+				--piko-button-primary-color-background: light-dark(
+					var(--piko-palette-dynamic-7),
+					var(--piko-palette-dynamic-8)
+				);
+				--piko-button-primary-color-background-hover: light-dark(
+					var(--piko-palette-dynamic-6),
+					var(--piko-palette-dynamic-7)
+				);
+				--piko-button-primary-color-background-active: light-dark(
+					var(--piko-palette-dynamic-8),
+					var(--piko-palette-dynamic-9)
+				);
 
-				--piko-space-1: var(--piko-unit-quarter);
-				--piko-space-2: var(--piko-unit-half);
-				--piko-space-3: var(--piko-unit-three-quarter);
-				--piko-space-4: var(--piko-unit);
-				--piko-space-5: calc(var(--piko-unit) * 1.5);
-				--piko-space-6: var(--piko-unit-double);
-				--piko-space-7: var(--piko-unit-triple);
-				--piko-space-8: var(--piko-unit-quad);
-				--piko-space-grid-gap: var(--piko-space-4);
-				--piko-space-stack-gap: var(--piko-space-4);
-				--piko-space-cluster-gap: var(--piko-space-2);
-				--piko-space-section-gap: var(--piko-space-7);
-				--piko-space-card-padding: var(--piko-space-3);
-				--piko-space-control-padding-x: var(--piko-space-3);
-				--piko-space-control-padding-y: var(--piko-space-1);
-				--piko-space-page-gutter: var(--piko-page-gutter);
+				--piko-button-secondary-color-text: light-dark(
+					var(--piko-palette-dynamic-8),
+					var(--piko-palette-dynamic-2)
+				);
+				--piko-button-secondary-color-text-hover: light-dark(
+					var(--piko-palette-white),
+					var(--piko-palette-dynamic-7)
+				);
+				--piko-button-secondary-color-text-active: var(--piko-palette-white);
+				--piko-button-secondary-color-background: light-dark(
+					var(--piko-palette-dynamic-2),
+					var(--piko-palette-dynamic-7)
+				);
+				--piko-button-secondary-color-background-hover: light-dark(
+					var(--piko-palette-dynamic-6),
+					var(--piko-palette-dynamic-3)
+				);
+				--piko-button-secondary-color-background-active: light-dark(
+					var(--piko-palette-dynamic-7),
+					var(--piko-palette-dynamic-8)
+				);
 
-				--piko-page-max: 90rem;
+				--piko-button-tertiary-color-text: light-dark(
+					var(--piko-palette-dynamic-7),
+					var(--piko-palette-dynamic-2)
+				);
+				--piko-button-tertiary-color-text-hover: var(--piko-palette-white);
+				--piko-button-tertiary-color-text-active: var(--piko-palette-white);
+				--piko-button-tertiary-color-background: transparent;
+				--piko-button-tertiary-color-background-hover: light-dark(
+					var(--piko-palette-dynamic-6),
+					var(--piko-palette-dynamic-9)
+				);
+				--piko-button-tertiary-color-background-active: light-dark(
+					var(--piko-palette-dynamic-7),
+					var(--piko-palette-dynamic-8)
+				);
+
+				--piko-button-danger-color-text: light-dark(
+					var(--piko-palette-white),
+					var(--piko-palette-white)
+				);
+				--piko-button-danger-color-text-hover: var(--piko-palette-white);
+				--piko-button-danger-color-text-active: var(--piko-palette-white);
+				--piko-button-danger-color-background: light-dark(
+					var(--piko-palette-red-7),
+					var(--piko-palette-red-8)
+				);
+				--piko-button-danger-color-background-hover: light-dark(
+					var(--piko-palette-red-6),
+					var(--piko-palette-red-7)
+				);
+				--piko-button-danger-color-background-active: light-dark(
+					var(--piko-palette-red-8),
+					var(--piko-palette-red-9)
+				);
+
+				--piko-button-disabled-color-text: var(--piko-color-text-subtle);
+				--piko-button-disabled-color-text-hover: var(
+					--piko-button-disabled-color-text
+				);
+				--piko-button-disabled-color-text-active: var(
+					--piko-button-disabled-color-text
+				);
+				--piko-button-disabled-color-background: light-dark(
+					var(--piko-palette-slate-4),
+					var(--piko-palette-slate-7)
+				);
+				--piko-button-disabled-color-background-hover: var(
+					--piko-button-disabled-color-background
+				);
+				--piko-button-disabled-color-background-active: var(
+					--piko-button-disabled-color-background
+				);
+
+				/* Typography */
+				--piko-t-body: var(--piko-font-base);
+				--piko-t-small: var(--piko-font--2);
+				--piko-t-caption: var(--piko-font--2);
+				--piko-t-h1: var(--piko-font-5);
+				--piko-t-h2: var(--piko-font-4);
+				--piko-t-h3: var(--piko-font-3);
+				--piko-t-h4: var(--piko-font-2);
+				--piko-t-h5: var(--piko-font-1);
+				--piko-t-h6: var(--piko-font-base);
+				--piko-t-code: var(--piko-font--1);
+
+				/* Gaps */
+				--piko-gap-grid: var(--piko-unit);
+				--piko-gap-stack: var(--piko-unit-half);
+				--piko-gap-section: var(--piko-unit-double);
+				--piko-gap-icon: var(--piko-unit-quarter);
+
+				--piko-space-panel-padding: var(--piko-unit);
+				--piko-space-control-padding-x: var(--piko-unit);
+				--piko-space-control-padding-y: var(--piko-unit-half);
+
 				--piko-page-gutter: var(--piko-unit-half);
 				@media (min-width: 50em) {
 					--piko-page-gutter: var(--piko-unit);
@@ -367,33 +399,211 @@
 		}
 	}
 
-	@layer reset {
+	@layer normalize {
 		*,
-		*::before,
-		*::after {
+		:before,
+		:after {
 			box-sizing: border-box;
 		}
 
-		* {
-			margin: 0;
-		}
-
-		html:focus-within {
-			scroll-behavior: smooth;
+		:scope {
+			-webkit-text-size-adjust: 100%;
+			tab-size: 4;
+			font-family:
+				system-ui,
+				Segoe UI,
+				Roboto,
+				Helvetica,
+				Arial,
+				sans-serif,
+				Apple Color Emoji,
+				Segoe UI Emoji;
+			line-height: 1.15;
 		}
 
 		body {
-			min-height: 100vh;
-			line-height: 1.5;
+			margin: 0;
+		}
+
+		b,
+		strong {
+			font-weight: bolder;
+		}
+
+		code,
+		kbd,
+		samp,
+		pre {
+			font-family:
+				ui-monospace,
+				SFMono-Regular,
+				Consolas,
+				Liberation Mono,
+				Menlo,
+				monospace;
+			font-size: 1em;
+		}
+
+		small {
+			font-size: 80%;
+		}
+
+		sub,
+		sup {
+			vertical-align: baseline;
+			font-size: 75%;
+			line-height: 0;
+			position: relative;
+		}
+
+		sub {
+			inset-block-end: -0.25em;
+		}
+
+		sup {
+			inset-block-start: -0.5em;
+		}
+
+		table {
+			border-color: currentColor;
+		}
+
+		button,
+		input,
+		optgroup,
+		select,
+		textarea {
+			margin: 0;
+			font-family: inherit;
+			font-size: 100%;
+			line-height: 1.15;
+		}
+
+		button,
+		[type="button"],
+		[type="reset"],
+		[type="submit"] {
+			-webkit-appearance: button;
+		}
+
+		legend {
+			padding: 0;
+		}
+
+		progress {
+			vertical-align: baseline;
+		}
+
+		::-webkit-inner-spin-button,
+		::-webkit-outer-spin-button {
+			height: auto;
+		}
+
+		[type="search"] {
+			-webkit-appearance: textfield;
+			outline-offset: -2px;
+		}
+
+		::-webkit-search-decoration {
+			-webkit-appearance: none;
+		}
+
+		::-webkit-file-upload-button {
+			-webkit-appearance: button;
+			font: inherit;
+		}
+
+		summary {
+			display: list-item;
+		}
+	}
+
+	@layer reset {
+		hr {
+			border-block-start-width: 1px;
+		}
+
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
+			font-size: inherit;
+			line-height: inherit;
+			font-weight: inherit;
+			text-wrap: balance;
+			overflow-wrap: break-word;
+		}
+
+		p {
+			overflow-wrap: break-word;
+		}
+
+		blockquote,
+		dl,
+		dd,
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6,
+		hr,
+		figure,
+		p,
+		pre {
+			margin: 0;
+		}
+
+		fieldset {
+			border: 0;
+			margin: 0;
+			padding: 0;
+		}
+
+		legend {
+			padding: 0;
+		}
+
+		ol,
+		ul,
+		menu {
+			margin: 0;
+			padding: 0;
+			list-style-type: "";
+		}
+
+		dialog {
+			padding: 0;
+		}
+
+		table {
+			border-collapse: collapse;
+		}
+
+		textarea {
+			resize: vertical;
 		}
 
 		img,
-		picture,
 		video,
 		canvas,
-		svg {
+		audio,
+		iframe,
+		embed,
+		object {
+			vertical-align: middle;
 			display: block;
+		}
+
+		img,
+		video {
 			max-width: 100%;
+		}
+
+		[hidden] {
+			display: none;
 		}
 
 		input,
@@ -402,281 +612,895 @@
 		select {
 			font: inherit;
 		}
-
-		p,
-		h1,
-		h2,
-		h3,
-		h4,
-		h5,
-		h6 {
-			overflow-wrap: break-word;
-		}
-
-		ul[role="list"],
-		ol[role="list"] {
-			list-style: none;
-			padding: 0;
-		}
-
-		table {
-			border-collapse: collapse;
-		}
 	}
 
 	@layer base {
-		html {
-			color-scheme: light dark;
-			font-family:
-				ui-sans-serif,
-				system-ui,
-				sans-serif,
-				Apple Color Emoji,
-				Segoe UI Emoji,
-				Segoe UI Symbol,
-				Noto Color Emoji;
-			-webkit-font-smoothing: antialiased;
-			-moz-osx-font-smoothing: grayscale;
+		@layer primatives {
+			html {
+				color-scheme: light dark;
+				font-family:
+					ui-sans-serif,
+					system-ui,
+					sans-serif,
+					Apple Color Emoji,
+					Segoe UI Emoji,
+					Segoe UI Symbol,
+					Noto Color Emoji;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+			}
+
+			body {
+				min-height: 100vh;
+				font-size: var(--piko-t-body);
+				line-height: 1.4;
+			}
+
+			body,
+			[data-theme] {
+				background-color: var(--piko-color-background);
+				color: var(--piko-color-text);
+			}
+
+			[data-theme="dark"] {
+				color-scheme: dark;
+			}
+			[data-theme="light"] {
+				color-scheme: light;
+			}
+
+			:focus {
+				outline: none;
+			}
+
+			:focus-visible {
+				outline: var(--piko-color-focus) solid 2px;
+			}
+			a,
+			.piko-link,
+			button.piko-link {
+				font-size: inherit;
+				line-height: inherit;
+				font-weight: inherit;
+				text-decoration: underline;
+				color: var(--piko-color-link);
+				cursor: pointer;
+				min-width: auto;
+				min-height: auto;
+				box-shadow: none;
+				background: none;
+				border: none;
+				padding: 0;
+				display: inline;
+			}
+
+			a:visited,
+			.piko-link:visited,
+			button.piko-link:visited {
+				color: var(--piko-color-link-visited);
+				background: none;
+			}
+
+			a:not(:disabled, .piko-disabled):hover,
+			a:not(:disabled, .piko-disabled):active,
+			.piko-link:not(:disabled, .piko-disabled):hover,
+			.piko-link:not(:disabled, .piko-disabled):active {
+				color: var(--piko-color-link-hover);
+				background: none;
+			}
+
+			fieldset {
+				border: 1px solid var(--piko-color-border-subtle);
+				padding: var(--piko-space-panel-padding);
+			}
+
+			legend {
+				font-size: var(--piko-t-small);
+				font-weight: 600;
+			}
+
+			small {
+				font-size: var(--piko-t-small);
+			}
+
+			::placeholder {
+				color: var(--piko-color-text-subtle);
+				font-style: italic;
+				overflow: visible;
+			}
+
+			::selection {
+				background: var(--piko-color-text-dynamic);
+				color: var(--piko-color-background-dynamic);
+			}
 		}
 
-		body {
-			font-size: var(--piko-type-body);
-			line-height: 1.4;
+		@layer typography {
+			.piko-t-h1,
+			.piko-prose :where(h1),
+			.piko-prose .piko-t-h1 {
+				font-size: var(--piko-t-h1);
+				line-height: 1.1;
+				font-weight: lighter;
+			}
+
+			.piko-t-h2,
+			.piko-prose :where(h2),
+			.piko-prose .piko-t-h2 {
+				font-size: var(--piko-t-h2);
+				line-height: 1.15;
+				font-weight: lighter;
+			}
+
+			.piko-t-h3,
+			.piko-prose :where(h3),
+			.piko-prose .piko-t-h3 {
+				font-size: var(--piko-t-h3);
+				line-height: 1.2;
+			}
+
+			.piko-t-h4,
+			.piko-prose :where(h4),
+			.piko-prose .piko-t-h4 {
+				font-size: var(--piko-t-h4);
+				line-height: 1.25;
+			}
+
+			.piko-t-h5,
+			.piko-prose :where(h5),
+			.piko-prose .piko-t-h5 {
+				font-size: var(--piko-t-h5);
+				line-height: 1.3;
+			}
+
+			.piko-t-h6,
+			.piko-prose :where(h6),
+			.piko-prose .piko-t-h6 {
+				font-size: var(--piko-t-h6);
+				line-height: 1.35;
+			}
+
+			.piko-t-label {
+				font-size: var(--piko-t-body);
+				font-weight: bold;
+			}
+
+			.piko-t-group-label {
+				font-size: var(--piko-t-body);
+				font-weight: bold;
+				text-transform: uppercase;
+			}
+
+			.piko-prose :where(h1, h2, h3, h4, h5, h6) {
+				line-height: 1.2;
+				text-wrap: balance;
+				font-weight: 700;
+			}
+
+			.piko-prose
+				:is(
+					p,
+					ul,
+					ol,
+					h1,
+					h2,
+					h3,
+					h4,
+					h5,
+					h6,
+					table,
+					figure,
+					blockquote,
+					iframe,
+					pre,
+					.piko-prose__block
+				):not(:last-child) {
+				margin-block-end: 0.625rem;
+			}
+
+			.piko-prose
+				:is(
+					p,
+					ul,
+					ol,
+					h1,
+					h2,
+					h3,
+					h4,
+					h5,
+					h6,
+					table,
+					figure,
+					blockquote,
+					iframe,
+					pre,
+					.piko-prose__block
+				)
+				+ :is(h1, h2, h3, h4, h5, h6) {
+				margin-block-start: 2.5rem;
+			}
+
+			.piko-ul,
+			.piko-ol,
+			.piko-prose ul,
+			.piko-prose ol {
+				padding-inline-start: 1em;
+				list-style-position: outside;
+			}
+
+			.piko-ul,
+			.piko-prose ul {
+				list-style-type: disc;
+			}
+
+			.piko-ol,
+			.piko-prose ol {
+				list-style-type: decimal;
+			}
+
+			.piko-li:not(:last-child),
+			.piko-prose li:not(:last-child) {
+				margin-block-end: 0.25em;
+			}
+
+			.piko-prose :is(p, ul, ol) {
+				text-wrap: pretty;
+			}
+
+			.piko-prose :where(blockquote) {
+				border-inline-start: 4px solid var(--piko-color-border);
+				padding-inline-start: var(--piko-unit);
+			}
+
+			label,
+			.piko-t-label {
+				display: block;
+				margin-bottom: var(--piko-gap-stack);
+			}
 		}
 
-		body,
-		[data-theme] {
-			background-color: var(--piko-color-background);
-			color: var(--piko-color-text);
-		}
+		@layer buttons {
+			button:-moz-focusring,
+			[type="button"]:-moz-focusring,
+			[type="reset"]:-moz-focusring,
+			[type="submit"]:-moz-focusring {
+				outline: var(--piko-color-focus) solid 2px;
+			}
 
-		[data-theme="dark"] {
-			color-scheme: dark;
-		}
-		[data-theme="light"] {
-			color-scheme: light;
-		}
+			button:not(:where(.piko-neutral)),
+			.piko-button,
+			a.piko-button,
+			[class*="piko-button-"],
+			::file-selector-button {
+				--_piko-button-color-text: var(--piko-button-secondary-color-text);
+				--_piko-button-color-background: var(
+					--piko-button-secondary-color-background
+				);
+				--_piko-button-hover-text: var(
+					--piko-button-secondary-color-text-hover
+				);
+				--_piko-button-hover-background: var(
+					--piko-button-secondary-color-background-hover
+				);
+				--_piko-button-active-text: var(
+					--piko-button-secondary-color-text-active
+				);
+				--_piko-button-active-background: var(
+					--piko-button-secondary-color-background-active
+				);
+				-webkit-appearance: none;
+				appearance: none;
+				align-items: center;
+				gap: var(--piko-gap-icon);
+				touch-action: manipulation;
+				user-select: none;
+				border: none;
+				inline-size: fit-content;
+				padding: var(--piko-space-control-padding-y)
+					var(--piko-space-control-padding-x);
+				font-family: inherit;
+				font-size: inherit;
+				line-height: inherit;
+				font-weight: inherit;
+				color: var(--_piko-button-color-text);
+				background: var(--_piko-button-color-background);
+				border-radius: 4px;
+				flex-shrink: 0;
+				text-decoration: none;
+				display: inline-flex;
+			}
 
-		small {
-			font-size: var(--piko-type-small);
-		}
+			a.piko-button {
+				text-align: center;
+			}
 
-		:where(h1, h2, h3, h4, h5, h6) {
-			font-size: var(--piko-type-body);
-			line-height: inherit;
-			font-weight: inherit;
-		}
+			:is(.piko-button, a.piko-button):has(> .piko-button__icon:only-child) {
+				justify-content: center;
+			}
 
-		.piko-type-h1 {
-			font-size: var(--piko-type-h1);
-			line-height: 1.1;
-			font-weight: lighter;
-		}
+			.piko-button__icon {
+				width: 1em;
+				height: 1em;
+			}
 
-		.piko-type-h2 {
-			font-size: var(--piko-type-h2);
-			line-height: 1.15;
-			font-weight: lighter;
-		}
+			button:not(:disabled, .piko-disabled):not(:where(.piko-neutral)):hover,
+			button:not(:disabled, .piko-disabled):not(:where(.piko-neutral)):hover,
+			.piko-button:not(:disabled, .piko-disabled):not(
+					:where(.piko-neutral)
+				):hover,
+			a.piko-button:not(:disabled, .piko-disabled):not(
+					:where(.piko-neutral)
+				):hover,
+			button:not(:disabled, .piko-disabled):not(
+					:where(.piko-neutral)
+				):focus-visible,
+			.piko-button:not(:disabled, .piko-disabled):not(
+					:where(.piko-neutral)
+				):focus-visible,
+			a.piko-button:not(:disabled, .piko-disabled):not(
+					:where(.piko-neutral)
+				):focus-visible {
+				color: var(--_piko-button-hover-text);
+				background: var(--_piko-button-hover-background);
+			}
 
-		.piko-type-h3 {
-			font-size: var(--piko-type-h3);
-			line-height: 1.2;
-		}
+			button:not(:disabled, .piko-disabled):not(:where(.piko-neutral)):active,
+			button:not(:disabled, .piko-disabled):not(
+					:where(.piko-neutral)
+				).piko-active,
+			.piko-button:not(:disabled, .piko-disabled):not(
+					:where(.piko-neutral)
+				):active,
+			.piko-button:not(:disabled, .piko-disabled):not(
+					:where(.piko-neutral)
+				).piko-active,
+			a.piko-button:not(:disabled, .piko-disabled):not(
+					:where(.piko-neutral)
+				):active,
+			a.piko-button:not(:disabled, .piko-disabled):not(
+					:where(.piko-neutral)
+				).piko-active {
+				color: var(--_piko-button-active-text);
+				background: var(--_piko-button-active-background);
+			}
 
-		.piko-type-h4 {
-			font-size: var(--piko-type-h4);
-			line-height: 1.25;
-		}
+			.piko-button--primary,
+			a.piko-button--primary {
+				--_piko-button-color-text: var(--piko-button-primary-color-text);
+				--_piko-button-color-background: var(
+					--piko-button-primary-color-background
+				);
+				--_piko-button-hover-text: var(--piko-button-primary-color-text-hover);
+				--_piko-button-hover-background: var(
+					--piko-button-primary-color-background-hover
+				);
+				--_piko-button-active-text: var(
+					--piko-button-primary-color-text-active
+				);
+				--_piko-button-active-background: var(
+					--piko-button-primary-color-background-active
+				);
+			}
 
-		.piko-type-h5 {
-			font-size: var(--piko-type-h5);
-			line-height: 1.3;
-		}
+			.piko-button--tertiary,
+			a.piko-button--tertiary {
+				--_piko-button-color-text: var(--piko-button-tertiary-color-text);
+				--_piko-button-color-background: var(
+					--piko-button-tertiary-color-background
+				);
+				--_piko-button-hover-text: var(--piko-button-tertiary-color-text-hover);
+				--_piko-button-hover-background: var(
+					--piko-button-tertiary-color-background-hover
+				);
+				--_piko-button-active-text: var(
+					--piko-button-tertiary-color-text-active
+				);
+				--_piko-button-active-background: var(
+					--piko-button-tertiary-color-background-active
+				);
+			}
 
-		.piko-type-h6 {
-			font-size: var(--piko-type-h6);
-			line-height: 1.35;
-		}
+			.piko-button--danger,
+			a.piko-button--danger {
+				--_piko-button-color-text: var(--piko-button-danger-color-text);
+				--_piko-button-color-background: var(
+					--piko-button-danger-color-background
+				);
+				--_piko-button-hover-text: var(--piko-button-danger-color-text-hover);
+				--_piko-button-hover-background: var(
+					--piko-button-danger-color-background-hover
+				);
+				--_piko-button-active-text: var(--piko-button-danger-color-text-active);
+				--_piko-button-active-background: var(
+					--piko-button-danger-color-background-active
+				);
+			}
 
-		.piko-prose :where(h1, h2, h3, h4, h5, h6) {
-			line-height: 1.2;
-			text-wrap: balance;
-			font-weight: 700;
-			margin-block: var(--piko-space-6) var(--piko-space-3);
-		}
+			button.piko-disabled,
+			button:disabled,
+			.piko-button.piko-disabled,
+			.piko-button:disabled {
+				--_piko-button-color-text: var(--piko-button-disabled-color-text);
+				--_piko-button-color-background: var(
+					--piko-button-disabled-color-background
+				);
+				--_piko-button-hover-text: var(--piko-button-disabled-color-text-hover);
+				--_piko-button-hover-background: var(
+					--piko-button-disabled-color-background-hover
+				);
+				--_piko-button-active-text: var(
+					--piko-button-disabled-color-text-active
+				);
+				--_piko-button-active-background: var(
+					--piko-button-disabled-color-background-active
+				);
+			}
 
-		.piko-prose :where(h1) {
-			font-size: var(--piko-type-h1);
-		}
+			.cds-button--primary.cds-disabled,
+			a.cds-button--primary.cds-disabled,
+			.cds-button--primary:disabled {
+				--_piko-button-color-text: var(--piko-button-disabled-color-text);
+				--_piko-button-color-background: var(
+					--piko-button-disabled-color-background
+				);
+				--_piko-button-hover-text: var(--piko-button-disabled-color-text-hover);
+				--_piko-button-hover-background: var(
+					--piko-button-disabled-color-background-hover
+				);
+				--_piko-button-active-text: var(
+					--piko-button-disabled-color-text-active
+				);
+				--_piko-button-active-background: var(
+					--piko-button-disabled-color-background-active
+				);
+			}
 
-		.piko-prose :where(h2) {
-			font-size: var(--piko-type-h2);
-		}
+			.cds-button--tertiary.cds-disabled,
+			a.cds-button--tertiary.cds-disabled,
+			.cds-button--tertiary:disabled {
+				--_piko-button-color-background: transparent;
+				--_piko-button-hover-background: transparent;
+				--_piko-button-active-background: transparent;
+			}
 
-		.piko-prose :where(h3) {
-			font-size: var(--piko-type-h3);
+			.cds-button--destruction.cds-disabled,
+			a.cds-button--destruction.cds-disabled,
+			.cds-button--destruction:disabled {
+				--_piko-button-color-text: var(--piko-button-disabled-color-text);
+				--_piko-button-color-background: var(
+					--piko-button-disabled-color-background
+				);
+				--_piko-button-hover-text: var(--piko-button-disabled-color-text-hover);
+				--_piko-button-hover-background: var(
+					--piko-button-disabled-color-background-hover
+				);
+				--_piko-button-active-text: var(
+					--piko-button-disabled-color-text-active
+				);
+				--_piko-button-active-background: var(
+					--piko-button-disabled-color-background-active
+				);
+			}
 		}
-
-		.piko-prose :where(h4) {
-			font-size: var(--piko-type-h4);
-		}
-
-		.piko-prose :where(h5) {
-			font-size: var(--piko-type-h5);
-		}
-
-		.piko-prose :where(h6) {
-			font-size: var(--piko-type-h6);
-		}
-
-		.piko-prose :where(p, ul, ol, dl, pre, table, blockquote, form) {
-			margin-block: var(--piko-space-4);
-		}
-
-		.piko-prose :where(ul, ol) {
-			padding-inline-start: 1.5em;
-		}
-
-		.piko-prose :where(blockquote) {
-			border-inline-start: 4px solid var(--piko-color-border);
-			padding-inline-start: var(--piko-space-3);
-		}
-
-		a {
-			color: var(--piko-color-link);
-			text-decoration: underline;
-		}
-
-		a:hover {
-			color: var(--piko-color-link-hover);
-		}
-
-		fieldset {
-			border: 1px solid var(--piko-color-border);
-			padding: var(--piko-space-card-padding);
-		}
-
-		legend {
-			padding-inline: var(--piko-space-control-padding-y);
-			font-size: var(--piko-type-small);
-			font-weight: 600;
-		}
-
-		label {
-			display: inline-block;
-			margin-bottom: var(--piko-space-control-padding-y);
-		}
-
-		:where(input, select, textarea, button) {
-			border-radius: 0;
-		}
-
-		:where(
-			input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not(
-					[type="submit"]
-				):not([type="reset"]),
-			textarea,
+		@layer forms {
+			input,
+			optgroup,
 			select,
-			button,
-			input[type="button"],
-			input[type="submit"],
-			input[type="reset"]
-		) {
-			background: var(--piko-color-surface);
-			border: 1px solid var(--piko-color-border);
-			color: var(--piko-color-text);
-			padding: var(--piko-space-control-padding-y)
-				var(--piko-space-control-padding-x);
-		}
+			textarea {
+				color: inherit;
+				font: inherit;
+				box-sizing: border-box;
+				margin: 0;
+			}
 
-		:where(
-			input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not(
-					[type="submit"]
-				):not([type="reset"])
-		) {
-			width: 100%;
-		}
+			input:not([type]),
+			input[type="text"],
+			input[type="email"],
+			input[type="number"],
+			input[type="date"],
+			input[type="search"],
+			input[type="tel"],
+			input[type="password"],
+			input[type="url"],
+			select,
+			textarea,
+			.cds-input {
+				--_cds-input-border-color: var(
+					--cds-state-color-input-border,
+					var(--cds-color-border-moderate)
+				);
+				--_cds-input-border-addition: 0;
+				appearance: none;
+				background-color: var(--cds-color-background);
+				border: solid 1px var(--_cds-input-border-color);
+				inline-size: 100%;
+				min-inline-size: 0;
+				color: var(--cds-color-text);
+				line-height: var(--cds-font-button-label-lineheight);
+				font-size: var(--cds-font-button-label-fontsize);
+				box-shadow: 0 0 0
+					var(
+						--cds-state-input-border-addition,
+						var(--_cds-input-border-addition)
+					)
+					inset var(--_cds-input-border-color);
+				padding: var(--cds-input-size-padding-top)
+					var(--cds-input-size-padding-left)
+					var(--cds-input-size-padding-bottom)
+					var(--cds-input-size-padding-left);
+				min-block-size: var(--cds-input-size-minheight);
+				border-radius: 0;
+				display: block;
+			}
 
-		:where(input, select, textarea, button):focus-visible {
-			outline: 2px solid var(--piko-color-primary-border);
-			outline-offset: 2px;
-		}
+			:is(
+				input:not([type]),
+				input[type="text"],
+				input[type="email"],
+				input[type="number"],
+				input[type="date"],
+				input[type="search"],
+				input[type="tel"],
+				input[type="password"],
+				input[type="url"],
+				select,
+				textarea,
+				.cds-input
+			):is(:focus, :focus-visible) {
+				--_cds-input-border-color: var(
+					--cds-state-color-input-focus-border,
+					var(--cds-color-focus-border)
+				);
+				--_cds-input-border-addition: 1px;
+				outline: none;
+			}
 
-		:where(input, textarea)::placeholder {
-			color: var(--piko-color-text-subtle);
-			opacity: 1;
-		}
+			select:not([multiple]) {
+				--_select-arrow-size: 12px;
+				background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23888' viewBox='0 0 16 16' %3E%3Cpath d='M8 8.843 2.225 2.938l-2.1 2.109L8 13.063l7.875-8.016-2.1-2.109z'%3E%3C/path%3E%3C/svg%3E");
+				background-position: calc(100% - 8px);
+				background-repeat: no-repeat;
+				background-size: var(--_select-arrow-size);
+				padding-inline-end: calc(
+					var(--cds-input-size-padding-left) + var(--_select-arrow-size)
+				);
+			}
 
-		input[type="checkbox"],
-		input[type="radio"] {
-			accent-color: var(--piko-palette-dynamic-6);
-		}
+			:is(
+				input:not([type]),
+				input[type="text"],
+				input[type="email"],
+				input[type="number"],
+				input[type="date"],
+				input[type="search"],
+				input[type="tel"],
+				input[type="password"],
+				input[type="url"],
+				textarea
+			):is(:read-only, .cds-read-only) {
+				--_cds-input-border-color: var(--cds-color-readonly-border);
+				background: var(--cds-color-readonly-background);
+				color: var(--cds-color-readonly-text);
+			}
 
-		:where(
-			button,
-			input[type="button"],
-			input[type="submit"],
-			input[type="reset"]
-		) {
-			cursor: pointer;
-		}
+			:is(
+				input:not([type]),
+				input[type="text"],
+				input[type="email"],
+				input[type="number"],
+				input[type="date"],
+				input[type="search"],
+				input[type="tel"],
+				input[type="password"],
+				input[type="url"],
+				select,
+				textarea,
+				.cds-input,
+				.cds-input--select,
+				.cds-input--field,
+				.cds-input--textarea
+			):is(:disabled, .cds-disabled) {
+				--_cds-input-border-color: var(--cds-color-readonly-border);
+				background: var(--cds-color-insensitive-background);
+				color: var(--cds-color-insensitive-text);
+				-webkit-text-fill-color: var(--cds-color-insensitive-text);
+			}
 
-		:where(input, select, textarea, button):disabled {
-			cursor: not-allowed;
-			opacity: 0.7;
-		}
+			:is(
+					input:not([type]),
+					input[type="text"],
+					input[type="email"],
+					input[type="number"],
+					input[type="date"],
+					input[type="search"],
+					input[type="tel"],
+					input[type="password"],
+					input[type="url"],
+					select,
+					textarea,
+					.cds-input,
+					.cds-input--select,
+					.cds-input--field,
+					.cds-input--textarea
+				):is(:disabled, .cds-disabled)::placeholder {
+				color: var(--cds-color-insensitive-text);
+			}
 
-		:where(.piko-button, .button) {
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
-			gap: var(--piko-space-cluster-gap);
-			border: 1px solid var(--piko-color-border);
-			padding: var(--piko-space-control-padding-y)
-				var(--piko-space-control-padding-x);
-			min-height: 2.5rem;
-			text-decoration: none;
-			border-radius: 0;
-			line-height: 1;
-		}
+			:is(
+				input:not([type]),
+				input[type="text"],
+				input[type="email"],
+				input[type="number"],
+				input[type="date"],
+				input[type="search"],
+				input[type="tel"],
+				input[type="password"],
+				input[type="url"],
+				select,
+				textarea,
+				.cds-input,
+				.cds-input--select,
+				.cds-input--field,
+				.cds-input--textarea
+			):user-invalid {
+				--_cds-input-border-addition: 1px;
+				--_cds-input-border-color: var(--cds-color-error-border);
+			}
 
-		:where(.piko-button, .button):hover {
-			text-decoration: none;
-		}
+			:is(
+				input:not([type]),
+				input[type="text"],
+				input[type="email"],
+				input[type="number"],
+				input[type="date"],
+				input[type="search"],
+				input[type="tel"],
+				input[type="password"],
+				input[type="url"],
+				select,
+				textarea,
+				.cds-input,
+				.cds-input--select,
+				.cds-input--field,
+				.cds-input--textarea
+			):-moz-ui-invalid {
+				--_cds-input-border-addition: 1px;
+				--_cds-input-border-color: var(--cds-color-error-border);
+			}
 
-		:where(.piko-button--primary, .button.primary, .button.positive) {
-		}
+			@supports not selector(:user-invalid) {
+				:is(
+					input:not([type]),
+					input[type="text"],
+					input[type="email"],
+					input[type="number"],
+					input[type="date"],
+					input[type="search"],
+					input[type="tel"],
+					input[type="password"],
+					input[type="url"],
+					select,
+					textarea,
+					.cds-input,
+					.cds-input--select,
+					.cds-input--field,
+					.cds-input--textarea
+				):invalid {
+					--_cds-input-border-addition: 1px;
+					--_cds-input-border-color: var(--cds-color-error-border);
+				}
+			}
 
-		:where(.piko-button--secondary, .button.secondary) {
-			background: var(--piko-color-secondary-bg);
-			border-color: var(--piko-color-secondary-border);
-			color: var(--piko-color-secondary-text);
-		}
+			:is(
+				input:not([type]),
+				input[type="text"],
+				input[type="email"],
+				input[type="number"],
+				input[type="date"],
+				input[type="search"],
+				input[type="tel"],
+				input[type="password"],
+				input[type="url"],
+				select,
+				textarea,
+				.cds-input,
+				.cds-input--select,
+				.cds-input--field,
+				.cds-input--textarea
+			)::-ms-clear {
+				display: none;
+			}
 
-		:where(.piko-button--tertiary, .button.tertiary) {
-			background: var(--piko-color-tertiary-bg);
-			border-color: var(--piko-color-tertiary-border);
-			color: var(--piko-color-tertiary-text);
-		}
+			:is(
+					input:not([type]),
+					input[type="text"],
+					input[type="email"],
+					input[type="number"],
+					input[type="date"],
+					input[type="search"],
+					input[type="tel"],
+					input[type="password"],
+					input[type="url"],
+					select,
+					textarea,
+					.cds-input,
+					.cds-input--select,
+					.cds-input--field,
+					.cds-input--textarea
+				)[type="search"]::-webkit-search-decoration,
+			:is(
+					input:not([type]),
+					input[type="text"],
+					input[type="email"],
+					input[type="number"],
+					input[type="date"],
+					input[type="search"],
+					input[type="tel"],
+					input[type="password"],
+					input[type="url"],
+					select,
+					textarea,
+					.cds-input,
+					.cds-input--select,
+					.cds-input--field,
+					.cds-input--textarea
+				)[type="search"]::-webkit-search-cancel-button,
+			:is(
+					input:not([type]),
+					input[type="text"],
+					input[type="email"],
+					input[type="number"],
+					input[type="date"],
+					input[type="search"],
+					input[type="tel"],
+					input[type="password"],
+					input[type="url"],
+					select,
+					textarea,
+					.cds-input,
+					.cds-input--select,
+					.cds-input--field,
+					.cds-input--textarea
+				)[type="search"]::-webkit-search-results-button,
+			:is(
+					input:not([type]),
+					input[type="text"],
+					input[type="email"],
+					input[type="number"],
+					input[type="date"],
+					input[type="search"],
+					input[type="tel"],
+					input[type="password"],
+					input[type="url"],
+					select,
+					textarea
+				)[type="search"]::-webkit-search-results-decoration {
+				appearance: none !important;
+			}
 
-		:where(.piko-button--danger, .button.danger, .button.negative) {
-			background: var(--piko-color-danger-bg);
-			border-color: var(--piko-color-danger-border);
-			color: var(--piko-color-danger-text);
-		}
+			textarea,
+			.cds-input--textarea {
+				resize: vertical;
+			}
 
-		:where(.piko-button, .button):disabled,
-		:where(.piko-button, .button)[aria-disabled="true"] {
-			cursor: not-allowed;
-			opacity: 0.7;
-		}
+			input[type="radio"],
+			input[type="checkbox"] {
+				accent-color: var(--piko-color-focus);
+				cursor: pointer;
+				flex-shrink: 0;
+				width: 1em;
+				height: 1em;
+				line-height: 0;
+			}
 
-		.container {
-			/* todo - does it need to be used */
-			max-width: var(--piko-page-max);
-			margin-inline: auto;
-			padding-inline: var(--piko-page-gutter);
+			/* old bits */
+
+			:where(input, select, textarea) {
+				border-radius: 0;
+			}
+
+			input[type="checkbox"],
+			input[type="radio"] {
+				accent-color: var(--piko-color-focus);
+			}
+
+			:where(
+				button:not(:disabled),
+				input[type="button"]:not(:disabled),
+				input[type="submit"]:not(:disabled),
+				input[type="reset"]
+			) {
+				cursor: pointer;
+			}
+
+			:where(input, select, textarea, button):disabled {
+				cursor: not-allowed;
+				background: var(--piko-color-background-inactive);
+			}
 		}
+	}
+}
+
+/* App-specific code */
+
+@view-transition {
+	navigation: auto;
+}
+
+@keyframes vt-slide-out-right {
+	from {
+		transform: translateX(0);
+		opacity: 1;
+	}
+	to {
+		transform: translateX(100%);
+		opacity: 0.5;
+	}
+}
+@keyframes vt-slide-in-from-right {
+	from {
+		transform: translateX(100%);
+		opacity: 0.5;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+@keyframes vt-slide-out-left {
+	from {
+		transform: translateX(0);
+		opacity: 1;
+	}
+	to {
+		transform: translateX(-100%);
+		opacity: 0.5;
+	}
+}
+@keyframes vt-slide-in-from-left {
+	from {
+		transform: translateX(-100%);
+		opacity: 0.5;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+
+/* Suppress default root crossfade — the named columns cover the whole viewport */
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation: none;
+}
+
+/* Keep each transitioning column clipped to its own original bounds. */
+::view-transition-group(site-header-content),
+::view-transition-group(site-content) {
+	overflow: clip;
+}
+
+/* Left column: exits rightward into the seam, enters from the seam (rightward) */
+::view-transition-old(site-header-content) {
+	animation: vt-slide-out-right 0.25s ease-in both;
+}
+::view-transition-new(site-header-content) {
+	animation: vt-slide-in-from-right 0.25s 0.25s ease-out both;
+}
+
+/* Right column: exits leftward into the seam, enters from the seam (leftward) */
+::view-transition-old(site-content) {
+	animation: vt-slide-out-left 0.25s ease-in both;
+}
+::view-transition-new(site-content) {
+	animation: vt-slide-in-from-left 0.25s 0.25s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	::view-transition-old(site-header-content),
+	::view-transition-new(site-header-content),
+	::view-transition-old(site-content),
+	::view-transition-new(site-content) {
+		animation: none;
 	}
 }

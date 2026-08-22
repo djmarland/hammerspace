@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { resolve } from "$app/paths";
-	import Logo from "@/components/Atoms/Logo/Logo.svelte";
+    import {resolve} from "$app/paths";
+    import Logo from "@/components/Atoms/Logo/Logo.svelte";
 
-	type Props = { title: string };
+    type Props = { title: string };
 	let { title }: Props = $props();
 </script>
 
@@ -12,7 +12,7 @@
 			<Logo />
 		</a>
 	</div>
-	<h1 class="piko-type-h1">{title}</h1>
+	<h1 class="piko-t-h1">{title}</h1>
 	<slot />
 </header>
 
