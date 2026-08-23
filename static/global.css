@@ -229,7 +229,7 @@
 					var(--piko-palette-grey-5)
 				);
 
-				--piko-color-focus: light-dark(
+				--piko-color-accent: light-dark(
 					var(--piko-palette-dynamic-7),
 					var(--piko-palette-dynamic-2)
 				);
@@ -425,6 +425,7 @@
 				/* Gaps */
 				--piko-gap-grid: var(--piko-unit);
 				--piko-gap-stack: var(--piko-unit);
+				--piko-gap-text: var(--piko-unit-half);
 				--piko-gap-section: var(--piko-unit-double);
 				--piko-gap-icon: var(--piko-unit-quarter);
 
@@ -698,7 +699,7 @@
 			}
 
 			:focus-visible {
-				outline: var(--piko-color-focus) solid 2px;
+				outline: currentColor solid 2px;
 			}
 			a,
 			.piko-link,
@@ -840,7 +841,7 @@
 				font-size: var(--piko-t-h6);
 				line-height: 1.35;
 				font-weight: 500;
-				text-transform: uppercase;
+				font-variant-caps: small-caps;
 			}
 
 			.piko-t-label {
@@ -851,7 +852,7 @@
 			.piko-t-group-label {
 				font-size: var(--piko-t-body-small);
 				font-weight: bold;
-				text-transform: uppercase;
+				font-variant-caps: small-caps;
 			}
 
 			.piko-prose
@@ -940,7 +941,7 @@
 			[type="button"]:-moz-focusring,
 			[type="reset"]:-moz-focusring,
 			[type="submit"]:-moz-focusring {
-				outline: var(--piko-color-focus) solid 2px;
+				outline: currentColor solid 2px;
 			}
 
 			button:not(:where(.piko-neutral)),
@@ -1168,7 +1169,7 @@
 				box-sizing: border-box;
 				margin: 0;
 				width: 100%;
-				accent-color: var(--piko-color-focus);
+				accent-color: var(--piko-color-accent);
 			}
 
 			input:not([type]),
@@ -1215,7 +1216,7 @@
 			):is(:focus, :focus-visible) {
 				--_piko-input-border-color: var(
 					--piko-color-state-border,
-					var(--piko-color-focus)
+					currentColor
 				);
 				outline: none;
 			}
@@ -1317,6 +1318,10 @@
 				width: 0.85em;
 				height: 0.85em;
 			}
+
+			.piko-form-field + .piko-form-field {
+				margin-block-start: var(--piko-unit-double);
+			}
 		}
 
 		@layer utils {
@@ -1339,12 +1344,6 @@
 			}
 			.piko-vstack--small {
 				--_piko-vstack-gap: var(--piko-unit-half);
-			}
-
-			.piko-form-field {
-				& + .piko-form-field {
-					margin-block-start: var(--piko-unit);
-				}
 			}
 		}
 	}

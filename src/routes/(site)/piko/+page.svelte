@@ -5,6 +5,7 @@
     import PikoToken from "@/components/PikoToken.svelte";
     import SidePageHeader from "@/components/Blog/SidePageHeader.svelte";
     import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate.svelte";
+    import FormField from "@/components/Molecules/FormField/FormField.svelte";
 
     const corePalettes = [
         {label: "Dynamic", token: "dynamic"},
@@ -58,7 +59,7 @@
             "--piko-color-border-strong",
         ],
         "Other": [
-            "--piko-color-focus",
+            "--piko-color-accent",
         ],
     } as const;
 
@@ -85,6 +86,7 @@
     const semanticSpacingTokens = [
         {label: "Grid gap", token: "--piko-gap-grid"},
         {label: "Stack gap", token: "--piko-gap-stack"},
+        {label: "Text gap", token: "--piko-gap-text"},
         {label: "Panel padding", token: "--piko-space-panel-padding"},
         {label: "Control padding (x)", token: "--piko-space-control-padding-x"},
         {label: "Control padding (y)", token: "--piko-space-control-padding-y"},
@@ -382,7 +384,9 @@
                 <div class="piko-vstack">
                     {#each states as state (state)}
                         <div>
-                            <h4 class="piko-t-h5"><PikoToken token={`data-state="${state}"`}/></h4>
+                            <h4 class="piko-t-h5">
+                                <PikoToken token={`data-state="${state}"`}/>
+                            </h4>
                             <div class="piko-vstack--small" data-state={state}>
                                 <p class="piko-state__text">
                                     {state} text mode using
@@ -394,7 +398,7 @@
                                 </p>
                             </div>
                         </div>
-                            <hr />
+                        <hr/>
                     {/each}
                 </div>
             </section>
@@ -427,102 +431,72 @@
 
                 <section id="form-text-inputs">
                     <h3>Text inputs</h3>
-                    <div class="piko-form-demo">
-                        <div class="piko-form-field">
-                            <label for="demo-text">Full name</label>
-                            <input type="text" id="demo-text" placeholder="e.g. Jane Smith"/>
-                        </div>
-                        <div class="piko-form-field">
-                            <label for="demo-email">Email address</label>
-                            <input type="email" id="demo-email" placeholder="you@example.com"/>
-                        </div>
-                        <div class="piko-form-field">
-                            <label for="demo-password">Password</label>
-                            <input type="password" id="demo-password" placeholder="••••••••"/>
-                        </div>
-                        <div class="piko-form-field">
-                            <label for="demo-number">Quantity</label>
-                            <input type="number" id="demo-number" value="1" min="1" max="99"/>
-                        </div>
-                    </div>
+                    <FormField id="demo-text" label="Full name">
+                        <input type="text" id="demo-text" placeholder="e.g. Jane Smith"/>
+                    </FormField>
+                    <FormField id="demo-email" label="Email address">
+                        <input type="email" id="demo-email" placeholder="you@example.com"/>
+                    </FormField>
+                    <FormField id="demo-password" label="Password">
+                        <input type="password" id="demo-password" placeholder="••••••••"/>
+                    </FormField>
+                    <FormField id="demo-number" label="Quantity">
+                        <input type="number" id="demo-number" value="1" min="1" max="99"/>
+                    </FormField>
                 </section>
 
                 <section id="form-helper-error">
                     <h3>With helper text and errors</h3>
-                    <div class="piko-form-demo">
-                        <div class="piko-form-field">
-                            <label for="demo-hint">Username</label>
-                            <p class="piko-form-hint" id="demo-hint-description">
-                                Must be 3–20 characters. Letters, numbers, and underscores only.
-                            </p>
-                            <input
-                                    type="text"
-                                    id="demo-hint"
-                                    aria-describedby="demo-hint-description"
-                                    value="jane_smith"
-                            />
-                        </div>
-                        <div class="piko-form-field" data-state="error">
-                            <label for="demo-error">Email address</label>
-                            <input
-                                    type="email"
-                                    id="demo-error"
-                                    aria-describedby="demo-error-description"
-                                    aria-invalid="true"
-                                    value="not-an-email"
-                            />
-                            <p
-                                    class="piko-state__text"
-                                    data-state="error"
-                                    id="demo-error-description"
-                            >
-                                Enter a valid email address.
-                            </p>
-                        </div>
-                    </div>
+                    <FormField id="demo-hint" required label="Username"
+                               hint="Must be 3–20 characters. Letters, numbers, and underscores only.">
+                        <input
+                                type="text"
+                                id="demo-hint"
+                                aria-describedby="demo-hint-description"
+                                value="jane_smith"
+                        />
+                    </FormField>
+                    <FormField id="email" required label="Email address" hint="Must be valid."
+                               stateMessage="Enter a valid email address." state="error">
+                        <input
+                                type="text"
+                                id="email"
+                                aria-describedby="email-description"
+                                value="jane_smith"
+                        />
+                    </FormField>
                 </section>
 
                 <section id="form-disabled">
                     <h3>Disabled state</h3>
-                    <div class="piko-form-demo">
-                        <div class="piko-form-field">
-                            <label for="demo-disabled">Account ID</label>
-                            <input type="text" id="demo-disabled" value="ACC-00042" disabled/>
-                        </div>
-                        <div class="piko-form-field">
-                            <label for="demo-disabled-select">Region</label>
-                            <select id="demo-disabled-select" disabled>
-                                <option>Europe (EU-West)</option>
-                            </select>
-                        </div>
-                    </div>
+                    <FormField id="demo-disabled" label="Account ID">
+                        <input type="text" value="ACC-00042" disabled/>
+                    </FormField>
+                    <FormField id="demo-disabled-select" label="Region">
+                        <select id="demo-disabled-select" disabled>
+                            <option>Europe (EU-West)</option>
+                        </select>
+                    </FormField>
                 </section>
 
                 <section id="form-select-textarea">
                     <h3>Select and textarea</h3>
-                    <div class="piko-form-demo">
-                        <div class="piko-form-field">
-                            <label for="demo-select">Country</label>
-                            <select id="demo-select">
-                                <option value="">Choose a country…</option>
-                                <option value="gb">United Kingdom</option>
-                                <option value="us">United States</option>
-                                <option value="de">Germany</option>
-                                <option value="fr">France</option>
-                            </select>
-                        </div>
-                        <div class="piko-form-field">
-                            <label for="demo-textarea">Message</label>
-                            <p class="piko-form-hint" id="demo-textarea-description">
-                                Max 500 characters.
-                            </p>
+                    <FormField id="demo-select" label="Country">
+                        <select id="demo-select">
+                            <option value="">Choose a country…</option>
+                            <option value="gb">United Kingdom</option>
+                            <option value="us">United States</option>
+                            <option value="de">Germany</option>
+                            <option value="fr">France</option>
+                        </select>
+                    </FormField>
+                    <FormField id="demo-textarea" label="Message" hint="Max 500 characters.">
                             <textarea
                                     id="demo-textarea"
                                     rows={4}
                                     aria-describedby="demo-textarea-description"
                                     placeholder="Write your message here…"></textarea>
-                        </div>
-                    </div>
+                    </FormField>
                 </section>
 
                 <section id="form-checkboxes">
@@ -848,56 +822,5 @@
 	.space-bar {
 		height: 1rem;
 		background-color: var(--piko-color-background-dynamic);
-	}
-
-
-	.piko-form-demo {
-		display: grid;
-		gap: var(--piko-space-stack-gap);
-	}
-
-	.piko-form-field {
-		display: grid;
-		gap: var(--piko-unit-quarter);
-	}
-
-	.piko-form-hint {
-		margin: 0;
-		font-size: var(--piko-t-small);
-		color: var(--piko-color-text-subtle);
-	}
-
-	.piko-fieldset {
-		border: 1px solid var(--piko-color-border);
-		padding: var(--piko-space-panel-padding);
-		margin: 0;
-		display: grid;
-		gap: var(--piko-space-stack-gap);
-	}
-
-	.piko-fieldset legend {
-		font-weight: 700;
-		padding-inline: var(--piko-unit-quarter);
-	}
-
-	.piko-check-group {
-		display: grid;
-	}
-
-	.piko-check-item {
-		display: flex;
-		align-items: baseline;
-		gap: var(--piko-unit-half);
-	}
-
-	.piko-check-item input[type="checkbox"],
-	.piko-check-item input[type="radio"] {
-		flex-shrink: 0;
-	}
-
-	.piko-form-actions {
-		display: flex;
-		gap: var(--piko-space-cluster-gap);
-		flex-wrap: wrap;
 	}
 </style>

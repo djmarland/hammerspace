@@ -15,6 +15,9 @@
 
 <style>
 	.masthead {
+      :global(svg) {
+        max-width: 400px;
+      }
 		background:
 			radial-gradient(
 				circle at 15% 20%,

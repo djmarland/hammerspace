@@ -5,7 +5,7 @@
 <footer class="footer piko-prose">
 		<p>
 
-				&copy; 2006 - {new Date().getFullYear()} hammerspace.co.uk /
+				&copy; 2011 - {new Date().getFullYear()} hammerspace.co.uk /
 				<a href={resolve("/piko")}>Piko design system</a>
 				/ <a href={resolve("/admin")}>Admin</a>
                 </p>
