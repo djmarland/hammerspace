@@ -8,7 +8,6 @@
 	const COPY_RESET_TIMEOUT_MS = 1500;
 
 	let copyState = $state<"idle" | "copied" | "error">("idle");
-	let statusId = `token-status-${Math.random().toString(36).substr(2, 9)}`;
 
 	async function handleCopy() {
 		try {
@@ -23,73 +22,71 @@
 		}, COPY_RESET_TIMEOUT_MS);
 	}
 
-	const copyLabel = $derived(copyState === "copied" ? "Copied" : "Copy");
-	const statusText = $derived(
-		copyState === "copied"
-			? `Copied ${token} to clipboard.`
-			: copyState === "error"
-				? "Copy failed."
-				: "",
-	);
+	function handleTokenClick() {
+		const selection = window.getSelection();
+		if (selection && !selection.isCollapsed) return;
+		void handleCopy();
+	}
+
+	function handleTokenKeydown(event: KeyboardEvent) {
+		if (event.key !== "Enter" && event.key !== " ") return;
+		event.preventDefault();
+		void handleCopy();
+	}
+
+	const copyLabel = $derived(copyState === "copied" ? "Copied" : "Copy token");
 </script>
 
-<span class="token">
+<span
+	class="token"
+	role="button"
+	tabindex="0"
+	onclick={handleTokenClick}
+	onkeydown={handleTokenKeydown}
+	aria-label={copyLabel}
+>
 	<code>{token}</code>
-	<button
-		type="button"
-		class="copyButton"
-		onclick={handleCopy}
-		aria-label={`Copy ${token} to clipboard`}
-		aria-describedby={statusId}
-	>
-		{copyLabel}
-	</button>
-	<span id={statusId} class="visuallyHidden" role="status" aria-live="polite">
-		{statusText}
+	<span class="icon" aria-hidden="true">
+		{#if copyState === "copied"}
+			<svg focusable="false" viewBox="0 0 24 24">
+				<path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+			</svg>
+		{:else}
+			<svg focusable="false" viewBox="0 0 24 24">
+				<path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2m0 16H8V7h11z"></path>
+			</svg>
+		{/if}
 	</span>
 </span>
 
 <style>
 	.token {
-		display: inline-flex;
-		align-items: center;
-		gap: var(--piko-space-2);
-		max-width: 100%;
+		cursor: pointer;
 	}
 
 	.token code {
 		overflow-wrap: anywhere;
 	}
 
-	.copyButton {
-		border: 1px solid currentColor;
-		background: transparent;
-		color: inherit;
-		cursor: pointer;
-		font: inherit;
-		line-height: 1;
-		padding: 0.2rem 0.4rem;
+	.icon {
+		display: inline-flex;
+		width: 0.8em;
+		height: 0.8em;
 		opacity: 0;
-		pointer-events: none;
 		transition: opacity 120ms ease;
 	}
 
-	.token:hover .copyButton,
-	.token:focus-within .copyButton,
-	.copyButton:focus-visible {
-		opacity: 1;
-		pointer-events: auto;
+	.icon :global(svg) {
+		fill: currentColor;
 	}
 
-	.visuallyHidden {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		padding: 0;
-		margin: -1px;
-		overflow: hidden;
-		clip: rect(0, 0, 0, 0);
-		white-space: nowrap;
-		border: 0;
+	.token:hover .icon,
+	.token:focus-visible .icon {
+		opacity: 1;
+	}
+
+	.token:focus-visible {
+		outline: 2px solid currentColor;
+		outline-offset: 2px;
 	}
 </style>

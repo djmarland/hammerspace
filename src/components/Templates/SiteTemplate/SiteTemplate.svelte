@@ -16,7 +16,7 @@
 	.site-template {
 		display: grid;
 		min-height: 100vh;
-		grid-template-columns: 5fr 7fr;
+		grid-template-columns: 1fr 2fr;
 	}
 	header {
 		background-color: color-mix(in srgb, var(--piko-palette-dynamic-8) 10%, var(--piko-color-background) 90%);

@@ -61,12 +61,12 @@
 					0%,
 				transparent 52%
 			),
-			var(--piko-palette-slate-8);
+			var(--piko-palette-grey-8);
 		border-bottom: 1px solid
 			color-mix(
 				in srgb,
 				var(--piko-palette-dynamic-5) 65%,
-				var(--piko-palette-slate-7)
+				var(--piko-palette-grey-7)
 			);
 		padding: var(--piko-unit) var(--piko-space-4);
 		position: sticky;
