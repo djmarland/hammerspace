@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { resolve } from "$app/paths";
-	import PostEditorForm from "@/components/Admin/PostEditorForm.svelte";
-	import type { PageData } from "./$types";
+    import {resolve} from "$app/paths";
+    import PostEditorForm from "@/components/Admin/PostEditorForm.svelte";
+    import type {PageData} from "./$types";
 
-	interface Props {
+    interface Props {
 		data: PageData;
 	}
 
@@ -14,9 +14,9 @@
 	<title>Create New Post</title>
 </svelte:head>
 
-<div class="container">
+<div class="piko-page-container">
 	<header class="header">
-		<h1>Create New Post</h1>
+		<h1 class="piko-t-h1">Create New Post</h1>
 		<a href={resolve("/admin/posts")} class="back-link">← Back to posts</a>
 	</header>
 
@@ -28,12 +28,6 @@
 </div>
 
 <style>
-	.container {
-		max-width: var(--piko-page-max);
-		margin: 0 auto;
-		padding: var(--piko-space-5);
-	}
-
 	.header {
 		display: flex;
 		justify-content: space-between;
@@ -41,11 +35,6 @@
 		margin-bottom: var(--piko-space-7);
 		padding-bottom: var(--piko-space-5);
 		border-bottom: 1px solid var(--piko-color-border);
-	}
-
-	.header h1 {
-		font-size: 2rem;
-		margin: 0;
 	}
 
 	.back-link {

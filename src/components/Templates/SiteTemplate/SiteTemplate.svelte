@@ -1,5 +1,5 @@
 <script>
-    import Footer from "@/components/Organisms/Footer/Footer.svelte";
+	import Footer from "@/components/Organisms/Footer/Footer.svelte";
 </script>
 
 <div class="site-template">
@@ -19,7 +19,11 @@
 		grid-template-columns: 1fr 2fr;
 	}
 	header {
-		background-color: color-mix(in srgb, var(--piko-palette-dynamic-8) 10%, var(--piko-color-background) 90%);
+		background-color: color-mix(
+			in srgb,
+			var(--piko-palette-dynamic-8) 10%,
+			var(--piko-color-background) 90%
+		);
 		overflow: clip;
 	}
 	.header-content {

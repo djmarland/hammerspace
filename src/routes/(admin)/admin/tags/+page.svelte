@@ -1,8 +1,8 @@
 <script lang="ts">
-    import type {PageData} from "./$types";
-    import {enhance} from "$app/forms";
+	import type { PageData } from "./$types";
+	import { enhance } from "$app/forms";
 
-    interface Props {
+	interface Props {
 		data: PageData;
 	}
 

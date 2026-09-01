@@ -1,9 +1,9 @@
 <script lang="ts">
-    import type {PublicPostSummary} from "@/lib/posts";
-    import MarkdownContent from "@/components/Blog/MarkdownContent.svelte";
-    import ReadingTime from "@/components/Blog/ReadingTime.svelte";
+	import type { PublicPostSummary } from "@/lib/posts";
+	import MarkdownContent from "@/components/Blog/MarkdownContent.svelte";
+	import ReadingTime from "@/components/Blog/ReadingTime.svelte";
 
-    type Props = {
+	type Props = {
 		post: Pick<
 			PublicPostSummary,
 			"content" | "coverImageUrl" | "coverImageAlt" | "wordCount"

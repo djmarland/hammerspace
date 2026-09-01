@@ -1,10 +1,10 @@
 <script lang="ts">
-    import {resolve} from "$app/paths";
-    import PasskeySetup from "@/components/PasskeySetup.svelte";
-    import LogoutButton from "@/components/Organisms/LogoutButton/LogoutButton.svelte";
-    import type {PageData} from "./$types";
+	import { resolve } from "$app/paths";
+	import PasskeySetup from "@/components/PasskeySetup.svelte";
+	import LogoutButton from "@/components/Organisms/LogoutButton/LogoutButton.svelte";
+	import type { PageData } from "./$types";
 
-    type Props = { data: PageData };
+	type Props = { data: PageData };
 	let { data }: Props = $props();
 	const session = $derived(data.session);
 	const setupPasskey = $derived(data.setupPasskey);

@@ -1,112 +1,71 @@
 <script lang="ts">
     import Logo from "@/components/Atoms/Logo/Logo.svelte";
     import {resolve} from "$app/paths";
+    import LogoutButton from "@/components/Organisms/LogoutButton/LogoutButton.svelte";
 </script>
 
 <header class="masthead">
-	<div class="container">
-		<p>
-			<a href={resolve("/")}>
-				<Logo />
-			</a>
-		</p>
+	<div class="piko-page-container masthead__container">
+        <div>
+		<a href={resolve("/")}>
+			<Logo />
+		</a>
+            </div>
+        <nav>
+        <ul class="masthead__nav">
+            <li><a href={resolve("/admin/posts/new")}>New Post</a></li>
+            <li><a href={resolve("/admin/posts")}>Posts</a></li>
+            <li><a href={resolve("/admin/tags")}>Tags</a></li>
+            <LogoutButton />
+        </ul>
+        </nav>
 	</div>
 </header>
 
 <style>
 	.masthead {
-      :global(svg) {
-        max-width: 400px;
-      }
-		background:
-			radial-gradient(
-				circle at 15% 20%,
-				color-mix(
-						in srgb,
-						var(--piko-palette-dynamic-4) 42%,
-						transparent
-					)
-					0%,
-				transparent 38%
-			),
-			radial-gradient(
-				circle at 85% 80%,
-				color-mix(
-						in srgb,
-						var(--piko-palette-dynamic-4) 38%,
-						transparent
-					)
-					0%,
-				transparent 46%
-			),
-			radial-gradient(
-				ellipse at 60% 30%,
-				color-mix(in srgb, var(--piko-palette-white) 18%, transparent) 0%,
-				transparent 58%
-			),
-			radial-gradient(
-				ellipse at 25% 80%,
-				color-mix(
-						in srgb,
-						var(--piko-palette-dynamic-3) 24%,
-						transparent
-					)
-					0%,
-				transparent 55%
-			),
-			radial-gradient(
-				ellipse at 78% 12%,
-				color-mix(
-						in srgb,
-						var(--piko-palette-dynamic-3) 22%,
-						transparent
-					)
-					0%,
-				transparent 52%
-			),
-			var(--piko-palette-grey-8);
-		border-bottom: 1px solid
-			color-mix(
-				in srgb,
-				var(--piko-palette-dynamic-5) 65%,
-				var(--piko-palette-grey-7)
-			);
-		padding: var(--piko-unit) var(--piko-space-4);
+		:global(svg) {
+			width: 200px;
+			margin-block: var(--piko-unit);
+		}
+		background-color: color-mix(
+			in srgb,
+			var(--piko-palette-dynamic-8) 10%,
+			var(--piko-color-background) 90%
+		);
 		position: sticky;
 		top: 0;
-		animation: masthead-glow 16s ease-in-out infinite alternate;
+          margin-bottom: var(--piko-unit-double);
 	}
 
-	@keyframes masthead-glow {
-		0% {
-			background-position:
-				0 0,
-				100% 100%,
-				0 0;
-		}
-		100% {
-			background-position:
-				8% 12%,
-				92% 88%,
-				0 0;
-		}
-	}
+    .masthead__container {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: var(--piko-unit);
+      align-items: stretch;
+    }
 
-	@media (prefers-reduced-motion: reduce) {
-		.masthead {
-			animation: none;
-		}
-	}
+    .masthead__nav {
+        display: flex;
+        justify-content: flex-end;
+        align-items: stretch;
+        height: 100%;
 
-	@media (max-width: 56rem) {
-		.container {
-			display: flex;
-			justify-content: center;
-			text-align: center;
-		}
+      a {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        padding: var(--piko-unit);
+        text-decoration: none;
+        &:hover {
+          background-color: var(--piko-color-link);
+          color: color-mix(
+			in srgb,
+			var(--piko-palette-dynamic-8) 10%,
+			var(--piko-color-background) 90%
+		);
+        }
+      }
+    }
 
-		.container p {
-			margin: 0;
-		}
-	}
 </style>

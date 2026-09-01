@@ -1,12 +1,12 @@
 <script lang="ts">
-    import {resolve} from "$app/paths";
-    import type {PageData} from "./$types";
-    import PostCard from "@/components/Blog/PostCard.svelte";
-    import SidePageHeader from "@/components/Blog/SidePageHeader.svelte";
-    import PaginationNav from "@/components/PaginationNav.svelte";
-    import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate.svelte";
+	import { resolve } from "$app/paths";
+	import type { PageData } from "./$types";
+	import PostCard from "@/components/Blog/PostCard.svelte";
+	import SidePageHeader from "@/components/Blog/SidePageHeader.svelte";
+	import PaginationNav from "@/components/PaginationNav.svelte";
+	import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate.svelte";
 
-    type Props = { data: PageData };
+	type Props = { data: PageData };
 	let { data }: Props = $props();
 	const archive = $derived(data.archive);
 
@@ -21,7 +21,7 @@
 
 <SiteTemplate>
 	<SidePageHeader slot="header" title="Archive">
-        <a href={resolve("/feed.xml")} class="actionLink">RSS feed</a>
+		<a href={resolve("/feed.xml")} class="actionLink">RSS feed</a>
 	</SidePageHeader>
 
 	<div class="content">

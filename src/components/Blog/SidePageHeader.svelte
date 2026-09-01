@@ -1,8 +1,8 @@
 <script lang="ts">
-    import {resolve} from "$app/paths";
-    import Logo from "@/components/Atoms/Logo/Logo.svelte";
+	import { resolve } from "$app/paths";
+	import Logo from "@/components/Atoms/Logo/Logo.svelte";
 
-    type Props = { title: string };
+	type Props = { title: string };
 	let { title }: Props = $props();
 </script>
 

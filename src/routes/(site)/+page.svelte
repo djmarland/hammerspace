@@ -1,12 +1,12 @@
 <script lang="ts">
-    import {resolve} from "$app/paths";
-    import type {PageData} from "./$types";
-    import PostBody from "@/components/Blog/PostBody.svelte";
-    import ReadingTime from "@/components/Blog/ReadingTime.svelte";
-    import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate.svelte";
-    import Logo from "@/components/Atoms/Logo/Logo.svelte";
+	import { resolve } from "$app/paths";
+	import type { PageData } from "./$types";
+	import PostBody from "@/components/Blog/PostBody.svelte";
+	import ReadingTime from "@/components/Blog/ReadingTime.svelte";
+	import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate.svelte";
+	import Logo from "@/components/Atoms/Logo/Logo.svelte";
 
-    type Props = { data: PageData };
+	type Props = { data: PageData };
 	let { data }: Props = $props();
 	const posts = $derived(data.posts);
 

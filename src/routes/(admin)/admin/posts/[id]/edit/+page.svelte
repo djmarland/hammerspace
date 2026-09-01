@@ -1,11 +1,11 @@
 <script lang="ts">
-    import {resolve} from "$app/paths";
-    import PostEditorForm from "@/components/Admin/PostEditorForm.svelte";
-    import {formatDateTimeLocalValue} from "@/lib/temporal";
-    import {enhance} from "$app/forms";
-    import type {PageData} from "./$types";
+	import { resolve } from "$app/paths";
+	import PostEditorForm from "@/components/Admin/PostEditorForm.svelte";
+	import { formatDateTimeLocalValue } from "@/lib/temporal";
+	import { enhance } from "$app/forms";
+	import type { PageData } from "./$types";
 
-    interface Props {
+	interface Props {
 		data: PageData;
 	}
 

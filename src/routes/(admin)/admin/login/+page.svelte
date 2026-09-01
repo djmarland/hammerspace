@@ -1,11 +1,14 @@
 <script lang="ts">
-    import {browser} from "$app/environment";
-    import {goto} from "$app/navigation";
-    import {resolve} from "$app/paths";
-    import {page} from "$app/state";
-    import {startAuthentication, verifyAuthentication,} from "@/lib/webauthn-client";
+	import { browser } from "$app/environment";
+	import { goto } from "$app/navigation";
+	import { resolve } from "$app/paths";
+	import { page } from "$app/state";
+	import {
+		startAuthentication,
+		verifyAuthentication,
+	} from "@/lib/webauthn-client";
 
-    const PASSKEY_TIMEOUT_MS = 12000;
+	const PASSKEY_TIMEOUT_MS = 12000;
 
 	function withTimeout<T>(
 		promise: Promise<T>,
@@ -149,37 +152,34 @@
 </svelte:head>
 
 <div class="container">
-	<div class="form">
-		<h1>Admin Login</h1>
+	<div class="form piko-vstack">
+		<h1 class="piko-t-h1">Login</h1>
 
 		{#if error}
-			<div class="error">{error}</div>
+			<div data-state="error" class="piko-state__box">{error}</div>
 		{/if}
 
 		{#if token}
-			<p class="demo">
+			<p data-state="info" class="piko-state__box">
 				{tokenLoading ? "Verifying login token..." : "Token login attempted."}
 			</p>
 		{:else}
-			<p class="demo">
-				Passkey prompt should appear automatically. If it does not, use the
-				button below.
-			</p>
-
 			{#if autoAttempting}
-				<p class="demo">Attempting automatic passkey login...</p>
+				<p data-state="info" class="piko-state__box">
+					Attempting automatic passkey login...
+				</p>
 			{/if}
 
 			<button
 				onclick={() => void handlePasskeyLogin("manual")}
-				class="passkeyButton"
+				class="piko-button--primary"
 				disabled={passkeyLoading}
 			>
 				{passkeyLoading ? "Authenticating..." : "Retry Passkey Login"}
 			</button>
 
 			{#if !webauthnSupported}
-				<p class="demo">
+				<p data-state="warning" class="piko-state__box">
 					This browser may report limited WebAuthn support, but you can still
 					try passkey login manually.
 				</p>
@@ -190,63 +190,9 @@
 
 <style>
 	.container {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		min-height: 100vh;
-	}
-
-	.form {
-		background: var(--piko-color-surface);
-		padding: calc(var(--piko-space-6) + var(--piko-space-2));
-		border: 1px solid var(--piko-color-border);
-		box-shadow: var(--piko-shadow-2);
-		width: 100%;
-		max-width: 480px;
-	}
-
-	.form h1 {
-		margin-bottom: 30px;
 		text-align: center;
-	}
-
-	.passkeyButton {
-		width: 100%;
-		padding: var(--piko-space-control-padding-y)
-			var(--piko-space-control-padding-x);
-		background-color: var(--piko-color-success-bg);
-		color: var(--piko-color-success-text);
-		border: 1px solid var(--piko-color-success-border);
-		border-radius: 0;
-		font-size: 1rem;
-		cursor: pointer;
-		transition: background-color 0.2s ease;
-		margin-top: 16px;
-		box-sizing: border-box;
-	}
-
-	.passkeyButton:hover:not(:disabled) {
-		background-color: var(--piko-color-success-border);
-	}
-
-	.passkeyButton:disabled {
-		opacity: 0.6;
-		cursor: not-allowed;
-	}
-
-	.error {
-		background-color: var(--piko-color-error-bg);
-		border: 1px solid var(--piko-color-error-border);
-		color: var(--piko-color-error-text);
-		padding: 10px;
-		border-radius: 0;
-		margin-bottom: 20px;
-	}
-
-	.demo {
-		margin-top: 20px;
-		text-align: center;
-		font-size: 0.9rem;
-		color: var(--piko-color-text-subtle);
+		padding: var(--piko-unit);
+		max-width: 600px;
+		margin-inline: auto;
 	}
 </style>

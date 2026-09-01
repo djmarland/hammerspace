@@ -211,15 +211,20 @@
 		{/if}
 	</label>
 
+    <div class="actions">
+        <div class="piko-page-container actions__inner">
 	<button type="submit" class="submitButton" disabled={pending}>
 		{pending ? "Saving..." : submitLabel}
 	</button>
+        </div>
+        </div>
 </form>
 
 <style>
 	.form {
 		display: grid;
 		gap: 1.25rem;
+      margin-bottom: var(--piko-unit-quad);
 	}
 
 	.field,
@@ -315,4 +320,18 @@
 		color: #c10f0f;
 		font-weight: 600;
 	}
+
+    .actions {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--piko-color-background);
+      padding-block: var(--piko-unit);
+      border-top: solid 1px var(--piko-color-border);
+   }
+    .actions__inner {
+      display: flex;
+      justify-content: end;
+    }
 </style>

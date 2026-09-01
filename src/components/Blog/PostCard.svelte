@@ -1,8 +1,8 @@
 <script lang="ts">
-    import {resolve} from "$app/paths";
-    import type {PublicPostSummary} from "@/lib/posts";
+	import { resolve } from "$app/paths";
+	import type { PublicPostSummary } from "@/lib/posts";
 
-    type Props = {
+	type Props = {
 		post: PublicPostSummary;
 		headingLevel?: "h2" | "h3";
 	};

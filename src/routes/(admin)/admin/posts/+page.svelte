@@ -1,10 +1,10 @@
 <script lang="ts">
-    import {resolve} from "$app/paths";
-    import PaginationNav from "@/components/PaginationNav.svelte";
-    import type {PageData} from "./$types";
-    import {enhance} from "$app/forms";
+	import { resolve } from "$app/paths";
+	import PaginationNav from "@/components/PaginationNav.svelte";
+	import type { PageData } from "./$types";
+	import { enhance } from "$app/forms";
 
-    interface Props {
+	interface Props {
 		data: PageData;
 	}
 

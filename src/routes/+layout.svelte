@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { onNavigate } from '$app/navigation';
+	import { onNavigate } from "$app/navigation";
 
 	declare global {
 		interface Document {
-			startViewTransition?: (
-				updateCallback: () => Promise<void> | void
-			) => { finished: Promise<void> };
+			startViewTransition?: (updateCallback: () => Promise<void> | void) => {
+				finished: Promise<void>;
+			};
 		}
 	}
 

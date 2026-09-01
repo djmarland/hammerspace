@@ -1,10 +1,15 @@
 <script lang="ts">
-    import {browser} from "$app/environment";
-    import {onMount} from "svelte";
-    import {readLocalStorage, writeLocalStorage} from "@/lib/local-storage";
-    import {calculateWordsPerMinute, readingSpeedStore, readingTimerStore, setReadingSpeed,} from "@/lib/reading-timer";
+	import { browser } from "$app/environment";
+	import { onMount } from "svelte";
+	import { readLocalStorage, writeLocalStorage } from "@/lib/local-storage";
+	import {
+		calculateWordsPerMinute,
+		readingSpeedStore,
+		readingTimerStore,
+		setReadingSpeed,
+	} from "@/lib/reading-timer";
 
-    let {
+	let {
 		wordCount,
 		defaultWordsPerMinute = 200,
 		storageKey = ["reader", "blog", "reading-speed-wpm"],
@@ -227,7 +232,7 @@
 					Timer running: {formatDuration(liveElapsedMs)}
 				</p>
 				<div class="dialogActions stackedActions">
-					<button type="button" class="secondaryButton" onclick={stopTimer}
+					<button type="button" class="piko-button--primary" onclick={stopTimer}
 						>Stop Timer</button
 					>
 					<button type="submit">Close</button>
@@ -239,8 +244,10 @@
 					find your reading speed.
 				</p>
 				<div class="dialogActions stackedActions">
-					<button type="button" class="primaryButton" onclick={startTimer}
-						>Start Timer</button
+					<button
+						type="button"
+						class="piko-button--primary"
+						onclick={startTimer}>Start Timer</button
 					>
 					<button type="submit">Close</button>
 				</div>
@@ -273,11 +280,11 @@
 				bind:value={stopTimerWordsPerMinute}
 			/>
 			<div class="dialogActions stackedActions">
-				<button type="button" class="secondaryButton" onclick={closeStopDialog}
-					>Cancel</button
-				>
-				<button type="button" class="primaryButton" onclick={saveStopTimer}
-					>Save for next time</button
+				<button type="button" onclick={closeStopDialog}>Cancel</button>
+				<button
+					type="button"
+					class="piko-button--primary"
+					onclick={saveStopTimer}>Save for next time</button
 				>
 			</div>
 		</form>
@@ -342,7 +349,7 @@
 	.dialogContent label {
 		font-weight: 600;
 	}
-    
+
 	.dialogActions {
 		display: flex;
 		justify-content: flex-end;

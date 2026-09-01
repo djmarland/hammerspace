@@ -1,9 +1,13 @@
 <script lang="ts">
-    import {goto} from "$app/navigation";
-    import {resolve} from "$app/paths";
-    import {isWebAuthnSupported, startRegistration, verifyRegistration,} from "@/lib/webauthn-client";
+	import { goto } from "$app/navigation";
+	import { resolve } from "$app/paths";
+	import {
+		isWebAuthnSupported,
+		startRegistration,
+		verifyRegistration,
+	} from "@/lib/webauthn-client";
 
-    interface Props {
+	interface Props {
 		hasPasskey: boolean;
 	}
 
