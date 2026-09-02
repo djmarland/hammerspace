@@ -803,6 +803,17 @@
 					font-weight: bold;
 				}
 			}
+
+			dialog {
+				border: solid 1px var(--piko-color-border);
+				background: var(--piko-color-background);
+				color: var(--piko-color-text);
+				padding: var(--piko-unit);
+				box-shadow: 0 0 8px rgb(from var(--piko-palette-black) r g b / 0.5);
+			}
+			dialog::backdrop {
+				background: rgba(0, 0, 0, 0.4);
+			}
 		}
 
 		@layer typography {
@@ -1141,9 +1152,9 @@
 				);
 			}
 
-			.cds-button--primary.cds-disabled,
-			a.cds-button--primary.cds-disabled,
-			.cds-button--primary:disabled {
+			.piko-button--primary.piko-disabled,
+			a.piko-button--primary.piko-disabled,
+			.piko-button--primary:disabled {
 				--_piko-button-color-text: var(--piko-button-disabled-color-text);
 				--_piko-button-color-background: var(
 					--piko-button-disabled-color-background
@@ -1160,17 +1171,17 @@
 				);
 			}
 
-			.cds-button--tertiary.cds-disabled,
-			a.cds-button--tertiary.cds-disabled,
-			.cds-button--tertiary:disabled {
+			.piko-button--tertiary.piko-disabled,
+			a.piko-button--tertiary.piko-disabled,
+			.piko-button--tertiary:disabled {
 				--_piko-button-color-background: transparent;
 				--_piko-button-hover-background: transparent;
 				--_piko-button-active-background: transparent;
 			}
 
-			.cds-button--destruction.cds-disabled,
-			a.cds-button--destruction.cds-disabled,
-			.cds-button--destruction:disabled {
+			.piko-button--destruction.piko-disabled,
+			a.piko-button--destruction.piko-disabled,
+			.piko-button--destruction:disabled {
 				--_piko-button-color-text: var(--piko-button-disabled-color-text);
 				--_piko-button-color-background: var(
 					--piko-button-disabled-color-background
@@ -1240,7 +1251,7 @@
 				input[type="url"],
 				select,
 				textarea,
-				.cds-input
+				.piko-input
 			):is(:focus, :focus-visible) {
 				--_piko-input-border-color: var(
 					--piko-color-state-border,
@@ -1265,11 +1276,11 @@
 				input[type="url"],
 				select,
 				textarea,
-				.cds-input,
-				.cds-input--select,
-				.cds-input--field,
-				.cds-input--textarea
-			):is(:disabled, .cds-disabled) {
+				.piko-input,
+				.piko-input--select,
+				.piko-input--field,
+				.piko-input--textarea
+			):is(:disabled, .piko-disabled) {
 				--_piko-input-border-color: var(--piko-color-background-inactive);
 				background: var(--piko-color-background-inactive);
 			}
@@ -1286,11 +1297,11 @@
 					input[type="url"],
 					select,
 					textarea,
-					.cds-input,
-					.cds-input--select,
-					.cds-input--field,
-					.cds-input--textarea
-				):is(:disabled, .cds-disabled)::placeholder {
+					.piko-input,
+					.piko-input--select,
+					.piko-input--field,
+					.piko-input--textarea
+				):is(:disabled, .piko-disabled)::placeholder {
 				color: var(--piko-color-text-subtle);
 			}
 
@@ -1306,10 +1317,10 @@
 				input[type="url"],
 				select,
 				textarea,
-				.cds-input,
-				.cds-input--select,
-				.cds-input--field,
-				.cds-input--textarea
+				.piko-input,
+				.piko-input--select,
+				.piko-input--field,
+				.piko-input--textarea
 			):user-invalid {
 				--_piko-input-border-color: var(--piko-color-state-error-border);
 			}
@@ -1326,10 +1337,10 @@
 				input[type="url"],
 				select,
 				textarea,
-				.cds-input,
-				.cds-input--select,
-				.cds-input--field,
-				.cds-input--textarea
+				.piko-input,
+				.piko-input--select,
+				.piko-input--field,
+				.piko-input--textarea
 			):-moz-ui-invalid {
 				--_piko-input-border-color: var(--piko-color-state-error-border);
 			}

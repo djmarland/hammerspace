@@ -1,86 +1,78 @@
 <script lang="ts">
-	import { resolve } from "$app/paths";
-	import PostEditorForm from "@/components/Admin/PostEditorForm.svelte";
-	import { formatDateTimeLocalValue } from "@/lib/temporal";
-	import { enhance } from "$app/forms";
-	import type { PageData } from "./$types";
+    import PostEditorForm from "@/components/Admin/PostEditorForm.svelte";
+    import {formatDateTimeLocalValue} from "@/lib/temporal";
+    import {enhance} from "$app/forms";
+    import type {PageData} from "./$types";
 
-	interface Props {
-		data: PageData;
-	}
+    interface Props {
+        data: PageData;
+    }
 
-	let { data }: Props = $props();
+    let {data}: Props = $props();
 
-	let actionInProgress = $state(false);
-	let deleteConfirm = $state(false);
+    let actionInProgress = $state(false);
+    let deleteConfirm = $state(false);
 
-	function handleSubmit() {
-		actionInProgress = true;
-	}
+    function handleSubmit() {
+        actionInProgress = true;
+    }
 
-	function cancelDelete() {
-		deleteConfirm = false;
-		actionInProgress = false;
-	}
+    function cancelDelete() {
+        deleteConfirm = false;
+        actionInProgress = false;
+    }
 </script>
 
 <svelte:head>
-	<title>Edit Post: {data.post.title}</title>
+    <title>Edit Post: {data.post.title}</title>
 </svelte:head>
 
-<div class="container">
-	<header class="header">
-		<div class="header-content">
-			<h1>{data.post.title}</h1>
-			<div class="dates">
-				<p class="date-info">
-					<span class="label">Created:</span>
-					<time
-						>{new Date(data.post.createdAt).toLocaleDateString("en-US", {
-							year: "numeric",
-							month: "short",
-							day: "numeric",
-							hour: "2-digit",
-							minute: "2-digit",
-						})}</time
-					>
-				</p>
-				<p class="date-info">
-					<span class="label">Updated:</span>
-					<time
-						>{new Date(data.post.updatedAt).toLocaleDateString("en-US", {
-							year: "numeric",
-							month: "short",
-							day: "numeric",
-							hour: "2-digit",
-							minute: "2-digit",
-						})}</time
-					>
-				</p>
-				{#if data.post.publishedAt}
-					<p class="date-info">
-						<span class="label">Published:</span>
-						<time
-							>{new Date(data.post.publishedAt).toLocaleDateString("en-US", {
-								year: "numeric",
-								month: "short",
-								day: "numeric",
-								hour: "2-digit",
-								minute: "2-digit",
-							})}</time
-						>
-					</p>
-				{/if}
-			</div>
-		</div>
-		<a href={resolve("/admin/posts")} class="back-link">← Back to posts</a>
-	</header>
+<div class="piko-page-container piko-vstack">
+    <header class="header piko-vstack--small">
+            <h1 class="piko-t-h1">{data.post.title}</h1>
+            <dl>
+                <dt>Created:</dt>
+                <dd>
+                    <time>{new Date(data.post.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                    })}</time
+                    >
+                </dd>
+                <dt>Updated:</dt>
+                <dd>
+                    <time>{new Date(data.post.updatedAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                    })}</time
+                    >
+                </dd>
+                {#if data.post.publishedAt}
+                    <dt>Published:</dt>
+                    <dd>
+                        <time>{new Date(data.post.publishedAt).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                        })}</time>
+                    </dd>
+                {/if}
+            </dl>
+    </header>
 
-	<PostEditorForm
-		action="?/update"
-		submitLabel="Update Post"
-		tags={data.tags}
-		initialValues={{
+    <PostEditorForm
+            action="?/update"
+            submitLabel="Update Post"
+            tags={data.tags}
+            initialValues={{
 			title: data.post.title,
 			slug: data.post.slug,
 			excerpt: data.post.excerpt || "",
@@ -93,124 +85,71 @@
 			coverImageAlt: data.post.coverImageAlt || "",
 			tagIds: data.post.tags.map((tag) => tag.tagId),
 		}}
-	/>
+    />
 
-	<section class="danger-zone">
-		<h2>Danger Zone</h2>
-		<p class="danger-zone-intro">
-			These actions are permanent and cannot be undone.
-		</p>
+    <section class="danger-zone">
+        <h2>Danger Zone</h2>
+        <p class="danger-zone-intro">
+            These actions are permanent and cannot be undone.
+        </p>
 
-		<div class="danger-actions">
-			<div class="action-group danger-delete">
-				<div class="action-info">
-					<h3>Delete Post</h3>
-					<p>Permanently delete this post. This action cannot be undone.</p>
-				</div>
-				{#if !deleteConfirm}
-					<button
-						type="button"
-						class="btn-danger"
-						onclick={() => {
+        <div class="danger-actions">
+            <div class="action-group danger-delete">
+                <div class="action-info">
+                    <h3>Delete Post</h3>
+                    <p>Permanently delete this post. This action cannot be undone.</p>
+                </div>
+                {#if !deleteConfirm}
+                    <button
+                            type="button"
+                            class="btn-danger"
+                            onclick={() => {
 							deleteConfirm = true;
 						}}
-					>
-						Delete
-					</button>
-				{:else}
-					<div class="delete-confirm-panel">
-						<p class="confirm-message">
-							Are you absolutely sure you want to delete this post permanently?
-						</p>
-						<div class="confirm-buttons">
-							<form
-								method="post"
-								action="?/delete"
-								use:enhance={() => handleSubmit()}
-							>
-								<input type="hidden" name="postId" value={data.post.id} />
-								<button
-									type="submit"
-									class="btn-delete-confirm"
-									disabled={actionInProgress}
-								>
-									{actionInProgress ? "Deleting..." : "Yes, Delete Permanently"}
-								</button>
-							</form>
-							<button
-								type="button"
-								class="btn-cancel"
-								onclick={cancelDelete}
-								disabled={actionInProgress}
-							>
-								Cancel
-							</button>
-						</div>
-					</div>
-				{/if}
-			</div>
-		</div>
-	</section>
+                    >
+                        Delete
+                    </button>
+                {:else}
+                    <div class="delete-confirm-panel">
+                        <p class="confirm-message">
+                            Are you absolutely sure you want to delete this post permanently?
+                        </p>
+                        <div class="confirm-buttons">
+                            <form
+                                    method="post"
+                                    action="?/delete"
+                                    use:enhance={() => handleSubmit()}
+                            >
+                                <input type="hidden" name="postId" value={data.post.id}/>
+                                <button
+                                        type="submit"
+                                        class="btn-delete-confirm"
+                                        disabled={actionInProgress}
+                                >
+                                    {actionInProgress ? "Deleting..." : "Yes, Delete Permanently"}
+                                </button>
+                            </form>
+                            <button
+                                    type="button"
+                                    class="btn-cancel"
+                                    onclick={cancelDelete}
+                                    disabled={actionInProgress}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                {/if}
+            </div>
+        </div>
+    </section>
 </div>
 
 <style>
-	.container {
-		max-width: var(--piko-page-max);
-		margin: 0 auto;
-		padding: var(--piko-space-5);
-	}
-
 	.header {
-		display: flex;
-		justify-content: space-between;
-		align-items: flex-start;
-		margin-bottom: var(--piko-space-7);
-		padding-bottom: var(--piko-space-5);
+		margin-bottom: var(--piko-unit);
+		padding-bottom: var(--piko-unit);
 		border-bottom: 1px solid var(--piko-color-border);
-		gap: var(--piko-space-4);
-	}
-
-	.header-content {
-		flex: 1;
-	}
-
-	.header h1 {
-		font-size: 2rem;
-		margin: 0 0 var(--piko-space-3) 0;
-	}
-
-	.dates {
-		display: flex;
-		gap: var(--piko-space-4);
-		flex-wrap: wrap;
-	}
-
-	.date-info {
-		margin: 0;
-		font-size: 0.9rem;
-		color: var(--piko-color-text-subtle);
-	}
-
-	.date-info .label {
-		font-weight: 600;
-		color: var(--piko-color-text);
-	}
-
-	.date-info time {
-		margin-left: 0.5rem;
-	}
-
-	.back-link {
-		color: var(--piko-color-primary);
-		text-decoration: none;
-		font-size: 0.9rem;
-		white-space: nowrap;
-		transition: opacity 0.2s ease;
-	}
-
-	.back-link:hover {
-		opacity: 0.8;
-		text-decoration: underline;
 	}
 
 	.danger-zone {

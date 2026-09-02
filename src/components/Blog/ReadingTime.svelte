@@ -262,7 +262,7 @@
 		</div>
 	{/if}
 
-	<dialog bind:this={stopDialog} class="dialog" aria-label="Stop reading timer">
+	<dialog bind:this={stopDialog} aria-label="Stop reading timer">
 		<form method="dialog" class="dialogContent" onsubmit={closeStopDialog}>
 			<p class="dialogTitle">Stop reading timer</p>
 			<p class="timerStatus">Elapsed time: {formatDuration(liveElapsedMs)}</p>
@@ -311,17 +311,6 @@
 		display: flex;
 		justify-content: flex-end;
 		margin-top: 1rem;
-	}
-
-	.dialog {
-		border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
-		padding: 1.25rem;
-		background: var(--piko-color-background, #fff);
-		color: inherit;
-	}
-
-	.dialog::backdrop {
-		background: rgba(0, 0, 0, 0.35);
 	}
 
 	.dialogContent {

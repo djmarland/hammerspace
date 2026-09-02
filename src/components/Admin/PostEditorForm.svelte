@@ -149,7 +149,7 @@
 				Rendered with the same MarkdownContent component used on public posts.
 			</p>
 		</div>
-		<div class="previewBody">
+		<div class="previewBody piko-prose">
 			{#if previewContent}
 				<MarkdownContent content={previewContent} />
 			{:else}
@@ -238,19 +238,6 @@
 	.fieldset legend,
 	.previewHeader h2 {
 		font-weight: 600;
-	}
-
-	.field input,
-	.field textarea {
-		padding: 0.75rem 0.85rem;
-		border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
-		background: transparent;
-		color: inherit;
-		font: inherit;
-	}
-
-	.field textarea {
-		resize: vertical;
 	}
 
 	.tagGrid {

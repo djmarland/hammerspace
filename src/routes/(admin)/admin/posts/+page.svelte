@@ -2,7 +2,6 @@
     import {resolve} from "$app/paths";
     import PaginationNav from "@/components/PaginationNav.svelte";
     import type {PageData} from "./$types";
-    import {enhance} from "$app/forms";
 
     interface Props {
 		data: PageData;
@@ -11,7 +10,8 @@
 	let { data }: Props = $props();
 
 	let query = $state("");
-	let deleteConfirm = $state<string | null>(null);
+	// per-row confirm component handles its own open state; no shared dialog state
+	// kept actionInProgress to disable submit buttons while request in flight
 	let actionInProgress = $state(false);
 
 	$effect(() => {
@@ -25,13 +25,6 @@
 		return `/admin/posts?${params.toString()}`;
 	}
 
-	function handleDeleteClick(postId: string) {
-		deleteConfirm = postId;
-	}
-
-	function cancelDelete() {
-		deleteConfirm = null;
-	}
 
 	function handleSubmit() {
 		actionInProgress = true;
@@ -54,9 +47,7 @@
                 name="query"
                 placeholder="Search posts..."
                 value={query}
-                onchange={(e) => {
-                    query = e.currentTarget.value;
-                }}
+                onchange={(e) => query = e.currentTarget.value}
             />
                 <button type="submit">Search</button>
             </div>
@@ -83,12 +74,11 @@
 					<th>Slug</th>
 					<th>Status</th>
 					<th>Updated</th>
-					<th>Actions</th>
 				</tr>
 			</thead>
 			<tbody>
 				{#each data.posts as post (post.id)}
-					<tr>
+					<tr class="status-row" data-state={post.publishedAt ? "success" : "warning"}>
 						<td>
 							<a
 								href={resolve(`/admin/posts/${post.id}/edit`)}
@@ -96,7 +86,7 @@
 							>
 						</td>
 						<td class="slug-cell">{post.slug}</td>
-						<td class="status-cell" data-state={post.publishedAt ? "success" : "warning"}>
+						<td>
 								{post.publishedAt ? "Published" : "Draft"}
 						</td>
 						<td>
@@ -105,50 +95,6 @@
 								month: "short",
 								day: "numeric",
 							})}
-						</td>
-						<td class="actions-cell">
-							<div class="piko-hstack">
-								<a
-									href={resolve(`/admin/posts/${post.id}/edit`)}
-									class="piko-button--primary"
-									title="Edit post">Edit</a
-								>
-								<button
-									type="button"
-									class="piko-button--danger"
-									onclick={() => handleDeleteClick(post.id)}
-									title="Delete post"
-								>
-									Delete
-								</button>
-								{#if deleteConfirm === post.id}
-									<div class="delete-confirm">
-										<p>Delete this post permanently?</p>
-										<form
-											method="post"
-											action="?/delete"
-											use:enhance={() => handleSubmit()}
-										>
-											<input type="hidden" name="postId" value={post.id} />
-											<button
-												type="submit"
-												class="confirm-delete-btn"
-												disabled={actionInProgress}
-											>
-												Yes, Delete
-											</button>
-										</form>
-										<button
-											type="button"
-											class="cancel-delete-btn"
-											onclick={cancelDelete}
-											disabled={actionInProgress}
-										>
-											Cancel
-										</button>
-									</div>
-								{/if}
-							</div>
 						</td>
 					</tr>
 				{/each}
@@ -168,7 +114,7 @@
 		color: var(--piko-color-text-subtle);
 		font-family: monospace;
 	}
-    .status-cell {
+    .status-row {
       background-color: var(--piko-color-state-background);
     }
 
