@@ -1,13 +1,13 @@
 <script lang="ts">
-	import type { PageData } from "./$types";
-	import PostCard from "@/components/Blog/PostCard.svelte";
-	import PostBody from "@/components/Blog/PostBody.svelte";
-	import SidePageHeader from "@/components/Blog/SidePageHeader.svelte";
-	import ReadingTime from "@/components/Blog/ReadingTime.svelte";
-	import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate.svelte";
-	import { resolve } from "$app/paths";
+    import type {PageData} from "./$types";
+    import PostCard from "@/components/Blog/PostCard.svelte";
+    import PostBody from "@/components/Blog/PostBody.svelte";
+    import SidePageHeader from "@/components/Blog/SidePageHeader.svelte";
+    import ReadingTime from "@/components/Blog/ReadingTime.svelte";
+    import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate.svelte";
+    import {resolve} from "$app/paths";
 
-	type Props = { data: PageData };
+    type Props = { data: PageData };
 	let { data }: Props = $props();
 	const post = $derived(data.post);
 	const relatedPosts = $derived(data.relatedPosts);
@@ -18,7 +18,7 @@
 </script>
 
 <svelte:head>
-	<title>{post.title} - Hammerspace Blog</title>
+	<title>{post.title} | Hammerspace</title>
 	<meta name="description" content={post.excerpt || ""} />
 	<meta property="og:type" content="article" />
 	<meta property="og:title" content={post.title} />

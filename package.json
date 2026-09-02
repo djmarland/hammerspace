@@ -28,6 +28,7 @@
 		"eslint-plugin-svelte": "^3.22.0",
 		"globals": "^17.11.0",
 		"marked": "^11.0.0",
+		"microlighter": "^2.1.0",
 		"remark-gfm": "^4.0.1"
 	},
 	"devDependencies": {

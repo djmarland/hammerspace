@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { resolve } from "$app/paths";
-	import type { PageData } from "./$types";
-	import PostBody from "@/components/Blog/PostBody.svelte";
-	import ReadingTime from "@/components/Blog/ReadingTime.svelte";
-	import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate.svelte";
-	import Logo from "@/components/Atoms/Logo/Logo.svelte";
+    import {resolve} from "$app/paths";
+    import type {PageData} from "./$types";
+    import PostBody from "@/components/Blog/PostBody.svelte";
+    import ReadingTime from "@/components/Blog/ReadingTime.svelte";
+    import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate.svelte";
+    import Logo from "@/components/Atoms/Logo/Logo.svelte";
 
-	type Props = { data: PageData };
+    type Props = { data: PageData };
 	let { data }: Props = $props();
 	const posts = $derived(data.posts);
 
@@ -16,7 +16,7 @@
 </script>
 
 <svelte:head>
-	<title>Hammerspace Blog</title>
+	<title>Hammerspace - A blog about Web Development, Software Engineering, and Technology in general</title>
 </svelte:head>
 
 <SiteTemplate>
@@ -26,9 +26,9 @@
 		</h1>
 		<p class="intro">
 			A blog about Web Development, Software Engineering, and Technology in
-			general, and maybe other topics of interest.
+			general, plus maybe other topics of interest.
 			<br />
-			by <b>David Marland</b>
+			By <b><a href={resolve("/about")}>David Marland</a></b>
 		</p>
 		<nav class="actions">
 			<a href={resolve("/posts")}>Browse archive</a>
@@ -36,7 +36,7 @@
 		</nav>
 	</header>
 
-	<main class="container">
+	<div class="piko-vstack">
 		<section class="section">
 			<div class="postList">
 				{#each posts as post (post.id)}
@@ -46,7 +46,6 @@
 								<a href={resolve(`/posts/${post.slug}`)}>{post.title}</a>
 							</h2>
 							<div class="meta">
-								By {post.authorName} ·
 								<time dateTime={post.publishedAt.toISOString()}>
 									{dateFormatter.format(post.publishedAt)}
 								</time>
@@ -67,16 +66,13 @@
 				{/each}
 			</div>
 		</section>
-	</main>
+        <section>
+            <a href={resolve("/posts")} class="button">View all posts</a>
+        </section>
+	</div>
 </SiteTemplate>
 
 <style>
-	.container {
-		max-width: 960px;
-		margin: 0 auto;
-		padding: 2rem 0 3rem;
-	}
-
 	.hero {
 		display: flex;
 		flex-direction: column;

@@ -119,10 +119,6 @@
 		{#if fieldErrors.slug}
 			<span class="fieldError">{fieldErrors.slug}</span>
 		{/if}
-		<p class="helpText">
-			Canonical URL is derived automatically from NEXT_PUBLIC_SITE_URL and this
-			slug.
-		</p>
 	</label>
 
 	<label class="field">

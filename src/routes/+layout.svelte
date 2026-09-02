@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { onNavigate } from "$app/navigation";
+    import {onNavigate} from "$app/navigation";
+    import "microlighter/themes/github.css";
 
-	declare global {
+    declare global {
 		interface Document {
 			startViewTransition?: (updateCallback: () => Promise<void> | void) => {
 				finished: Promise<void>;

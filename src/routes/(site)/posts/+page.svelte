@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { resolve } from "$app/paths";
-	import type { PageData } from "./$types";
-	import PostCard from "@/components/Blog/PostCard.svelte";
-	import SidePageHeader from "@/components/Blog/SidePageHeader.svelte";
-	import PaginationNav from "@/components/PaginationNav.svelte";
-	import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate.svelte";
+    import {resolve} from "$app/paths";
+    import type {PageData} from "./$types";
+    import PostCard from "@/components/Blog/PostCard.svelte";
+    import SidePageHeader from "@/components/Blog/SidePageHeader.svelte";
+    import PaginationNav from "@/components/PaginationNav.svelte";
+    import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate.svelte";
 
-	type Props = { data: PageData };
+    type Props = { data: PageData };
 	let { data }: Props = $props();
 	const archive = $derived(data.archive);
 
@@ -16,7 +16,7 @@
 </script>
 
 <svelte:head>
-	<title>Archive - Hammerspace Blog</title>
+	<title>Archive | Hammerspace</title>
 </svelte:head>
 
 <SiteTemplate>

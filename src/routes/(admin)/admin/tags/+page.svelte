@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { PageData } from "./$types";
-	import { enhance } from "$app/forms";
+    import type {PageData} from "./$types";
+    import {enhance} from "$app/forms";
 
-	interface Props {
+    interface Props {
 		data: PageData;
 	}
 
@@ -288,12 +288,6 @@
 		font-size: 1.3rem;
 	}
 
-	.empty-state {
-		padding: var(--piko-space-7);
-		text-align: center;
-		color: var(--piko-color-text-subtle);
-	}
-
 	.tags-list {
 		display: flex;
 		flex-direction: column;
@@ -341,17 +335,6 @@
 		position: relative;
 	}
 
-	.edit-btn,
-	.delete-btn {
-		padding: 0.35rem 0.6rem;
-		border: 1px solid var(--piko-color-border);
-		border-radius: 0;
-		background-color: var(--piko-color-bg);
-		color: var(--piko-color-text);
-		cursor: pointer;
-		font-size: 0.8rem;
-		transition: all 0.2s ease;
-	}
 
 	.edit-btn:hover {
 		background-color: #e6f0ff;
@@ -359,20 +342,6 @@
 		color: #003d82;
 	}
 
-	.delete-btn {
-		background-color: #ffcccc;
-		border-color: #ff9999;
-		color: #cc0000;
-	}
-
-	.delete-btn:hover:not(:disabled) {
-		background-color: #ff9999;
-	}
-
-	.delete-btn:disabled {
-		opacity: 0.6;
-		cursor: not-allowed;
-	}
 
 	.edit-form {
 		display: contents;
@@ -398,94 +367,5 @@
 	.edit-controls input:focus {
 		outline: none;
 		border-color: var(--piko-color-primary);
-	}
-
-	.save-btn,
-	.cancel-btn {
-		padding: 0.35rem 0.6rem;
-		border: 1px solid var(--piko-color-border);
-		border-radius: 0;
-		background-color: var(--piko-color-bg);
-		color: var(--piko-color-text);
-		cursor: pointer;
-		font-size: 0.8rem;
-		transition: all 0.2s ease;
-	}
-
-	.save-btn {
-		background-color: #e6f7ff;
-		border-color: #99ccff;
-		color: #003d82;
-	}
-
-	.save-btn:hover:not(:disabled) {
-		background-color: #99ccff;
-	}
-
-	.cancel-btn:hover:not(:disabled) {
-		background-color: #e0e0e0;
-	}
-
-	.save-btn:disabled,
-	.cancel-btn:disabled {
-		opacity: 0.6;
-		cursor: not-allowed;
-	}
-
-	.delete-confirm {
-		position: absolute;
-		top: 100%;
-		right: 0;
-		z-index: 10;
-		background-color: var(--piko-color-bg);
-		border: 2px solid #cc0000;
-		border-radius: 0;
-		padding: var(--piko-space-3);
-		min-width: 200px;
-		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-		margin-top: var(--piko-space-2);
-	}
-
-	.delete-confirm p {
-		margin: 0 0 var(--piko-space-2) 0;
-		font-size: 0.9rem;
-		font-weight: 600;
-	}
-
-	.delete-confirm form {
-		display: contents;
-	}
-
-	.confirm-delete-btn,
-	.cancel-delete-btn {
-		padding: 0.35rem 0.6rem;
-		border: 1px solid var(--piko-color-border);
-		border-radius: 0;
-		background-color: var(--piko-color-bg);
-		color: var(--piko-color-text);
-		cursor: pointer;
-		font-size: 0.8rem;
-		margin-right: var(--piko-space-2);
-		transition: all 0.2s ease;
-	}
-
-	.confirm-delete-btn {
-		background-color: #cc0000;
-		border-color: #990000;
-		color: white;
-	}
-
-	.confirm-delete-btn:hover:not(:disabled) {
-		background-color: #990000;
-	}
-
-	.cancel-delete-btn:hover:not(:disabled) {
-		background-color: #e0e0e0;
-	}
-
-	.confirm-delete-btn:disabled,
-	.cancel-delete-btn:disabled {
-		opacity: 0.6;
-		cursor: not-allowed;
 	}
 </style>

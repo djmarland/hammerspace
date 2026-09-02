@@ -1,5 +1,5 @@
 <script>
-	import Footer from "@/components/Organisms/Footer/Footer.svelte";
+    import Footer from "@/components/Organisms/Footer/Footer.svelte";
 </script>
 
 <div class="site-template">
@@ -30,7 +30,7 @@
 		position: sticky;
 		top: 0;
 		height: 100vh;
-		width: min(100%, 400px);
+		width: min(100%, 480px);
 		margin-left: auto;
 		padding: var(--piko-unit-double);
 		display: grid;
@@ -38,7 +38,7 @@
 		view-transition-name: site-header-content;
 	}
 	.content-column {
-		margin-top: 30vh;
+		margin-top: 33vh;
 		view-transition-name: site-content;
 		overflow: clip;
 	}

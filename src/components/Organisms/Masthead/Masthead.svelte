@@ -16,7 +16,10 @@
             <li><a href={resolve("/admin/posts/new")}>New Post</a></li>
             <li><a href={resolve("/admin/posts")}>Posts</a></li>
             <li><a href={resolve("/admin/tags")}>Tags</a></li>
+            <li>
+
             <LogoutButton />
+            </li>
         </ul>
         </nav>
 	</div>
@@ -39,24 +42,29 @@
 	}
 
     .masthead__container {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: var(--piko-unit);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: var(--piko-half) var(--piko-unit);
       align-items: stretch;
     }
 
     .masthead__nav {
         display: flex;
-        justify-content: flex-end;
+        justify-self: center;
         align-items: stretch;
         height: 100%;
 
-      a {
+      :global(form) {
+        height: 100%;
+      }
+      :global(a), :global(button) {
         display: flex;
         align-items: center;
         height: 100%;
         padding: var(--piko-unit);
         text-decoration: none;
+        color: var(--piko-color-link);
         &:hover {
           background-color: var(--piko-color-link);
           color: color-mix(

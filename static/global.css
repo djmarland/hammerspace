@@ -10,14 +10,14 @@
 				--piko-unit-quad: calc(var(--piko-unit) * 4);
 
 				/* @link https://utopia.fyi/type/calculator?c=360,16,1.2,1240,20,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12 */
-				--piko-fontsize--2: clamp(0.6944rem, 0.6513rem + 0.1919vw, 0.8rem);
-				--piko-fontsize--1: clamp(0.8333rem, 0.7652rem + 0.303vw, 1rem);
-				--piko-fontsize-0: clamp(1rem, 0.8977rem + 0.4545vw, 1.25rem);
-				--piko-fontsize-1: clamp(1.2rem, 1.0517rem + 0.6591vw, 1.5625rem);
-				--piko-fontsize-2: clamp(1.44rem, 1.2301rem + 0.933vw, 1.9531rem);
-				--piko-fontsize-3: clamp(1.728rem, 1.4362rem + 1.2971vw, 2.4414rem);
-				--piko-fontsize-4: clamp(2.0736rem, 1.6734rem + 1.7785vw, 3.0518rem);
-				--piko-fontsize-5: clamp(2.4883rem, 1.9457rem + 2.4116vw, 3.8147rem);
+				--piko-fontsize--2: clamp(0.64rem, 0.7167rem + -0.099vw, 0.6944rem);
+				--piko-fontsize--1: clamp(0.8rem, 0.847rem + -0.0606vw, 0.8333rem);
+				--piko-fontsize-0: clamp(1rem, 1rem + 0vw, 1rem);
+				--piko-fontsize-1: clamp(1.2rem, 1.1795rem + 0.0909vw, 1.25rem);
+				--piko-fontsize-2: clamp(1.44rem, 1.3899rem + 0.2227vw, 1.5625rem);
+				--piko-fontsize-3: clamp(1.728rem, 1.6359rem + 0.4093vw, 1.9531rem);
+				--piko-fontsize-4: clamp(2.0736rem, 1.9231rem + 0.6687vw, 2.4414rem);
+				--piko-fontsize-5: clamp(2.4883rem, 2.2578rem + 1.0244vw, 3.0518rem);
 
 				--piko-palette-white: #fff;
 				--piko-palette-black: #000;
@@ -790,10 +790,18 @@
 			}
 
 			hr {
-				border-block-start-width: 1px;
+				border: 0;
+				border-block-start: solid 1px var(--piko-color-border-subtle);
 				border-block-start-width: hairline;
-				border-block-end-width: 0;
-				border-color: var(--piko-color-border-subtle);
+			}
+
+			dl {
+				display: grid;
+				grid-template-columns: max-content 1fr;
+				gap: var(--piko-unit-half) var(--piko-unit);
+				dt {
+					font-weight: bold;
+				}
 			}
 		}
 
@@ -843,6 +851,10 @@
 				line-height: 1.35;
 				font-weight: 500;
 				font-variant-caps: small-caps;
+			}
+
+			.piko-t-meta {
+				font-size: var(--piko-t-body-small);
 			}
 
 			.piko-t-label {
@@ -904,6 +916,14 @@
 				margin-block-start: 2.5rem;
 			}
 
+			.piko-prose pre:has(code) {
+				padding: var(--piko-unit);
+				border: solid 1px var(--piko-color-border);
+			}
+			.piko-prose pre code {
+				white-space: pre-wrap;
+			}
+
 			.piko-ul,
 			.piko-ol,
 			.piko-prose ul,
@@ -929,6 +949,7 @@
 
 			.piko-prose :is(p, ul, ol) {
 				text-wrap: pretty;
+				line-height: 1.7;
 			}
 
 			.piko-prose :where(blockquote) {
@@ -1359,6 +1380,29 @@
 			}
 			.piko-vstack--small {
 				--_piko-vstack-gap: var(--piko-unit-half);
+			}
+			.piko-hstack,
+			[class*="piko-hstack-"] {
+				display: flex;
+				flex-direction: row;
+				gap: var(--_piko-hstack-gap, var(--piko-gap-stack));
+			}
+			.piko-hstack--small {
+				--_piko-hstack-gap: var(--piko-unit-half);
+			}
+
+			.piko-card {
+				background: var(--piko-color-background-secondary);
+				border: solid 1px var(--piko-color-border);
+				padding: var(--piko-space-panel-padding);
+			}
+
+			.piko-hidden {
+				clip: rect(1px, 1px, 1px, 1px);
+				width: 1px;
+				height: 1px;
+				overflow: hidden;
+				position: absolute !important;
 			}
 		}
 	}
