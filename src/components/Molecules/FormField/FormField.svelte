@@ -6,9 +6,10 @@
 		required?: boolean;
 		hint?: string;
 		stateMessage?: string;
+		children?: () => unknown;
 	}
 
-	const { id, state, label, required, hint, stateMessage }: Props = $props();
+	const { id, state, label, required, hint, stateMessage, children }: Props = $props();
 </script>
 
 <div class="piko-form-field form-field" data-state={state}>
@@ -23,7 +24,7 @@
 		<div class="form-field__hint">{hint}</div>
 	{/if}
 	<div class="form-field__input">
-		<slot />
+		{@render children?.()}
 	</div>
 	{#if stateMessage}
 		<div class="form-field__state-message piko-state__text">{stateMessage}</div>

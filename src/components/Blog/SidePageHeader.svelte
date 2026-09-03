@@ -2,8 +2,8 @@
 	import { resolve } from "$app/paths";
 	import Logo from "@/components/Atoms/Logo/Logo.svelte";
 
-	type Props = { title: string };
-	let { title }: Props = $props();
+	type Props = { title: string; children?: () => unknown };
+	let { title, children }: Props = $props();
 </script>
 
 <header class="header">
@@ -13,7 +13,7 @@
 		</a>
 	</div>
 	<h1 class="piko-t-h1">{title}</h1>
-	<slot />
+	{@render children?.()}
 </header>
 
 <style>

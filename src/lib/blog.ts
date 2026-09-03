@@ -6,14 +6,6 @@ export const ADMIN_POSTS_PER_PAGE = 12;
 export const SYNDICATION_POSTS_PER_PAGE = 20;
 const WORDS_PER_MINUTE = 200;
 
-export function buildPublicPostWhere(
-	now: Date = nowDate(),
-): Prisma.PostWhereInput {
-	return {
-		publishedAt: { not: null, lte: now },
-	};
-}
-
 export function buildDiscoverablePostWhere(
 	now: Date = nowDate(),
 ): Prisma.PostWhereInput {
@@ -31,12 +23,6 @@ export function resolveFirstPublicAt(post: {
 	createdAt: Date;
 }) {
 	return post.publishedAt ?? post.createdAt;
-}
-
-export async function synchronizeScheduledPublicationDates(
-	_now: Date = nowDate(),
-) {
-	return;
 }
 
 export function countWords(content: string) {

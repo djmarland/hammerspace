@@ -39,8 +39,8 @@ services:
         condition: service_healthy
     networks:
       - hammerspace-network
-    command: sh -c "npx prisma db push --accept-data-loss && npm run dev"
-    # command: sh -c "npx prisma db push && npm run build && npm run start"
+    #    command: sh -c "npx prisma db push --accept-data-loss && npm run dev"
+    command: sh -c "npm run build && npm run dev"
 
   nginx:
     image: nginx:alpine

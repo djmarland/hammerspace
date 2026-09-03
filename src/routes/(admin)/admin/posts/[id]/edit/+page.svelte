@@ -1,148 +1,212 @@
 <script lang="ts">
-    import PostEditorForm from "@/components/Admin/PostEditorForm.svelte";
-    import {formatDateTimeLocalValue} from "@/lib/temporal";
-    import {enhance} from "$app/forms";
-    import type {PageData} from "./$types";
+	import PostEditorForm from "@/components/Admin/PostEditorForm.svelte";
+	import { enhance } from "$app/forms";
+	import { resolve } from "$app/paths";
+	import type { PageData } from "./$types";
 
-    interface Props {
-        data: PageData;
-    }
+	interface Props {
+		data: PageData;
+	}
 
-    let {data}: Props = $props();
+	let { data }: Props = $props();
 
-    let actionInProgress = $state(false);
-    let deleteConfirm = $state(false);
+	let actionInProgress = $state(false);
+	let deleteConfirm = $state(false);
+	let unpublishConfirm = $state(false);
 
-    function handleSubmit() {
-        actionInProgress = true;
-    }
+	function handleSubmit() {
+		actionInProgress = true;
+	}
 
-    function cancelDelete() {
-        deleteConfirm = false;
-        actionInProgress = false;
-    }
+	function cancelDelete() {
+		deleteConfirm = false;
+		actionInProgress = false;
+	}
+
+	function cancelUnpublish() {
+		unpublishConfirm = false;
+		actionInProgress = false;
+	}
 </script>
 
 <svelte:head>
-    <title>Edit Post: {data.post.title}</title>
+	<title>Edit Post: {data.post.title}</title>
 </svelte:head>
 
-<div class="piko-page-container piko-vstack">
-    <header class="header piko-vstack--small">
-            <h1 class="piko-t-h1">{data.post.title}</h1>
-            <dl>
-                <dt>Created:</dt>
-                <dd>
-                    <time>{new Date(data.post.createdAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                    })}</time
-                    >
-                </dd>
-                <dt>Updated:</dt>
-                <dd>
-                    <time>{new Date(data.post.updatedAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                    })}</time
-                    >
-                </dd>
-                {#if data.post.publishedAt}
-                    <dt>Published:</dt>
-                    <dd>
-                        <time>{new Date(data.post.publishedAt).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "short",
-                            day: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                        })}</time>
-                    </dd>
-                {/if}
-            </dl>
-    </header>
+<div class="piko-vstack">
+	<header class="piko-page-container header piko-vstack--small">
+		<h1 class="piko-t-h1">{data.post.title}</h1>
+		<dl>
+			<dt>Created:</dt>
+			<dd>
+				<time
+					>{new Date(data.post.createdAt).toLocaleDateString("en-US", {
+						year: "numeric",
+						month: "short",
+						day: "numeric",
+						hour: "2-digit",
+						minute: "2-digit",
+					})}</time
+				>
+			</dd>
+			<dt>Updated:</dt>
+			<dd>
+				<time
+					>{new Date(data.post.updatedAt).toLocaleDateString("en-US", {
+						year: "numeric",
+						month: "short",
+						day: "numeric",
+						hour: "2-digit",
+						minute: "2-digit",
+					})}</time
+				>
+			</dd>
+			{#if data.post.publishedAt}
+				<dt>Published:</dt>
+				<dd>
+					<time
+						>{new Date(data.post.publishedAt).toLocaleDateString("en-US", {
+							year: "numeric",
+							month: "short",
+							day: "numeric",
+							hour: "2-digit",
+							minute: "2-digit",
+						})}</time
+					>
+				</dd>
+			{/if}
+		</dl>
+		<div class="piko-hstack">
+			<a href={resolve(`/admin/posts/${data.post.id}/publish`)}>
+				{data.post.publishedAt ? "Reschedule publication" : "Publish"}
+			</a>
+		</div>
+	</header>
 
-    <PostEditorForm
-            action="?/update"
-            submitLabel="Update Post"
-            tags={data.tags}
-            initialValues={{
-			title: data.post.title,
-			slug: data.post.slug,
-			excerpt: data.post.excerpt || "",
-			content: data.post.content,
-			isPublished: Boolean(data.post.publishedAt),
-			publishedAt: data.post.publishedAt
-				? formatDateTimeLocalValue(new Date(data.post.publishedAt))
-				: formatDateTimeLocalValue(new Date()),
-			coverImageUrl: data.post.coverImageUrl || "",
-			coverImageAlt: data.post.coverImageAlt || "",
-			tagIds: data.post.tags.map((tag) => tag.tagId),
-		}}
-    />
+	<PostEditorForm
+		action="?/update"
+		submitLabel="Update Post"
+		tags={data.tags}
+		data={data.form}
+	/>
 
-    <section class="danger-zone">
-        <h2>Danger Zone</h2>
-        <p class="danger-zone-intro">
-            These actions are permanent and cannot be undone.
-        </p>
+	<section class="piko-page-container">
+		{#if data.post.publishedAt}
+			<div class="danger-actions publication-section">
+				<div class="action-group action-warn">
+					<div class="action-info">
+						<h3>Unpublish Post</h3>
+						<p>
+							Move this post back to Draft. It will no longer be visible on
+							the public site.
+						</p>
+					</div>
+					{#if !unpublishConfirm}
+						<button
+							type="button"
+							class="btn-warning"
+							onclick={() => {
+								unpublishConfirm = true;
+							}}
+						>
+							Unpublish
+						</button>
+					{:else}
+						<div class="delete-confirm-panel">
+							<p class="confirm-message">
+								Are you sure you want to unpublish this post?
+							</p>
+							<div class="confirm-buttons">
+								<form
+									method="post"
+									action="?/unpublish"
+									use:enhance={() => handleSubmit()}
+								>
+									<button
+										type="submit"
+										class="btn-warning"
+										disabled={actionInProgress}
+									>
+										{actionInProgress
+											? "Unpublishing..."
+											: "Yes, Unpublish"}
+									</button>
+								</form>
+								<button
+									type="button"
+									class="btn-cancel"
+									onclick={cancelUnpublish}
+									disabled={actionInProgress}
+								>
+									Cancel
+								</button>
+							</div>
+						</div>
+					{/if}
+				</div>
+			</div>
+		{/if}
 
-        <div class="danger-actions">
-            <div class="action-group danger-delete">
-                <div class="action-info">
-                    <h3>Delete Post</h3>
-                    <p>Permanently delete this post. This action cannot be undone.</p>
-                </div>
-                {#if !deleteConfirm}
-                    <button
-                            type="button"
-                            class="btn-danger"
-                            onclick={() => {
-							deleteConfirm = true;
-						}}
-                    >
-                        Delete
-                    </button>
-                {:else}
-                    <div class="delete-confirm-panel">
-                        <p class="confirm-message">
-                            Are you absolutely sure you want to delete this post permanently?
-                        </p>
-                        <div class="confirm-buttons">
-                            <form
-                                    method="post"
-                                    action="?/delete"
-                                    use:enhance={() => handleSubmit()}
-                            >
-                                <input type="hidden" name="postId" value={data.post.id}/>
-                                <button
-                                        type="submit"
-                                        class="btn-delete-confirm"
-                                        disabled={actionInProgress}
-                                >
-                                    {actionInProgress ? "Deleting..." : "Yes, Delete Permanently"}
-                                </button>
-                            </form>
-                            <button
-                                    type="button"
-                                    class="btn-cancel"
-                                    onclick={cancelDelete}
-                                    disabled={actionInProgress}
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                {/if}
-            </div>
-        </div>
-    </section>
+		<div class="danger-zone">
+			<h2>Danger Zone</h2>
+			<p class="danger-zone-intro">
+				These actions are permanent and cannot be undone.
+			</p>
+
+			<div class="danger-actions">
+				<div class="action-group danger-delete">
+					<div class="action-info">
+						<h3>Delete Post</h3>
+						<p>Permanently delete this post. This action cannot be undone.</p>
+					</div>
+					{#if !deleteConfirm}
+						<button
+							type="button"
+							class="btn-danger"
+							onclick={() => {
+								deleteConfirm = true;
+							}}
+						>
+							Delete
+						</button>
+					{:else}
+						<div class="delete-confirm-panel">
+							<p class="confirm-message">
+								Are you absolutely sure you want to delete this post
+								permanently?
+							</p>
+							<div class="confirm-buttons">
+								<form
+									method="post"
+									action="?/delete"
+									use:enhance={() => handleSubmit()}
+								>
+									<input type="hidden" name="postId" value={data.post.id} />
+									<button
+										type="submit"
+										class="btn-delete-confirm"
+										disabled={actionInProgress}
+									>
+										{actionInProgress
+											? "Deleting..."
+											: "Yes, Delete Permanently"}
+									</button>
+								</form>
+								<button
+									type="button"
+									class="btn-cancel"
+									onclick={cancelDelete}
+									disabled={actionInProgress}
+								>
+									Cancel
+								</button>
+							</div>
+						</div>
+					{/if}
+				</div>
+			</div>
+		</div>
+	</section>
 </div>
 
 <style>
@@ -150,6 +214,14 @@
 		margin-bottom: var(--piko-unit);
 		padding-bottom: var(--piko-unit);
 		border-bottom: 1px solid var(--piko-color-border);
+	}
+
+	.publication-section {
+		margin-bottom: var(--piko-space-5);
+	}
+
+	.action-group.action-warn {
+		border-color: color-mix(in srgb, #e65100 25%, transparent);
 	}
 
 	.danger-zone {

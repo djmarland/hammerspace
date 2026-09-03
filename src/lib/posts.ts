@@ -1,22 +1,20 @@
-import type { Prisma } from "@/generated/client";
-import { getAdminSessionUser } from "@/lib/admin-auth";
+import type {Prisma} from "@/generated/client";
+import {getAdminSessionUser} from "@/lib/admin-auth";
 import {
-	ADMIN_POSTS_PER_PAGE,
-	buildDiscoverablePostWhere,
-	buildExcerpt,
-	buildPublicPostWhere,
-	clampPage,
-	countWords,
-	estimateReadingTimeMinutes,
-	formatPostStatus,
-	parsePageNumber,
-	PUBLIC_POSTS_PER_PAGE,
-	resolveFirstPublicAt,
-	SYNDICATION_POSTS_PER_PAGE,
-	synchronizeScheduledPublicationDates,
+    ADMIN_POSTS_PER_PAGE,
+    buildDiscoverablePostWhere,
+    buildExcerpt,
+    clampPage,
+    countWords,
+    estimateReadingTimeMinutes,
+    formatPostStatus,
+    parsePageNumber,
+    PUBLIC_POSTS_PER_PAGE,
+    resolveFirstPublicAt,
+    SYNDICATION_POSTS_PER_PAGE,
 } from "@/lib/blog";
-import { prisma } from "@/lib/db";
-import { nowDate } from "@/lib/temporal";
+import {prisma} from "@/lib/db";
+import {nowDate} from "@/lib/temporal";
 
 interface AdminPostFilters {
 	page?: number | string | string[];
@@ -26,10 +24,6 @@ interface AdminPostFilters {
 interface PublicPostFilters {
 	page?: number | string | string[];
 	pageSize?: number;
-}
-
-interface SearchPublicPostsFilters extends PublicPostFilters {
-	query?: string;
 }
 
 interface TagArchiveFilters extends PublicPostFilters {
@@ -49,7 +43,7 @@ export interface PublicPostSummary {
 	content: string;
 	status: "DRAFT" | "PUBLISHED";
 	statusLabel: string;
-	publishedAt: Date;
+	publishedAt: Date | null;
 	coverImageUrl: string | null;
 	coverImageAlt: string | null;
 	wordCount: number;
@@ -225,9 +219,6 @@ async function getPaginatedPublicPosts(
 	where: Prisma.PostWhereInput,
 	filters: PublicPostFilters = {},
 ) {
-	const now = nowDate();
-	await synchronizeScheduledPublicationDates(now);
-
 	const pageSize = filters.pageSize || PUBLIC_POSTS_PER_PAGE;
 	const requestedPage = parsePageNumber(filters.page);
 	const totalCount = await prisma.post.count({ where });
@@ -251,7 +242,6 @@ async function getPaginatedPublicPosts(
 
 export async function getLatestPublicPosts(limit = 5) {
 	const now = nowDate();
-	await synchronizeScheduledPublicationDates(now);
 	const posts = await prisma.post.findMany({
 		where: buildDiscoverablePostWhere(now),
 		orderBy: orderPostsByRecency(),
@@ -295,13 +285,10 @@ export async function getPublicTagArchive({
 	} satisfies PublicTagArchive;
 }
 
-export async function getPublicPostBySlug(slug: string) {
-	const now = nowDate();
-	await synchronizeScheduledPublicationDates(now);
+export async function getPostBySlug(slug: string) {
 	const post = await prisma.post.findFirst({
 		where: {
 			slug,
-			AND: [buildPublicPostWhere(now)],
 		},
 		select: publicPostSelect,
 	});
@@ -327,7 +314,6 @@ export async function getRelatedPosts(
 	}
 
 	const now = nowDate();
-	await synchronizeScheduledPublicationDates(now);
 	const tagSlugs = tags.map((tag) => tag.slug);
 	const posts = await prisma.post.findMany({
 		where: {
@@ -371,8 +357,7 @@ export async function getPublicSyndicationPosts(
 
 export async function getPublicTagIndex() {
 	const now = nowDate();
-	await synchronizeScheduledPublicationDates(now);
-	return prisma.tag.findMany({
+	return await prisma.tag.findMany({
 		where: {
 			posts: {
 				some: {
@@ -387,7 +372,6 @@ export async function getPublicTagIndex() {
 
 export async function getAllPostsForAdmin(filters: AdminPostFilters = {}) {
 	await requireAdminSession();
-	await synchronizeScheduledPublicationDates();
 
 	const normalizedFilters = {
 		query: (filters.query || "").trim(),
@@ -420,8 +404,7 @@ export async function getAllPostsForAdmin(filters: AdminPostFilters = {}) {
 
 export async function getPostById(postId: string) {
 	await requireAdminSession();
-	await synchronizeScheduledPublicationDates();
-	return prisma.post.findUnique({
+	return await prisma.post.findUnique({
 		where: { id: postId },
 		select: {
 			id: true,
@@ -441,7 +424,7 @@ export async function getPostById(postId: string) {
 
 export async function getTagsForAdmin() {
 	await requireAdminSession();
-	return prisma.tag.findMany({
+	return await prisma.tag.findMany({
 		orderBy: { name: "asc" },
 		select: {
 			id: true,

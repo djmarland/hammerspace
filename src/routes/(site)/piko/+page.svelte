@@ -153,32 +153,34 @@
 </svelte:head>
 
 <SiteTemplate>
-	<SidePageHeader slot="header" title="Piko">
-		<p>Piko is the design system for Hammerspace</p>
-		<nav>
-			<ul class="piko-vstack">
-				{#each docsNavGroups as group (group.title)}
-					<li>
-						<!-- id is optional, so it should only be a link if it exists -->
-						<p class="piko-t-group-label nav-group-label">
-							{#if group.id}
-								<a href={`#${group.id}`}>{group.title}</a>
-							{:else}
-								{group.title}
-							{/if}
-						</p>
-						<ul class="nav-group-items">
-							{#each group.sections as section (section.id)}
-								<li>
-									<a href={`#${section.id}`}>{section.label}</a>
-								</li>
-							{/each}
-						</ul>
-					</li>
-				{/each}
-			</ul>
-		</nav>
-	</SidePageHeader>
+	{#snippet header()}
+		<SidePageHeader title="Piko">
+			<p>Piko is the design system for Hammerspace</p>
+			<nav>
+				<ul class="piko-vstack">
+					{#each docsNavGroups as group (group.title)}
+						<li>
+							<!-- id is optional, so it should only be a link if it exists -->
+							<p class="piko-t-group-label nav-group-label">
+								{#if group.id}
+									<a href={`#${group.id}`}>{group.title}</a>
+								{:else}
+									{group.title}
+								{/if}
+							</p>
+							<ul class="nav-group-items">
+								{#each group.sections as section (section.id)}
+									<li>
+										<a href={`#${section.id}`}>{section.label}</a>
+									</li>
+								{/each}
+							</ul>
+						</li>
+					{/each}
+				</ul>
+			</nav>
+		</SidePageHeader>
+	{/snippet}
 
 	<div class="piko-prose">
 		<section class="piko-prose__block" id="core">
@@ -830,9 +832,9 @@
 
 	.hue-demo {
 		color: var(--piko-color-text-dynamic);
-        font-variant-numeric: tabular-nums;
-      min-width: 3ch;
-      display: inline-block;
+		font-variant-numeric: tabular-nums;
+		min-width: 3ch;
+		display: inline-block;
 	}
 
 	.token-grid {
@@ -848,7 +850,7 @@
 		padding: var(--piko-space-panel-padding);
 		font-size: var(--piko-t-caption);
 
-		code {
+		:global(code) {
 			overflow-wrap: anywhere;
 		}
 	}

@@ -1,10 +1,15 @@
 <script lang="ts">
-    import {browser} from "$app/environment";
-    import {onMount} from "svelte";
-    import {readLocalStorage, writeLocalStorage} from "@/lib/local-storage";
-    import {calculateWordsPerMinute, readingSpeedStore, readingTimerStore, setReadingSpeed,} from "@/lib/reading-timer";
+	import { browser } from "$app/environment";
+	import { onMount } from "svelte";
+	import { readLocalStorage, writeLocalStorage } from "@/lib/local-storage";
+	import {
+		calculateWordsPerMinute,
+		readingSpeedStore,
+		readingTimerStore,
+		setReadingSpeed,
+	} from "@/lib/reading-timer";
 
-    let {
+	let {
 		wordCount,
 		defaultWordsPerMinute = 200,
 		storageKey = ["reader", "blog", "reading-speed-wpm"],
@@ -316,7 +321,7 @@
 	.dialogContent {
 		display: grid;
 		gap: 0.75rem;
-      text-align: start;
+		text-align: start;
 	}
 
 	.dialogTitle {

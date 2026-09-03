@@ -53,3 +53,22 @@ export function formatDateTimeLocalValue(date: Date | null | undefined) {
 	);
 	return `${values.year}-${values.month}-${values.day}T${values.hour}:${values.minute}`;
 }
+
+/**
+ * Formats a date as a "-mm-yyyy" suffix (UTC-based) to append to a post's
+ * slug the first time it is published. Shared between the server (when
+ * actually publishing) and the client (to preview the resulting slug).
+ */
+export function formatSlugDateSuffix(date: Date) {
+	const parts = new Intl.DateTimeFormat("en-US", {
+		timeZone: "UTC",
+		year: "numeric",
+		month: "2-digit",
+	}).formatToParts(date);
+	const values = Object.fromEntries(
+		parts
+			.filter((part) => part.type !== "literal")
+			.map((part) => [part.type, part.value]),
+	);
+	return `-${values.month}-${values.year}`;
+}

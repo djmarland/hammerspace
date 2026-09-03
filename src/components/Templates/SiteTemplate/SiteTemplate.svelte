@@ -1,13 +1,15 @@
 <script>
     import Footer from "@/components/Organisms/Footer/Footer.svelte";
+
+    let { children, header } = $props();
 </script>
 
 <div class="site-template">
 	<header>
-		<div class="header-content"><slot name="header" /></div>
+		<div class="header-content">{@render header?.()}</div>
 	</header>
 	<div class="content-column">
-		<main><slot /></main>
+		<main>{@render children?.()}</main>
 		<Footer />
 	</div>
 </div>

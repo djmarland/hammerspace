@@ -6,6 +6,7 @@
     import ReadingTime from "@/components/Blog/ReadingTime.svelte";
     import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate.svelte";
     import {resolve} from "$app/paths";
+    import {isPostPublic} from "$lib/blog";
 
     type Props = { data: PageData };
 	let { data }: Props = $props();
@@ -30,58 +31,71 @@
 	<link rel="canonical" href="https://www.hammerspace.com/posts/{post.slug}" />
 </svelte:head>
 
-<article class="article">
+<article>
 	<SiteTemplate>
-		<SidePageHeader slot="header" title={post.title}>
-			<div class="metaRow">
-				<div class="meta">
-					By <b>David Marland</b><br />
-					<time dateTime={post.publishedAt.toISOString()}>
-						{dateFormatter.format(post.publishedAt)}
-					</time>
-					· <ReadingTime wordCount={post.wordCount} />
+		{#snippet header()}
+			<SidePageHeader title={post.title}>
+				<div class="metaRow">
+					<div class="meta">
+						By <b>David Marland</b><br />
+						{#if post.publishedAt}
+							<time dateTime={post.publishedAt.toISOString()}>
+								{dateFormatter.format(post.publishedAt)}
+							</time>
+							·
+						{/if}
+						<ReadingTime wordCount={post.wordCount} />
+					</div>
 				</div>
+				{#if post.tags.length > 0}
+					<ul class="tags">
+						{#each post.tags as tag (tag.slug)}
+							<li>
+								<a href={resolve(`/tags/${tag.slug}`)}>#{tag.name}</a>
+							</li>
+						{/each}
+					</ul>
+				{/if}
+			</SidePageHeader>
+		{/snippet}
+
+		{#if post.status === "DRAFT"}
+			<div data-state="warning" class="piko-state__box">
+				<p>This post is a DRAFT. This is not the final URL for sharing.</p>
 			</div>
-			{#if post.tags.length > 0}
-				<ul class="tags">
-					{#each post.tags as tag (tag.slug)}
-						<li>
-							<a href={resolve(`/tags/${tag.slug}`)}>#{tag.name}</a>
-						</li>
-					{/each}
-				</ul>
-			{/if}
-		</SidePageHeader>
+		{:else if post.publishedAt && !isPostPublic(post.publishedAt)}
+			<div data-state="info" class="piko-state__box">
+				<p>
+					This post is scheduled for publication at {new Date(
+						post.publishedAt,
+					).toLocaleDateString("en-US", {
+						year: "numeric",
+						month: "short",
+						day: "numeric",
+						hour: "2-digit",
+						minute: "2-digit",
+						hour12: false,
+					})}
+				</p>
+			</div>
+		{/if}
 
 		<PostBody {post} />
 
 		{#if relatedPosts.length > 0}
-			<aside class="relatedSection">
-				<div class="relatedHeader">
-					<h2>Related posts</h2>
-					<p>More posts sharing one or more tags with this article.</p>
-				</div>
-				<div class="relatedList">
+			<aside class="piko-vstack--small">
+				<h2>Related posts</h2>
+				<ul class="relatedList">
 					{#each relatedPosts as relatedPost (relatedPost.id)}
-						<PostCard post={relatedPost} headingLevel="h3" />
+						<li><PostCard post={relatedPost} headingLevel="h3" /></li>
 					{/each}
-				</div>
+				</ul>
 			</aside>
 		{/if}
 	</SiteTemplate>
 </article>
 
 <style>
-	.article,
-	.relatedSection {
-		display: grid;
-		gap: 1.25rem;
-	}
-
-	.relatedHeader h2 {
-		margin: 0;
-	}
-
 	.metaRow {
 		display: flex;
 		flex-wrap: wrap;
@@ -90,8 +104,7 @@
 		gap: 0.75rem;
 	}
 
-	.meta,
-	.relatedHeader p {
+	.meta {
 		margin: 0;
 		color: color-mix(in srgb, currentColor 75%, transparent);
 	}
@@ -111,15 +124,6 @@
 		padding: 0.15rem 0.55rem;
 		border-radius: 999px;
 		background: color-mix(in srgb, currentColor 10%, transparent);
-	}
-
-	.relatedSection {
-		margin-top: 3rem;
-	}
-
-	.relatedHeader {
-		display: grid;
-		gap: 0.35rem;
 	}
 
 	.relatedList {

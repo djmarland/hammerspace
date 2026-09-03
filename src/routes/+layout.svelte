@@ -10,7 +10,7 @@
 		}
 	}
 
-	let { data } = $props();
+	let { children, data } = $props();
 
 	onNavigate((navigation) => {
 		if (!document.startViewTransition) return;
@@ -29,7 +29,7 @@
 </svelte:head>
 
 <div class="app-shell">
-	<slot />
+	{@render children?.()}
 </div>
 
 <style>

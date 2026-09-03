@@ -5,18 +5,25 @@
 </script>
 
 <svelte:head>
-    <title>About | Hammerspace</title>
+	<title>About | Hammerspace</title>
 </svelte:head>
 
 <SiteTemplate>
-    <SidePageHeader slot="header" title="About">
-        <img class="profile" src="/profile.jpeg"
-             alt="Profile picture of David, wearing sunglasses, a hat and white shirt"/>
-    </SidePageHeader>
-    <div class="piko-prose">
-        <Socials />
-        <p>Hello, I am David Marland. I have been developing websites since 1999.</p>
-    </div>
+	{#snippet header()}
+		<SidePageHeader title="About">
+			<img
+				class="profile"
+				src="/profile.jpeg"
+				alt="David, wearing sunglasses, a hat and white shirt"
+			/>
+		</SidePageHeader>
+	{/snippet}
+	<div class="piko-prose">
+		<Socials />
+		<p>
+			Hello, I am David Marland. I have been developing websites since 1999.
+		</p>
+	</div>
 </SiteTemplate>
 
 <style>

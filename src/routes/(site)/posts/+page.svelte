@@ -20,9 +20,11 @@
 </svelte:head>
 
 <SiteTemplate>
-	<SidePageHeader slot="header" title="Archive">
-		<a href={resolve("/feed.xml")} class="actionLink">RSS feed</a>
-	</SidePageHeader>
+	{#snippet header()}
+		<SidePageHeader title="Archive">
+			<a href={resolve("/feed.xml")} class="actionLink">RSS feed</a>
+		</SidePageHeader>
+	{/snippet}
 
 	<div class="content">
 		<p class="filterMeta">
@@ -47,11 +49,6 @@
 		gap: 1.5rem;
 		max-width: 75ch;
 		padding: var(--piko-unit-double);
-	}
-
-	.intro {
-		margin: 0;
-		color: color-mix(in srgb, currentColor 75%, transparent);
 	}
 
 	.filterMeta {
