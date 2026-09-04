@@ -44,7 +44,8 @@ docker compose down
 ```text
 docker-compose.yml   # Local dev stack
 Dockerfile           # App image
-nginx.conf           # Reverse proxy config
+nginx.conf           # Local dev reverse proxy config
+deploy/              # VPS nginx + PM2 configs for beta and prod
 prisma/              # Schema and migrations
 scripts/             # Install/release helpers
 src/routes/          # SvelteKit routes
@@ -113,63 +114,115 @@ Production is a VPS install, not Docker-based.
    - the pruned production `node_modules/`
    - the VPS install scripts
    - `package.json`, `package-lock.json`, and `prisma.config.ts`
-4. The zip is attached to a GitHub prerelease for that commit.
+4. The tar is attached to a GitHub prerelease for that commit.
 
 ### VPS layout
 
-Recommended paths:
+Two environments run side by side on the same VPS, each as its own release directory, `.env`, PM2 app, and nginx site:
 
-- App: `/srv/hammerspace`
-- Shared env file: `/srv/hammerspace/.env`
-- PM2 app name: `hammerspace`
+| Environment | Domain                  | Install dir                            | PM2 app name       | App port |
+| ----------- | ------------------------ | --------------------------------------- | ------------------- | -------- |
+| Beta        | beta.hammerspace.co.uk   | `/var/www/beta.hammerspace.co.uk`       | `beta-hammerspace`  | 3000     |
+| Production  | www.hammerspace.co.uk    | `/var/www/www.hammerspace.co.uk`        | `www-hammerspace`   | 3001     |
+
+Config-as-code for both is kept in [`deploy/`](deploy/):
+
+```text
+deploy/
+├── pm2/
+│   ├── ecosystem.beta.config.cjs   # copy to /var/www/beta.hammerspace.co.uk/ecosystem.config.cjs
+│   └── ecosystem.prod.config.cjs   # copy to /var/www/www.hammerspace.co.uk/ecosystem.config.cjs
+└── nginx/
+    ├── cache.conf                        # proxy_cache_path zones, include in http {}
+    ├── beta.hammerspace.co.uk.conf       # site config for sites-available/
+    └── www.hammerspace.co.uk.conf        # site config for sites-available/
+```
+
+`scripts/vps-install.sh` / `scripts/vps-first-install.sh` never delete an existing `ecosystem.config.cjs` inside the install directory, and will use it (via `pm2 start ecosystem.config.cjs --only <name>`) if present, falling back to a plain `pm2 start node --name <name> -- build/index.js` otherwise.
 
 ### Initial VPS install
 
-1. Install Node.js 26+, npm, PostgreSQL client tools, unzip, curl, and PM2.
-2. Create the app directory and deploy the release zip into it.
-3. Place the production `.env` file at `/srv/hammerspace/.env`.
-4. Download the release zip from the GitHub release page.
-5. Run:
+1. Install Node.js 26+, npm, PostgreSQL client tools, unzip, curl, nginx, and PM2.
+2. Create both app directories, e.g.:
 
-```bash
-bash scripts/vps-first-install.sh <release-zip-url> /srv/hammerspace hammerspace /srv/hammerspace/.env
-```
+   ```bash
+   sudo mkdir -p /var/www/beta.hammerspace.co.uk /var/www/www.hammerspace.co.uk
+   sudo chown "$USER" /var/www/beta.hammerspace.co.uk /var/www/www.hammerspace.co.uk
+   ```
 
-This unpacks the release, runs Prisma migrations, and starts the app.
+3. Copy the matching ecosystem file into each install dir:
+
+   ```bash
+   cp deploy/pm2/ecosystem.beta.config.cjs /var/www/beta.hammerspace.co.uk/ecosystem.config.cjs
+   cp deploy/pm2/ecosystem.prod.config.cjs /var/www/www.hammerspace.co.uk/ecosystem.config.cjs
+   ```
+
+4. Place each environment's `.env` file at `/var/www/beta.hammerspace.co.uk/.env` and `/var/www/www.hammerspace.co.uk/.env` respectively. Each `.env` must set its own `DATABASE_URL`, `PUBLIC_APP_URL`/`PUBLIC_SITE_URL`/`PUBLIC_RP_ID` (matching that environment's domain), and an `ORIGIN` value equal to the public site URL (required by `@sveltejs/adapter-node` when running behind the nginx reverse proxy). Do **not** set `PORT` in `.env` — it's hardcoded in each `ecosystem.config.cjs` (3000 for beta, 3001 for prod) so the two apps can never accidentally collide.
+5. Set up nginx (see below).
+6. Download the release zip from the GitHub release page and, for each environment, run:
+
+   ```bash
+   bash scripts/vps-first-install.sh <release-zip-url> /var/www/beta.hammerspace.co.uk beta-hammerspace /var/www/beta.hammerspace.co.uk/.env
+   bash scripts/vps-first-install.sh <release-zip-url> /var/www/www.hammerspace.co.uk www-hammerspace /var/www/www.hammerspace.co.uk/.env
+   ```
+
+   This unpacks the release, runs Prisma migrations, and starts the app under PM2 using the environment's `ecosystem.config.cjs`.
+
+7. Persist PM2 across reboots:
+
+   ```bash
+   pm2 save
+   pm2 startup
+   ```
 
 ### Update an existing VPS install
 
 ```bash
-bash scripts/vps-install.sh <release-zip-url> /srv/hammerspace hammerspace /srv/hammerspace/.env
+bash scripts/vps-install.sh <release-zip-url> /var/www/beta.hammerspace.co.uk beta-hammerspace /var/www/beta.hammerspace.co.uk/.env
+bash scripts/vps-install.sh <release-zip-url> /var/www/www.hammerspace.co.uk www-hammerspace /var/www/www.hammerspace.co.uk/.env
 ```
 
-This replaces the release contents, runs `prisma migrate deploy`, and restarts PM2 with the new environment.
+This replaces the release contents (keeping `.env` and `ecosystem.config.cjs`), runs `prisma migrate deploy`, and restarts PM2 with the new environment.
+
+### nginx
+
+1. Copy the cache zone definitions so they load inside the `http {}` block:
+
+   ```bash
+   sudo cp deploy/nginx/cache.conf /etc/nginx/conf.d/hammerspace-cache.conf
+   ```
+
+2. Copy the site configs and enable them:
+
+   ```bash
+   sudo cp deploy/nginx/beta.hammerspace.co.uk.conf /etc/nginx/sites-available/beta.hammerspace.co.uk
+   sudo cp deploy/nginx/www.hammerspace.co.uk.conf /etc/nginx/sites-available/www.hammerspace.co.uk
+   sudo ln -s /etc/nginx/sites-available/beta.hammerspace.co.uk /etc/nginx/sites-enabled/
+   sudo ln -s /etc/nginx/sites-available/www.hammerspace.co.uk /etc/nginx/sites-enabled/
+   sudo nginx -t && sudo systemctl reload nginx
+   ```
+
+3. Add TLS with certbot for each domain once the HTTP site is working:
+
+   ```bash
+   sudo certbot --nginx -d beta.hammerspace.co.uk
+   sudo certbot --nginx -d www.hammerspace.co.uk -d hammerspace.co.uk
+   ```
+
+Each site config proxies to its own upstream port (3000 for beta, 3001 for prod), matching the `PORT` hardcoded in that environment's `ecosystem.config.cjs`, so the two PM2 processes never collide.
 
 ### PM2
 
-Use PM2 to keep the Node process alive on the VPS.
-
-Example ecosystem file:
-
-```js
-module.exports = {
-	apps: [
-		{
-			name: "hammerspace",
-			script: "npm",
-			args: "run start",
-			cwd: "/srv/hammerspace",
-			env_file: "/srv/hammerspace/.env",
-		},
-	],
-};
-```
+Each environment has its own `ecosystem.config.cjs` (see `deploy/pm2/`), naming the PM2 app (`beta-hammerspace` / `www-hammerspace`) and pointing `cwd`/`script` at that environment's release directory. Actual secrets (`DATABASE_URL`, `AUTH_JWT_SECRET`, `PORT`, etc.) live in each environment's `.env`, which the install scripts source into the shell before starting/restarting PM2.
 
 Useful PM2 commands:
 
 ```bash
-pm2 start ecosystem.config.cjs
-pm2 restart hammerspace --update-env
+pm2 list
+pm2 logs beta-hammerspace
+pm2 logs www-hammerspace
+pm2 restart beta-hammerspace --update-env
+pm2 restart www-hammerspace --update-env
 pm2 save
 pm2 startup
 ```

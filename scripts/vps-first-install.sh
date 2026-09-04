@@ -9,12 +9,13 @@ fi
 release_tarball_url="$1"
 install_dir="$2"
 pm2_app_name="$3"
-env_file="${4:-$install_dir/.env}"
 tmp_dir="$(mktemp -d)"
 tarball_path="$tmp_dir/release.tar.gz"
 
 curl -fsSL "$release_tarball_url" -o "$tarball_path"
 mkdir -p "$install_dir" "$tmp_dir/unpacked"
+install_dir="$(cd "$install_dir" && pwd)"
+env_file="${4:-$install_dir/.env}"
 tar -xzf "$tarball_path" -C "$tmp_dir/unpacked"
 
 release_root="$(find "$tmp_dir/unpacked" -mindepth 1 -maxdepth 1 -type d | head -n 1)"
@@ -37,6 +38,11 @@ set -a
 set +a
 
 npx prisma migrate deploy
-pm2 start node --name "$pm2_app_name" -- build/index.js
+
+if [[ -f "$install_dir/ecosystem.config.cjs" ]]; then
+	pm2 start ecosystem.config.cjs --only "$pm2_app_name"
+else
+	pm2 start node --name "$pm2_app_name" -- build/index.js
+fi
 
 rm -rf "$tmp_dir"
