@@ -106,13 +106,13 @@ Production is a VPS install, not Docker-based.
 ### Release flow
 
 1. Push a commit to `main`.
-2. GitHub Actions runs `npm ci`, `npm run build`, and `npm run generate`.
+2. GitHub Actions runs `npm ci`, `npm run build`, and `npm run generate`, then re-runs `npm ci --omit=dev` to reduce `node_modules` to production dependencies only.
 3. The workflow packages:
    - the built SvelteKit output
    - `prisma/`
-   - production `node_modules/`
+   - the pruned production `node_modules/`
    - the VPS install scripts
-   - `package.json` and `package-lock.json`
+   - `package.json`, `package-lock.json`, and `prisma.config.ts`
 4. The zip is attached to a GitHub prerelease for that commit.
 
 ### VPS layout
@@ -135,7 +135,7 @@ Recommended paths:
 bash scripts/vps-first-install.sh <release-zip-url> /srv/hammerspace hammerspace /srv/hammerspace/.env
 ```
 
-This unpacks the release, runs Prisma migrations, writes a PM2 ecosystem file, and starts the app.
+This unpacks the release, runs Prisma migrations, and starts the app.
 
 ### Update an existing VPS install
 

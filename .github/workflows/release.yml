@@ -19,7 +19,7 @@ jobs:
       - run: npm ci
       - run: npm run generate
       - run: npm run build
-      - run: npm ci --omit=dev
+      - run: npm ci --omit=dev --ignore-scripts
       - run: bash scripts/package-release.sh "${GITHUB_SHA}" dist-release
 
       - uses: softprops/action-gh-release@v2

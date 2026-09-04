@@ -42,6 +42,6 @@ set -a
 set +a
 
 npx prisma migrate deploy
-pm2 restart "$pm2_app_name" --update-env || pm2 start npm --name "$pm2_app_name" -- start
+pm2 restart "$pm2_app_name" --update-env || pm2 start node --name "$pm2_app_name" -- build/index.js
 
 rm -rf "$tmp_dir"
