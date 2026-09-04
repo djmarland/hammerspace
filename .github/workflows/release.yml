@@ -8,6 +8,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # prisma.config.ts requires DATABASE_URL to be set (it's read via
+      # prisma/config's env() helper, which throws if unset) for every
+      # Prisma CLI invocation, including `prisma generate`. Nothing here
+      # actually connects to a database, so a dummy value is enough.
+      DATABASE_URL: postgresql://user:password@localhost:5432/dummy
     steps:
       - uses: actions/checkout@v4
 

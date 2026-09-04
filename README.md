@@ -186,9 +186,11 @@ This replaces the release contents (keeping `.env` and `ecosystem.config.cjs`), 
 
 ### nginx
 
-1. Copy the cache zone definitions so they load inside the `http {}` block:
+1. Create the cache directories (nginx does not create these itself, and `nginx -t`/start will fail with `mkdir() ... failed (2: No such file or directory)` until they exist) and copy the cache zone definitions so they load inside the `http {}` block:
 
    ```bash
+   sudo mkdir -p /var/cache/nginx/hammerspace-beta /var/cache/nginx/hammerspace-prod
+   sudo chown -R www-data:www-data /var/cache/nginx   # use 'nginx' instead of www-data on RHEL/Amazon Linux
    sudo cp deploy/nginx/cache.conf /etc/nginx/conf.d/hammerspace-cache.conf
    ```
 
