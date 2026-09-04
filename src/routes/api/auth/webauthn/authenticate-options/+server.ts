@@ -28,7 +28,7 @@ export const POST: RequestHandler = async () => {
 		}));
 
 		const options = await generateAuthenticationOptions({
-			rpID: process.env.NEXT_PUBLIC_RP_ID || "localhost",
+			rpID: process.env.PUBLIC_RP_ID || "localhost",
 			userVerification: "preferred",
 			allowCredentials:
 				allowCredentials.length > 0 ? allowCredentials : undefined,

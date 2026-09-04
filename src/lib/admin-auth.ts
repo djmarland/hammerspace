@@ -21,9 +21,9 @@ export interface AdminSessionUser {
 }
 
 function getJwtSecret(): string {
-	const secret = process.env.AUTH_JWT_SECRET ?? process.env.NEXTAUTH_SECRET;
+	const secret = process.env.AUTH_JWT_SECRET ?? process.env.AUTH_SECRET;
 	if (!secret) {
-		throw new Error("Missing AUTH_JWT_SECRET (or NEXTAUTH_SECRET)");
+		throw new Error("Missing AUTH_JWT_SECRET (or AUTH_SECRET)");
 	}
 	return secret;
 }

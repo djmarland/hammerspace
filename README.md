@@ -1,301 +1,202 @@
 # Hammerspace Blog
 
-## 🚀 Quick Start
+Hammerspace is a SvelteKit blog/CMS with PostgreSQL, Prisma, and passkey-based admin authentication. Development runs in Docker Compose; production is deployed to a VPS as a release zip built by GitHub Actions and run under PM2.
+
+## Quick start
 
 ### Prerequisites
 
-- Docker and Docker Compose installed
+- Docker and Docker Compose
+- Node.js 26+ for local scripting if needed
 
-### Start Development Environment
+### Development
 
 ```bash
-# Copy environment file
 cp .env.example .env.local
-
-# Set the canonical public host used for RSS, sitemap, and posts post canonicals
-# Example: NEXT_PUBLIC_SITE_URL=http://localhost
-
-# Start all services (Node, PostgreSQL, Nginx)
 docker compose up -d
-
-# View logs
 docker compose logs -f node
 ```
 
-The app will be available at:
+The app is available at:
 
-- **Public Blog**: http://localhost or http://localhost:80
-- **App Direct**: http://localhost:3000
-- **Admin Dashboard**: http://localhost/admin (after setting up users)
+- Public site: http://localhost
+- App direct: http://localhost:3000
+- Admin: http://localhost/admin
 
-### Stop Services
+### Stop
 
 ```bash
 docker compose down
 ```
 
-## 🏗️ Architecture
+## Architecture
 
-### Tech Stack
-
-- **Frontend/Backend**: Next.js 15 (App Router) with TypeScript
+- **App**: SvelteKit 2 + Vite
+- **Language**: TypeScript
 - **Database**: PostgreSQL 15
 - **ORM**: Prisma
-- **Authentication**: Custom JWT cookie sessions + WebAuthn passkeys
-- **Styling**: CSS Modules
-- **Reverse Proxy**: Nginx with SWR caching
-- **Package Manager**: npm
+- **Auth**: JWT cookie sessions + WebAuthn passkeys
+- **Reverse proxy**: Nginx
+- **Package manager**: npm
 
-### Directory Structure
+### Project structure
 
-```
-hammerspace/
-├── docker-compose.yml       # Orchestration configuration
-├── Dockerfile              # Node.js app image
-├── nginx.conf              # Reverse proxy and caching rules
-├── prisma/
-│   └── schema.prisma       # Database schema
-├── src/
-│   ├── app/                # Next.js App Router
-│   │   ├── layout.tsx      # Root layout
-│   │   ├── page.tsx        # Home/blog listing
-│   │   ├── admin/          # Admin routes (protected)
-│   │   ├── api/auth/       # Auth + WebAuthn routes
-│   │   └── posts/          # Individual post pages
-│   ├── actions/            # Server Actions
-│   │   └── posts.ts        # Post CRUD operations
-│   ├── components/         # React components
-│   ├── lib/
-│   │   └── db.ts          # Prisma client singleton
-│   └── styles/            # CSS Modules
-├── package.json           # Dependencies
-├── next.config.js         # Next.js config
-├── tsconfig.json          # TypeScript config
-└── copilot-skills.md      # Copilot CLI instructions
+```text
+docker-compose.yml   # Local dev stack
+Dockerfile           # App image
+nginx.conf           # Reverse proxy config
+prisma/              # Schema and migrations
+scripts/             # Install/release helpers
+src/routes/          # SvelteKit routes
+src/lib/             # Application helpers
+.github/workflows/   # CI and release automation
 ```
 
-## 📋 Running Commands
+## Local commands
 
-All commands should be run via Docker. See `copilot-skills.md` for detailed instructions.
-
-### Common Tasks
+Run scripts through Docker Compose:
 
 ```bash
-# Apply database schema changes
-docker compose exec node npx prisma db push
-
-# Create a migration
-docker compose exec node npx prisma migrate dev
-
-# Seed database (if available)
-docker compose exec node npm run db:seed
-
-# Access database shell
-docker compose exec postgres psql -U postgres -d hammerspace
-
-# Rebuild Docker image
-docker compose up --build
-
-# View application logs
-docker compose logs -f node
-
-# One-off command
-docker compose run --rm node npm run <command>
-```
-
-## 🔒 Authentication
-
-### Admin Setup
-
-1. Create the initial admin user (fails if an admin already exists):
-
-```bash
+docker compose exec node npm run build
+docker compose exec node npm run lint
+docker compose exec node npm run db:push
+docker compose exec node npm run db:migrate
 docker compose exec node npm run admin:create-initial
 ```
 
-2. Open the printed one-time login URL, for example:
+Useful npm scripts:
 
-```text
-http://localhost:3000/admin/login?token=<high-entropy-token>
+- `npm run dev`
+- `npm run build`
+- `npm run preview`
+- `npm run lint`
+- `npm run generate`
+- `npm run db:push`
+- `npm run db:migrate`
+- `npm run db:seed`
+- `npm run admin:create-initial`
+
+## Environment variables
+
+Copy `.env.example` and set these values for both development and production:
+
+- `NODE_ENV`
+- `DB_USER`
+- `DB_PASSWORD`
+- `DB_NAME`
+- `DB_PORT`
+- `APP_PORT`
+- `DATABASE_URL`
+- `AUTH_JWT_SECRET`
+- `LOGIN_TOKEN_SECRET`
+- `PUBLIC_RP_ID` (WebAuthn relying-party ID / domain)
+- `PUBLIC_APP_URL`
+- `PUBLIC_SITE_URL` (canonical public site URL)
+
+Generate secrets with:
+
+```bash
+openssl rand -base64 32
 ```
 
-3. The login page will authenticate via token and route you to passkey setup.
-4. After passkey creation, the stored login token hash is cleared and cannot be used again.
+## Production deployment
 
-## ✍️ CMS behaviour
+Production is a VPS install, not Docker-based.
+
+### Release flow
+
+1. Push a commit to `main`.
+2. GitHub Actions runs `npm ci`, `npm run build`, and `npm run generate`.
+3. The workflow packages:
+   - the built SvelteKit output
+   - `prisma/`
+   - production `node_modules/`
+   - the VPS install scripts
+   - `package.json` and `package-lock.json`
+4. The zip is attached to a GitHub prerelease for that commit.
+
+### VPS layout
+
+Recommended paths:
+
+- App: `/srv/hammerspace`
+- Shared env file: `/srv/hammerspace/.env`
+- PM2 app name: `hammerspace`
+
+### Initial VPS install
+
+1. Install Node.js 26+, npm, PostgreSQL client tools, unzip, curl, and PM2.
+2. Create the app directory and deploy the release zip into it.
+3. Place the production `.env` file at `/srv/hammerspace/.env`.
+4. Download the release zip from the GitHub release page.
+5. Run:
+
+```bash
+bash scripts/vps-first-install.sh <release-zip-url> /srv/hammerspace hammerspace /srv/hammerspace/.env
+```
+
+This unpacks the release, runs Prisma migrations, writes a PM2 ecosystem file, and starts the app.
+
+### Update an existing VPS install
+
+```bash
+bash scripts/vps-install.sh <release-zip-url> /srv/hammerspace hammerspace /srv/hammerspace/.env
+```
+
+This replaces the release contents, runs `prisma migrate deploy`, and restarts PM2 with the new environment.
+
+### PM2
+
+Use PM2 to keep the Node process alive on the VPS.
+
+Example ecosystem file:
+
+```js
+module.exports = {
+	apps: [
+		{
+			name: "hammerspace",
+			script: "npm",
+			args: "run start",
+			cwd: "/srv/hammerspace",
+			env_file: "/srv/hammerspace/.env",
+		},
+	],
+};
+```
+
+Useful PM2 commands:
+
+```bash
+pm2 start ecosystem.config.cjs
+pm2 restart hammerspace --update-env
+pm2 save
+pm2 startup
+```
+
+### Database migrations
+
+- Development: `npm run db:migrate`
+- Production: `npx prisma migrate deploy`
+
+Run migrations during every release install before restarting the app.
+
+## CMS behavior
 
 - Posts use tags only; there are no categories.
 - Cover images must use absolute external URLs.
-- Draft posts are intentionally available on their real `/posts/[slug]` URL, but are excluded from archives, search, tag pages, RSS, and the sitemap.
-- Published posts have a non-null `publishedAt` date and appear in public lists once the date is in the past.
-- Only `publishedAt` drives visibility; there is no separate scheduled or archived state in the database.
+- Draft posts remain on their slug URL but are excluded from archives, search, tag pages, RSS, and the sitemap.
+- `publishedAt` controls visibility.
 
-## 🚀 Caching Strategy
+## RSS feed
 
-### Public Blog (Stale-While-Revalidate)
+- Endpoint: `/feed.xml`
+- Page size: 20 posts
+- `description` uses the excerpt
+- `content:encoded` uses the full post content
 
-- Response cache: **60 seconds max-age**
-- Stale content served for: **60 seconds**
-- Benefits: Fast responses, automatic background refresh
+## Resources
 
-Configured in `nginx.conf` for `/` route.
-
-### Admin Area (No Caching)
-
-- Configured in `nginx.conf` for `/admin` route
-- Always fresh content for authenticated users
-
-### API Routes (No Caching)
-
-- Configured in `nginx.conf` for `/api` route
-
-### Static Assets (30-day cache)
-
-- CSS, JS, images, fonts cached for 30 days with `immutable` flag
-
-## 📝 Features Implemented
-
-### Phase 1: Docker Infrastructure ✅
-
-- Docker Compose setup (Node, PostgreSQL, Nginx)
-- Dockerfile with npm and Prisma
-- Nginx reverse proxy with caching configuration
-- Environment configuration with `.env.example`
-- Copilot skills documentation
-
-### Phase 2: Next.js Application ✅
-
-- TypeScript configuration
-- CSS Modules setup
-- App Router structure
-- Layout system
-- Minimal styling for demonstration
-
-### Phase 3: Database & ORM ✅
-
-- Prisma schema (User and Post models)
-- PostgreSQL integration
-- Automatic migrations on startup
-
-### Phase 4: Authentication ✅
-
-- Passkey-first admin authentication
-- One-time bootstrap token login
-- JWT cookie session management
-- WebAuthn challenge verification
-
-### Phase 5-7: Pending
-
-- Public blog pages with SWR caching
-- SEO metadata and sitemap
-- Admin dashboard with CRUD
-- Full testing and documentation
-
-## 📡 RSS Feed
-
-Published posts are available via a paginated RSS feed:
-
-- **Endpoint**: `http://localhost:3000/feed.xml`
-- **Pagination**: page 1 is `/feed.xml`, then increment `page` (`?page=2`, `?page=3`, ...)
-- **Page size**: 20 posts per page
-- **Item content**:
-  - `description` contains the post excerpt
-  - `content:encoded` contains the full post content
-
-## 🛠️ Development
-
-### Hot Reload
-
-- Source code changes auto-reload in development
-- Database schema changes require `npx prisma db push`
-- Next.js automatically handles HMR (Hot Module Replacement)
-
-### Adding Dependencies
-
-```bash
-# Via Docker
-docker compose exec node npm install <package-name>
-
-# Or update package.json and restart
-docker compose restart node
-```
-
-### Debugging
-
-View detailed logs:
-
-```bash
-docker compose logs -f
-```
-
-Access specific service logs:
-
-```bash
-docker compose logs -f node      # App logs
-docker compose logs -f postgres  # Database logs
-docker compose logs -f nginx     # Reverse proxy logs
-```
-
-## 📦 Environment Variables
-
-See `.env.example` for all available options. Key variables:
-
-```
-# Database
-DB_USER=postgres
-DB_PASSWORD=postgres
-DB_NAME=hammerspace
-DATABASE_URL=postgresql://...
-
-# Auth
-AUTH_JWT_SECRET=<generate with: openssl rand -base64 32>
-LOGIN_TOKEN_SECRET=<generate with: openssl rand -base64 32>
-
-# Application
-NODE_ENV=development
-APP_PORT=3000
-NEXT_PUBLIC_SITE_URL=http://localhost
-```
-
-## 🔒 Production Considerations
-
-Before deploying to production:
-
-1. **Authentication**
-   - Generate strong `AUTH_JWT_SECRET` and `LOGIN_TOKEN_SECRET`
-   - Keep bootstrap token URLs private and single-use
-   - Require passkey registration immediately after token bootstrap login
-
-2. **Database**
-   - Use managed PostgreSQL (RDS, Supabase, etc.)
-   - Enable SSL connections
-   - Set up regular backups
-   - Use strong passwords
-
-3. **Environment**
-   - Use secure secret management
-   - Set `NODE_ENV=production`
-   - Configure proper `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_RP_ID`, and `NEXT_PUBLIC_SITE_URL`
-   - Use real domain names
-
-4. **Caching**
-   - Adjust ISR times based on content update frequency
-   - Consider CDN for static assets
-   - Monitor cache hit rates in Nginx
-
-5. **Security**
-   - Enable HTTPS
-   - Set up CORS if needed
-   - Validate and sanitize user inputs
-   - Use environment variables for secrets
-
-## 📚 Resources
-
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Prisma Documentation](https://www.prisma.io/docs/)
-- [SimpleWebAuthn Documentation](https://simplewebauthn.dev/)
-- [Nginx Documentation](https://nginx.org/en/docs/)
-
-## 📄 License
-
-This project is provided as-is for demonstration purposes.
+- Prisma: https://www.prisma.io/docs/
+- SvelteKit: https://svelte.dev/docs/kit
+- PM2: https://pm2.keymetrics.io/

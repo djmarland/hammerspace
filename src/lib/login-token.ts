@@ -4,10 +4,10 @@ function getTokenSecret(): string {
 	const secret =
 		process.env.LOGIN_TOKEN_SECRET ??
 		process.env.AUTH_JWT_SECRET ??
-		process.env.NEXTAUTH_SECRET;
+		process.env.AUTH_SECRET;
 	if (!secret) {
 		throw new Error(
-			"Missing LOGIN_TOKEN_SECRET (or AUTH_JWT_SECRET/NEXTAUTH_SECRET)",
+			"Missing LOGIN_TOKEN_SECRET (or AUTH_JWT_SECRET/AUTH_SECRET)",
 		);
 	}
 	return secret;

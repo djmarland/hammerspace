@@ -76,8 +76,8 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 			response: body as any,
 			expectedChallenge: storedChallenge,
 			expectedOrigin:
-				process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
-			expectedRPID: process.env.NEXT_PUBLIC_RP_ID || "localhost",
+				process.env.PUBLIC_APP_URL || "http://localhost:3000",
+			expectedRPID: process.env.PUBLIC_RP_ID || "localhost",
 			credential: {
 				id: Buffer.from(credential.credentialId).toString("base64url"),
 				publicKey: credential.credentialPublicKey,

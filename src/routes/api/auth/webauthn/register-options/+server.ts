@@ -22,7 +22,7 @@ export const POST: RequestHandler = async () => {
 		}
 
 		const registrationOptions = await generateRegistrationOptions({
-			rpID: process.env.NEXT_PUBLIC_RP_ID || "localhost",
+			rpID: process.env.PUBLIC_RP_ID || "localhost",
 			rpName: "Hammerspace",
 			userID: Buffer.from(user.id),
 			userName: user.id,
