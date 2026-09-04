@@ -28,4 +28,4 @@ jobs:
           name: Build ${{ github.sha }}
           prerelease: true
           files: |
-            ${{ github.workspace }}/${{ github.sha }}.zip
+            ${{ github.workspace }}/${{ github.sha }}.tar.gz

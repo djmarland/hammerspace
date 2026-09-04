@@ -38,4 +38,4 @@ release=${release_name}
 created_at=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 EOF
 
-zip -r "${release_name}.zip" "$output_dir" >/dev/null
+tar -czf "${release_name}.tar.gz" -C "$(dirname "$output_dir")" "$(basename "$output_dir")"

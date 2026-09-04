@@ -2,24 +2,24 @@
 set -euo pipefail
 
 if [[ $# -lt 3 || $# -gt 4 ]]; then
-	echo "Usage: $0 <release-zip-url> <install-dir> <pm2-app-name> [env-file]" >&2
+	echo "Usage: $0 <release-tarball-url> <install-dir> <pm2-app-name> [env-file]" >&2
 	exit 1
 fi
 
-release_zip_url="$1"
+release_tarball_url="$1"
 install_dir="$2"
 pm2_app_name="$3"
 env_file="${4:-$install_dir/.env}"
 tmp_dir="$(mktemp -d)"
-zip_path="$tmp_dir/release.zip"
+tarball_path="$tmp_dir/release.tar.gz"
 
-curl -fsSL "$release_zip_url" -o "$zip_path"
-mkdir -p "$install_dir"
-unzip -q "$zip_path" -d "$tmp_dir/unpacked"
+curl -fsSL "$release_tarball_url" -o "$tarball_path"
+mkdir -p "$install_dir" "$tmp_dir/unpacked"
+tar -xzf "$tarball_path" -C "$tmp_dir/unpacked"
 
 release_root="$(find "$tmp_dir/unpacked" -mindepth 1 -maxdepth 1 -type d | head -n 1)"
 if [[ -z "${release_root:-}" ]]; then
-	echo "Release zip did not contain a top-level directory" >&2
+	echo "Release tarball did not contain a top-level directory" >&2
 	exit 1
 fi
 
