@@ -1,6 +1,5 @@
 import crypto from "crypto";
-import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { getRequestEvent } from "$app/server";
 import { prisma } from "@/lib/db";
 
 export const ADMIN_AUTH_COOKIE = "admin_session";
@@ -22,9 +21,9 @@ export interface AdminSessionUser {
 }
 
 function getJwtSecret(): string {
-	const secret = process.env.AUTH_JWT_SECRET ?? process.env.NEXTAUTH_SECRET;
+	const secret = process.env.AUTH_JWT_SECRET ?? process.env.AUTH_SECRET;
 	if (!secret) {
-		throw new Error("Missing AUTH_JWT_SECRET (or NEXTAUTH_SECRET)");
+		throw new Error("Missing AUTH_JWT_SECRET (or AUTH_SECRET)");
 	}
 	return secret;
 }
@@ -111,10 +110,10 @@ export function createAdminSessionToken(
 }
 
 export function issueAdminSession(
-	response: NextResponse,
+	response: any,
 	userId: string,
 	bootstrap: boolean,
-): NextResponse {
+): any {
 	response.cookies.set(
 		ADMIN_AUTH_COOKIE,
 		createAdminSessionToken(userId, bootstrap),
@@ -129,7 +128,7 @@ export function issueAdminSession(
 	return response;
 }
 
-export function clearAdminSession(response: NextResponse): NextResponse {
+export function clearAdminSession(response: any): any {
 	response.cookies.set(ADMIN_AUTH_COOKIE, "", {
 		httpOnly: true,
 		sameSite: "lax",
@@ -141,13 +140,10 @@ export function clearAdminSession(response: NextResponse): NextResponse {
 }
 
 export async function getAdminSessionUser(): Promise<AdminSessionUser | null> {
-	const cookieStore = await cookies();
-	const token = cookieStore.get(ADMIN_AUTH_COOKIE)?.value;
-	if (!token) {
-		return null;
-	}
+	const event = getRequestEvent();
+	const cookieValue = event.cookies.get(ADMIN_AUTH_COOKIE);
 
-	const payload = parsePayload(token);
+	const payload = cookieValue ? parsePayload(cookieValue) : null;
 	if (!payload) {
 		return null;
 	}
@@ -156,17 +152,15 @@ export async function getAdminSessionUser(): Promise<AdminSessionUser | null> {
 		where: { id: payload.sub },
 		select: {
 			id: true,
-			isAdmin: true,
 			name: true,
 			loginTokenHash: true,
 			credentials: {
-				select: { id: true },
-				take: 1,
+				select: { credentialId: true },
 			},
 		},
 	});
 
-	if (!user || !user.isAdmin) {
+	if (!user) {
 		return null;
 	}
 

@@ -1,0 +1,56 @@
+<script lang="ts">
+	import { resolve } from "$app/paths";
+	import Logo from "@/components/Atoms/Logo/Logo.svelte";
+
+	type Props = { title: string; children?: () => unknown };
+	let { title, children }: Props = $props();
+</script>
+
+<header class="header">
+	<div class="logo">
+		<a href={resolve("/")}>
+			<Logo />
+		</a>
+	</div>
+	<h1 class="piko-t-h1">{title}</h1>
+	{@render children?.()}
+</header>
+
+<style>
+	.logo,
+	.logo a {
+		display: block;
+		width: min(100%, 120px);
+	}
+
+	.logo :global(svg),
+	.logo a :global(svg) {
+		display: block;
+		width: 100%;
+		height: auto;
+		max-width: 100%;
+	}
+
+	.header {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 0.85rem;
+		text-align: right;
+	}
+
+	.header h1 {
+		margin: 0;
+	}
+
+	@media (max-width: 56rem) {
+		.header {
+			align-items: center;
+			text-align: center;
+		}
+
+		.logo {
+			view-transition-name: site-logo;
+		}
+	}
+</style>

@@ -1,0 +1,1515 @@
+@layer piko {
+	@layer tokens {
+		@layer core {
+			:root {
+				--piko-unit: 16px;
+				--piko-unit-half: calc(var(--piko-unit) / 2);
+				--piko-unit-quarter: calc(var(--piko-unit) / 4);
+				--piko-unit-double: calc(var(--piko-unit) * 2);
+				--piko-unit-triple: calc(var(--piko-unit) * 3);
+				--piko-unit-quad: calc(var(--piko-unit) * 4);
+
+				/* @link https://utopia.fyi/type/calculator?c=360,16,1.2,1240,20,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12 */
+				--piko-fontsize--2: clamp(0.64rem, 0.7167rem + -0.099vw, 0.6944rem);
+				--piko-fontsize--1: clamp(0.8rem, 0.847rem + -0.0606vw, 0.8333rem);
+				--piko-fontsize-0: clamp(1rem, 1rem + 0vw, 1rem);
+				--piko-fontsize-1: clamp(1.2rem, 1.1795rem + 0.0909vw, 1.25rem);
+				--piko-fontsize-2: clamp(1.44rem, 1.3899rem + 0.2227vw, 1.5625rem);
+				--piko-fontsize-3: clamp(1.728rem, 1.6359rem + 0.4093vw, 1.9531rem);
+				--piko-fontsize-4: clamp(2.0736rem, 1.9231rem + 0.6687vw, 2.4414rem);
+				--piko-fontsize-5: clamp(2.4883rem, 2.2578rem + 1.0244vw, 3.0518rem);
+
+				--piko-palette-white: #fff;
+				--piko-palette-black: #000;
+				--piko-palette-grey-1: oklch(98% 0.004 247);
+				--piko-palette-grey-2: oklch(95.7% 0.007 247);
+				--piko-palette-grey-3: oklch(92.5% 0.011 247);
+				--piko-palette-grey-4: oklch(86.9% 0.016 247);
+				--piko-palette-grey-5: oklch(76.9% 0.021 247);
+				--piko-palette-grey-6: oklch(63.8% 0.023 247);
+				--piko-palette-grey-7: oklch(50.4% 0.022 247);
+				--piko-palette-grey-8: oklch(34.8% 0.019 247);
+				--piko-palette-grey-9: oklch(22.7% 0.016 247);
+
+				--piko-palette-red-1: oklch(97.9% 0.013 22);
+				--piko-palette-red-2: oklch(94.9% 0.029 22);
+				--piko-palette-red-3: oklch(90.8% 0.055 22);
+				--piko-palette-red-4: oklch(84.4% 0.093 22);
+				--piko-palette-red-5: oklch(75.6% 0.14 22);
+				--piko-palette-red-6: oklch(65.8% 0.18 22);
+				--piko-palette-red-7: oklch(56.2% 0.2 22);
+				--piko-palette-red-8: oklch(45.2% 0.179 22);
+				--piko-palette-red-9: oklch(34.8% 0.147 22);
+
+				--piko-palette-orange-1: oklch(98.4% 0.015 55);
+				--piko-palette-orange-2: oklch(96.2% 0.037 55);
+				--piko-palette-orange-3: oklch(92.7% 0.074 55);
+				--piko-palette-orange-4: oklch(87.8% 0.113 55);
+				--piko-palette-orange-5: oklch(80.7% 0.152 55);
+				--piko-palette-orange-6: oklch(72.2% 0.171 55);
+				--piko-palette-orange-7: oklch(61.4% 0.166 55);
+				--piko-palette-orange-8: oklch(48.1% 0.14 55);
+				--piko-palette-orange-9: oklch(37.6% 0.116 55);
+
+				--piko-palette-yellow-1: oklch(99.2% 0.014 97);
+				--piko-palette-yellow-2: oklch(98.1% 0.036 97);
+				--piko-palette-yellow-3: oklch(95.9% 0.071 97);
+				--piko-palette-yellow-4: oklch(92.7% 0.11 97);
+				--piko-palette-yellow-5: oklch(87.3% 0.145 97);
+				--piko-palette-yellow-6: oklch(79.8% 0.165 97);
+				--piko-palette-yellow-7: oklch(67.4% 0.147 97);
+				--piko-palette-yellow-8: oklch(53.4% 0.123 97);
+				--piko-palette-yellow-9: oklch(41.2% 0.101 97);
+
+				--piko-palette-green-1: oklch(98.6% 0.015 146);
+				--piko-palette-green-2: oklch(96.3% 0.039 146);
+				--piko-palette-green-3: oklch(92.2% 0.076 146);
+				--piko-palette-green-4: oklch(86.5% 0.115 146);
+				--piko-palette-green-5: oklch(78.2% 0.145 146);
+				--piko-palette-green-6: oklch(68.2% 0.146 146);
+				--piko-palette-green-7: oklch(56.7% 0.129 146);
+				--piko-palette-green-8: oklch(44.5% 0.106 146);
+				--piko-palette-green-9: oklch(34.2% 0.084 146);
+
+				--piko-palette-teal-1: oklch(98.3% 0.012 180);
+				--piko-palette-teal-2: oklch(95.5% 0.028 180);
+				--piko-palette-teal-3: oklch(91.2% 0.054 180);
+				--piko-palette-teal-4: oklch(84.6% 0.082 180);
+				--piko-palette-teal-5: oklch(75.7% 0.104 180);
+				--piko-palette-teal-6: oklch(64.8% 0.108 180);
+				--piko-palette-teal-7: oklch(52.3% 0.095 180);
+				--piko-palette-teal-8: oklch(39.8% 0.077 180);
+				--piko-palette-teal-9: oklch(30.7% 0.063 180);
+
+				--piko-palette-blue-1: oklch(98.1% 0.011 258);
+				--piko-palette-blue-2: oklch(95.2% 0.032 258);
+				--piko-palette-blue-3: oklch(90.7% 0.068 258);
+				--piko-palette-blue-4: oklch(84.2% 0.11 258);
+				--piko-palette-blue-5: oklch(75.2% 0.154 258);
+				--piko-palette-blue-6: oklch(64.4% 0.189 258);
+				--piko-palette-blue-7: oklch(53.5% 0.191 258);
+				--piko-palette-blue-8: oklch(43.5% 0.164 258);
+				--piko-palette-blue-9: oklch(34.5% 0.138 258);
+
+				--piko-palette-purple-1: oklch(98.3% 0.013 304);
+				--piko-palette-purple-2: oklch(95.8% 0.032 304);
+				--piko-palette-purple-3: oklch(91.8% 0.066 304);
+				--piko-palette-purple-4: oklch(86.1% 0.105 304);
+				--piko-palette-purple-5: oklch(77.9% 0.143 304);
+				--piko-palette-purple-6: oklch(68.5% 0.17 304);
+				--piko-palette-purple-7: oklch(58.5% 0.176 304);
+				--piko-palette-purple-8: oklch(47.2% 0.153 304);
+				--piko-palette-purple-9: oklch(37.6% 0.126 304);
+
+				--piko-palette-pink-1: oklch(98.2% 0.011 342);
+				--piko-palette-pink-2: oklch(95.2% 0.028 342);
+				--piko-palette-pink-3: oklch(90.8% 0.056 342);
+				--piko-palette-pink-4: oklch(84.3% 0.093 342);
+				--piko-palette-pink-5: oklch(75.6% 0.134 342);
+				--piko-palette-pink-6: oklch(65.7% 0.162 342);
+				--piko-palette-pink-7: oklch(55.4% 0.165 342);
+				--piko-palette-pink-8: oklch(44.6% 0.142 342);
+				--piko-palette-pink-9: oklch(35.5% 0.118 342);
+
+				--piko-palette-dynamic-hue: 40;
+				--piko-palette-dynamic-1: oklch(
+					97.2% 0.014 var(--piko-palette-dynamic-hue)
+				);
+				--piko-palette-dynamic-2: oklch(
+					94.8% 0.034 var(--piko-palette-dynamic-hue)
+				);
+				--piko-palette-dynamic-3: oklch(
+					90.7% 0.065 var(--piko-palette-dynamic-hue)
+				);
+				--piko-palette-dynamic-4: oklch(
+					84.6% 0.105 var(--piko-palette-dynamic-hue)
+				);
+				--piko-palette-dynamic-5: oklch(
+					76.5% 0.151 var(--piko-palette-dynamic-hue)
+				);
+				--piko-palette-dynamic-6: oklch(
+					66.1% 0.184 var(--piko-palette-dynamic-hue)
+				);
+				--piko-palette-dynamic-7: oklch(
+					54.5% 0.182 var(--piko-palette-dynamic-hue)
+				);
+				--piko-palette-dynamic-8: oklch(
+					42.3% 0.154 var(--piko-palette-dynamic-hue)
+				);
+				--piko-palette-dynamic-9: oklch(
+					32.8% 0.129 var(--piko-palette-dynamic-hue)
+				);
+				@media (color-gamut: p3) {
+					--piko-palette-dynamic-1: oklch(
+						97.2% 0.039 var(--piko-palette-dynamic-hue)
+					);
+					--piko-palette-dynamic-2: oklch(
+						94.8% 0.081 var(--piko-palette-dynamic-hue)
+					);
+					--piko-palette-dynamic-3: oklch(
+						90.7% 0.124 var(--piko-palette-dynamic-hue)
+					);
+					--piko-palette-dynamic-4: oklch(
+						84.6% 0.163 var(--piko-palette-dynamic-hue)
+					);
+					--piko-palette-dynamic-5: oklch(
+						76.5% 0.198 var(--piko-palette-dynamic-hue)
+					);
+					--piko-palette-dynamic-6: oklch(
+						66.1% 0.224 var(--piko-palette-dynamic-hue)
+					);
+					--piko-palette-dynamic-7: oklch(
+						54.5% 0.241 var(--piko-palette-dynamic-hue)
+					);
+					--piko-palette-dynamic-8: oklch(
+						42.3% 0.253 var(--piko-palette-dynamic-hue)
+					);
+					--piko-palette-dynamic-9: oklch(
+						32.8% 0.26 var(--piko-palette-dynamic-hue)
+					);
+				}
+			}
+		}
+
+		@layer semantic {
+			:root {
+				--piko-color-background: light-dark(
+					var(--piko-palette-grey-1),
+					var(--piko-palette-grey-9)
+				);
+				--piko-color-background-secondary: light-dark(
+					var(--piko-palette-grey-2),
+					var(--piko-palette-grey-8)
+				);
+				--piko-color-background-inactive: light-dark(
+					var(--piko-palette-grey-4),
+					var(--piko-palette-grey-6)
+				);
+				--piko-color-background-dynamic: light-dark(
+					var(--piko-palette-dynamic-2),
+					var(--piko-palette-dynamic-8)
+				);
+
+				--piko-color-text: light-dark(
+					var(--piko-palette-grey-9),
+					var(--piko-palette-grey-1)
+				);
+				--piko-color-text-subtle: light-dark(
+					var(--piko-palette-grey-7),
+					var(--piko-palette-grey-3)
+				);
+				--piko-color-text-dynamic: light-dark(
+					var(--piko-palette-dynamic-9),
+					var(--piko-palette-dynamic-1)
+				);
+
+				--piko-color-link: light-dark(
+					var(--piko-palette-dynamic-7),
+					var(--piko-palette-dynamic-4)
+				);
+				--piko-color-link-visited: light-dark(
+					var(--piko-palette-dynamic-6),
+					var(--piko-palette-dynamic-5)
+				);
+				--piko-color-link-hover: light-dark(
+					var(--piko-palette-dynamic-9),
+					var(--piko-palette-dynamic-3)
+				);
+
+				--piko-color-border: light-dark(
+					var(--piko-palette-grey-4),
+					var(--piko-palette-grey-6)
+				);
+				--piko-color-border-subtle: light-dark(
+					var(--piko-palette-grey-3),
+					var(--piko-palette-grey-7)
+				);
+				--piko-color-border-strong: light-dark(
+					var(--piko-palette-grey-5),
+					var(--piko-palette-grey-5)
+				);
+
+				--piko-color-accent: light-dark(
+					var(--piko-palette-dynamic-7),
+					var(--piko-palette-dynamic-2)
+				);
+
+				--piko-color-state-info-text: light-dark(
+					var(--piko-palette-blue-8),
+					var(--piko-palette-blue-3)
+				);
+				--piko-color-state-info-background: light-dark(
+					var(--piko-palette-blue-2),
+					var(--piko-palette-blue-8)
+				);
+				--piko-color-state-info-border: light-dark(
+					var(--piko-palette-blue-5),
+					var(--piko-palette-blue-6)
+				);
+
+				--piko-color-state-success-text: light-dark(
+					var(--piko-palette-green-8),
+					var(--piko-palette-green-3)
+				);
+				--piko-color-state-success-background: light-dark(
+					var(--piko-palette-green-2),
+					var(--piko-palette-green-8)
+				);
+				--piko-color-state-success-border: light-dark(
+					var(--piko-palette-green-5),
+					var(--piko-palette-green-6)
+				);
+
+				--piko-color-state-warning-text: light-dark(
+					var(--piko-palette-yellow-8),
+					var(--piko-palette-yellow-3)
+				);
+				--piko-color-state-warning-background: light-dark(
+					var(--piko-palette-yellow-2),
+					var(--piko-palette-yellow-8)
+				);
+				--piko-color-state-warning-border: light-dark(
+					var(--piko-palette-yellow-5),
+					var(--piko-palette-yellow-6)
+				);
+
+				--piko-color-state-error-text: light-dark(
+					var(--piko-palette-red-8),
+					var(--piko-palette-red-3)
+				);
+				--piko-color-state-error-background: light-dark(
+					var(--piko-palette-red-2),
+					var(--piko-palette-red-8)
+				);
+				--piko-color-state-error-border: light-dark(
+					var(--piko-palette-red-7),
+					var(--piko-palette-red-6)
+				);
+
+				[data-state="info"] {
+					--piko-color-state-text: var(--piko-color-state-info-text);
+					--piko-color-state-background: var(
+						--piko-color-state-info-background
+					);
+					--piko-color-state-border: var(--piko-color-state-info-border);
+				}
+				[data-state="success"] {
+					--piko-color-state-text: var(--piko-color-state-success-text);
+					--piko-color-state-background: var(
+						--piko-color-state-success-background
+					);
+					--piko-color-state-border: var(--piko-color-state-success-border);
+				}
+				[data-state="warning"] {
+					--piko-color-state-text: var(--piko-color-state-warning-text);
+					--piko-color-state-background: var(
+						--piko-color-state-warning-background
+					);
+					--piko-color-state-border: var(--piko-color-state-warning-border);
+				}
+				[data-state="error"] {
+					--piko-color-state-text: var(--piko-color-state-error-text);
+					--piko-color-state-background: var(
+						--piko-color-state-error-background
+					);
+					--piko-color-state-border: var(--piko-color-state-error-border);
+				}
+
+				--piko-button-primary-color-text: light-dark(
+					var(--piko-palette-white),
+					var(--piko-palette-white)
+				);
+				--piko-button-primary-color-text-hover: var(--piko-palette-white);
+				--piko-button-primary-color-text-active: var(--piko-palette-white);
+				--piko-button-primary-color-background: light-dark(
+					var(--piko-palette-dynamic-7),
+					var(--piko-palette-dynamic-8)
+				);
+				--piko-button-primary-color-background-hover: light-dark(
+					var(--piko-palette-dynamic-6),
+					var(--piko-palette-dynamic-7)
+				);
+				--piko-button-primary-color-background-active: light-dark(
+					var(--piko-palette-dynamic-8),
+					var(--piko-palette-dynamic-9)
+				);
+
+				--piko-button-secondary-color-text: light-dark(
+					var(--piko-palette-dynamic-8),
+					var(--piko-palette-dynamic-2)
+				);
+				--piko-button-secondary-color-text-hover: light-dark(
+					var(--piko-palette-white),
+					var(--piko-palette-dynamic-7)
+				);
+				--piko-button-secondary-color-text-active: var(--piko-palette-white);
+				--piko-button-secondary-color-background: light-dark(
+					var(--piko-palette-dynamic-2),
+					var(--piko-palette-dynamic-7)
+				);
+				--piko-button-secondary-color-background-hover: light-dark(
+					var(--piko-palette-dynamic-6),
+					var(--piko-palette-dynamic-3)
+				);
+				--piko-button-secondary-color-background-active: light-dark(
+					var(--piko-palette-dynamic-7),
+					var(--piko-palette-dynamic-8)
+				);
+
+				--piko-button-tertiary-color-text: light-dark(
+					var(--piko-palette-dynamic-7),
+					var(--piko-palette-dynamic-2)
+				);
+				--piko-button-tertiary-color-text-hover: var(--piko-palette-white);
+				--piko-button-tertiary-color-text-active: var(--piko-palette-white);
+				--piko-button-tertiary-color-background: transparent;
+				--piko-button-tertiary-color-background-hover: light-dark(
+					var(--piko-palette-dynamic-6),
+					var(--piko-palette-dynamic-9)
+				);
+				--piko-button-tertiary-color-background-active: light-dark(
+					var(--piko-palette-dynamic-7),
+					var(--piko-palette-dynamic-8)
+				);
+
+				--piko-button-danger-color-text: light-dark(
+					var(--piko-palette-white),
+					var(--piko-palette-white)
+				);
+				--piko-button-danger-color-text-hover: var(--piko-palette-white);
+				--piko-button-danger-color-text-active: var(--piko-palette-white);
+				--piko-button-danger-color-background: light-dark(
+					var(--piko-palette-red-7),
+					var(--piko-palette-red-8)
+				);
+				--piko-button-danger-color-background-hover: light-dark(
+					var(--piko-palette-red-6),
+					var(--piko-palette-red-7)
+				);
+				--piko-button-danger-color-background-active: light-dark(
+					var(--piko-palette-red-8),
+					var(--piko-palette-red-9)
+				);
+
+				--piko-button-disabled-color-text: var(--piko-color-text-subtle);
+				--piko-button-disabled-color-text-hover: var(
+					--piko-button-disabled-color-text
+				);
+				--piko-button-disabled-color-text-active: var(
+					--piko-button-disabled-color-text
+				);
+				--piko-button-disabled-color-background: light-dark(
+					var(--piko-palette-grey-4),
+					var(--piko-palette-grey-7)
+				);
+				--piko-button-disabled-color-background-hover: var(
+					--piko-button-disabled-color-background
+				);
+				--piko-button-disabled-color-background-active: var(
+					--piko-button-disabled-color-background
+				);
+
+				/* Typography */
+				--piko-t-body: var(--piko-fontsize-0);
+				--piko-t-body-small: var(--piko-fontsize--1);
+				--piko-t-small: var(--piko-fontsize--2);
+				--piko-t-caption: var(--piko-fontsize--2);
+				--piko-t-h1: var(--piko-fontsize-5);
+				--piko-t-h2: var(--piko-fontsize-4);
+				--piko-t-h3: var(--piko-fontsize-3);
+				--piko-t-h4: var(--piko-fontsize-2);
+				--piko-t-h5: var(--piko-fontsize-1);
+				--piko-t-h6: var(--piko-fontsize-0);
+				--piko-t-code: var(--piko-fontsize--1);
+
+				/* Gaps */
+				--piko-gap-grid: var(--piko-unit);
+				--piko-gap-stack: var(--piko-unit);
+				--piko-gap-text: var(--piko-unit-half);
+				--piko-gap-section: var(--piko-unit-double);
+				--piko-gap-icon: var(--piko-unit-quarter);
+
+				--piko-space-panel-padding: var(--piko-unit);
+				--piko-space-control-padding-x: var(--piko-unit);
+				--piko-space-control-padding-y: var(--piko-unit-half);
+
+				--piko-page-gutter: var(--piko-unit-half);
+				@media (min-width: 50em) {
+					--piko-page-gutter: var(--piko-unit);
+				}
+				@media (min-width: 90em) {
+					--piko-page-gutter: var(--piko-unit-double);
+				}
+				--piko-page-max: 1024px;
+			}
+		}
+	}
+
+	@layer normalize {
+		*,
+		:before,
+		:after {
+			box-sizing: border-box;
+		}
+
+		:scope {
+			-webkit-text-size-adjust: 100%;
+			tab-size: 4;
+			font-family:
+				system-ui,
+				Segoe UI,
+				Roboto,
+				Helvetica,
+				Arial,
+				sans-serif,
+				Apple Color Emoji,
+				Segoe UI Emoji;
+			line-height: 1.15;
+		}
+
+		body {
+			margin: 0;
+		}
+
+		b,
+		strong {
+			font-weight: bolder;
+		}
+
+		code,
+		kbd,
+		samp,
+		pre {
+			font-family:
+				ui-monospace,
+				SFMono-Regular,
+				Consolas,
+				Liberation Mono,
+				Menlo,
+				monospace;
+			font-size: 1em;
+		}
+
+		small {
+			font-size: 80%;
+		}
+
+		sub,
+		sup {
+			vertical-align: baseline;
+			font-size: 75%;
+			line-height: 0;
+			position: relative;
+		}
+
+		sub {
+			inset-block-end: -0.25em;
+		}
+
+		sup {
+			inset-block-start: -0.5em;
+		}
+
+		table {
+			border-color: currentColor;
+		}
+
+		button,
+		input,
+		optgroup,
+		select,
+		textarea {
+			margin: 0;
+			font-family: inherit;
+			font-size: 100%;
+			line-height: 1.15;
+		}
+
+		button,
+		[type="button"],
+		[type="reset"],
+		[type="submit"] {
+			-webkit-appearance: button;
+		}
+
+		legend {
+			padding: 0;
+		}
+
+		progress {
+			vertical-align: baseline;
+		}
+
+		::-webkit-inner-spin-button,
+		::-webkit-outer-spin-button {
+			height: auto;
+		}
+
+		[type="search"] {
+			-webkit-appearance: textfield;
+			outline-offset: -2px;
+		}
+
+		::-webkit-search-decoration {
+			-webkit-appearance: none;
+		}
+
+		::-webkit-file-upload-button {
+			-webkit-appearance: button;
+			font: inherit;
+		}
+
+		summary {
+			display: list-item;
+		}
+	}
+
+	@layer reset {
+		hr {
+			border-block-start-width: 1px;
+		}
+
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
+			font-size: inherit;
+			line-height: inherit;
+			font-weight: inherit;
+			text-wrap: balance;
+			overflow-wrap: break-word;
+		}
+
+		p {
+			overflow-wrap: break-word;
+		}
+
+		blockquote,
+		dl,
+		dd,
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6,
+		hr,
+		figure,
+		p,
+		pre {
+			margin: 0;
+		}
+
+		fieldset {
+			border: 0;
+			margin: 0;
+			padding: 0;
+		}
+
+		legend {
+			padding: 0;
+		}
+
+		ol,
+		ul,
+		menu {
+			margin: 0;
+			padding: 0;
+			list-style-type: "";
+		}
+
+		dialog {
+			padding: 0;
+		}
+
+		table {
+			border-collapse: collapse;
+		}
+
+		textarea {
+			resize: vertical;
+		}
+
+		img,
+		video,
+		canvas,
+		audio,
+		iframe,
+		embed,
+		object {
+			vertical-align: middle;
+			display: block;
+		}
+
+		img,
+		video {
+			max-width: 100%;
+		}
+
+		[hidden] {
+			display: none;
+		}
+
+		input,
+		button,
+		textarea,
+		select {
+			font: inherit;
+		}
+	}
+
+	@layer base {
+		@layer primatives {
+			html {
+				color-scheme: light dark;
+				font-family:
+					ui-sans-serif,
+					system-ui,
+					sans-serif,
+					Apple Color Emoji,
+					Segoe UI Emoji,
+					Segoe UI Symbol,
+					Noto Color Emoji;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+			}
+
+			body {
+				min-height: 100vh;
+				font-size: var(--piko-t-body);
+				line-height: 1.4;
+			}
+
+			body,
+			[data-theme] {
+				background-color: var(--piko-color-background);
+				color: var(--piko-color-text);
+			}
+
+			[data-theme="dark"] {
+				color-scheme: dark;
+			}
+			[data-theme="light"] {
+				color-scheme: light;
+			}
+
+			:focus {
+				outline: none;
+			}
+
+			:focus-visible {
+				outline: currentColor solid 2px;
+			}
+			a,
+			.piko-link,
+			button.piko-link {
+				font-size: inherit;
+				line-height: inherit;
+				font-weight: inherit;
+				text-decoration: underline;
+				color: var(--piko-color-link);
+				cursor: pointer;
+				min-width: auto;
+				min-height: auto;
+				box-shadow: none;
+				background: none;
+				border: none;
+				padding: 0;
+				display: inline;
+			}
+
+			a:visited,
+			.piko-link:visited,
+			button.piko-link:visited {
+				color: var(--piko-color-link-visited);
+				background: none;
+			}
+
+			a:not(:disabled, .piko-disabled):hover,
+			a:not(:disabled, .piko-disabled):active,
+			.piko-link:not(:disabled, .piko-disabled):hover,
+			.piko-link:not(:disabled, .piko-disabled):active {
+				color: var(--piko-color-link-hover);
+				background: none;
+			}
+
+			fieldset {
+				border: 1px solid var(--piko-color-border-subtle);
+				padding: var(--piko-space-panel-padding);
+			}
+
+			legend {
+				font-size: var(--piko-t-small);
+				font-weight: 600;
+			}
+
+			small {
+				font-size: var(--piko-t-small);
+			}
+
+			::placeholder {
+				color: var(--piko-color-text-subtle);
+				font-style: italic;
+				overflow: visible;
+			}
+
+			::selection {
+				background: var(--piko-color-text-dynamic);
+				color: var(--piko-color-background-dynamic);
+			}
+
+			:is(table, .piko-table) {
+				inline-size: 100%;
+			}
+
+			:is(table, .piko-table) :is(tr, .piko-tr) {
+				border-block-end: 1px solid var(--piko-color-border-subtle);
+			}
+
+			:is(table, .piko-table)
+				:is(tbody, .piko-tbody)
+				:is(tr, .piko-tr):last-child,
+			:is(table, .piko-table) > :is(tr, .piko-tr):last-child {
+				border-block-end: none;
+			}
+
+			:is(table, .piko-table) :is(th, .piko-th, td, .piko-td) {
+				padding: var(--piko-unit-half);
+			}
+
+			:is(table, .piko-table) :is(th, .piko-th) {
+				text-align: start;
+				font-weight: bold;
+			}
+
+			:is(table, .piko-table)
+				:is(td, .piko-td, tbody th, .piko-tbody .piko-th) {
+				vertical-align: top;
+			}
+
+			hr {
+				border: 0;
+				border-block-start: solid 1px var(--piko-color-border-subtle);
+				border-block-start-width: hairline;
+			}
+
+			dl {
+				display: grid;
+				grid-template-columns: max-content 1fr;
+				gap: var(--piko-unit-half) var(--piko-unit);
+				dt {
+					font-weight: bold;
+				}
+			}
+
+			dialog {
+				border: solid 1px var(--piko-color-border);
+				background: var(--piko-color-background);
+				color: var(--piko-color-text);
+				padding: var(--piko-unit);
+				box-shadow: 0 0 8px rgb(from var(--piko-palette-black) r g b / 0.5);
+			}
+			dialog::backdrop {
+				background: rgba(0, 0, 0, 0.4);
+			}
+		}
+
+		@layer typography {
+			.piko-t-h1,
+			.piko-prose :where(h1),
+			.piko-prose .piko-t-h1 {
+				font-size: var(--piko-t-h1);
+				line-height: 1.1;
+				font-weight: lighter;
+			}
+
+			.piko-t-h2,
+			.piko-prose :where(h2),
+			.piko-prose .piko-t-h2 {
+				font-size: var(--piko-t-h2);
+				line-height: 1.15;
+				font-weight: lighter;
+			}
+
+			.piko-t-h3,
+			.piko-prose :where(h3),
+			.piko-prose .piko-t-h3 {
+				font-size: var(--piko-t-h3);
+				line-height: 1.2;
+				font-weight: 300;
+			}
+
+			.piko-t-h4,
+			.piko-prose :where(h4),
+			.piko-prose .piko-t-h4 {
+				font-size: var(--piko-t-h4);
+				line-height: 1.25;
+			}
+
+			.piko-t-h5,
+			.piko-prose :where(h5),
+			.piko-prose .piko-t-h5 {
+				font-size: var(--piko-t-h5);
+				line-height: 1.3;
+			}
+
+			.piko-t-h6,
+			.piko-prose :where(h6),
+			.piko-prose .piko-t-h6 {
+				font-size: var(--piko-t-h6);
+				line-height: 1.35;
+				font-weight: 500;
+				font-variant-caps: small-caps;
+			}
+
+			.piko-t-meta {
+				font-size: var(--piko-t-body-small);
+			}
+
+			.piko-t-label,
+			label {
+				font-size: var(--piko-t-body);
+				font-weight: bold;
+			}
+
+			.piko-t-group-label {
+				font-size: var(--piko-t-body-small);
+				font-weight: bold;
+				font-variant-caps: small-caps;
+			}
+
+			.piko-prose
+				:is(
+					p,
+					ul,
+					ol,
+					dl,
+					h1,
+					h2,
+					h3,
+					h4,
+					h5,
+					h6,
+					table,
+					figure,
+					blockquote,
+					iframe,
+					pre,
+					address,
+					details,
+					.piko-prose__block
+				):not(:last-child) {
+				margin-block-end: 0.625rem;
+			}
+
+			.piko-prose
+				:is(
+					p,
+					ul,
+					ol,
+					dl,
+					h1,
+					h2,
+					h3,
+					h4,
+					h5,
+					h6,
+					table,
+					figure,
+					blockquote,
+					iframe,
+					pre,
+					section,
+					address,
+					details,
+					.piko-prose__block
+				)
+				+ :is(h1, h2, h3, h4, h5, h6, section) {
+				margin-block-start: 2.5rem;
+			}
+
+			.piko-prose pre:has(code) {
+				padding: var(--piko-unit);
+				border: solid 1px var(--piko-color-border);
+			}
+			.piko-prose pre code {
+				white-space: pre-wrap;
+			}
+
+			.piko-ul,
+			.piko-ol,
+			.piko-prose ul,
+			.piko-prose ol {
+				padding-inline-start: 1em;
+				list-style-position: outside;
+			}
+
+			.piko-ul,
+			.piko-prose ul {
+				list-style-type: disc;
+			}
+
+			.piko-ol,
+			.piko-prose ol {
+				list-style-type: decimal;
+			}
+
+			.piko-li:not(:last-child),
+			.piko-prose li:not(:last-child) {
+				margin-block-end: 0.25em;
+			}
+
+			.piko-prose :is(p, ul, ol) {
+				text-wrap: pretty;
+				line-height: 1.7;
+			}
+
+			.piko-prose :where(blockquote) {
+				border-inline-start: 4px solid var(--piko-color-border);
+				padding-inline-start: var(--piko-unit);
+			}
+		}
+
+		@layer buttons {
+			button:-moz-focusring,
+			[type="button"]:-moz-focusring,
+			[type="reset"]:-moz-focusring,
+			[type="submit"]:-moz-focusring {
+				outline: currentColor solid 2px;
+			}
+
+			button:not(:where(.piko-neutral, .piko-link)),
+			.piko-button,
+			a.piko-button,
+			[class*="piko-button-"],
+			::file-selector-button {
+				--_piko-button-color-text: var(--piko-button-secondary-color-text);
+				--_piko-button-color-background: var(
+					--piko-button-secondary-color-background
+				);
+				--_piko-button-hover-text: var(
+					--piko-button-secondary-color-text-hover
+				);
+				--_piko-button-hover-background: var(
+					--piko-button-secondary-color-background-hover
+				);
+				--_piko-button-active-text: var(
+					--piko-button-secondary-color-text-active
+				);
+				--_piko-button-active-background: var(
+					--piko-button-secondary-color-background-active
+				);
+				-webkit-appearance: none;
+				appearance: none;
+				align-items: center;
+				gap: var(--piko-gap-icon);
+				touch-action: manipulation;
+				user-select: none;
+				border: none;
+				inline-size: fit-content;
+				padding: var(--piko-space-control-padding-y)
+					var(--piko-space-control-padding-x);
+				font-family: inherit;
+				font-size: inherit;
+				line-height: inherit;
+				font-weight: inherit;
+				color: var(--_piko-button-color-text);
+				background: var(--_piko-button-color-background);
+				border-radius: 4px;
+				flex-shrink: 0;
+				text-decoration: none;
+				display: inline-flex;
+			}
+
+			a.piko-button {
+				text-align: center;
+			}
+
+			:is(.piko-button, a.piko-button):has(> .piko-button__icon:only-child) {
+				justify-content: center;
+			}
+
+			.piko-button__icon {
+				width: 1em;
+				height: 1em;
+			}
+
+			button:not(:disabled, .piko-disabled):not(
+					:where(.piko-neutral, .piko-link)
+				):hover,
+			button:not(:disabled, .piko-disabled):not(
+					:where(.piko-neutral, .piko-link)
+				):hover,
+			.piko-button:not(:disabled, .piko-disabled):not(
+					:where(.piko-neutral, .piko-link)
+				):hover,
+			a.piko-button:not(:disabled, .piko-disabled):not(
+					:where(.piko-neutral, .piko-link)
+				):hover,
+			button:not(:disabled, .piko-disabled):not(
+					:where(.piko-neutral, .piko-link)
+				):focus-visible,
+			.piko-button:not(:disabled, .piko-disabled):not(
+					:where(.piko-neutral, .piko-link)
+				):focus-visible,
+			a.piko-button:not(:disabled, .piko-disabled):not(
+					:where(.piko-neutral, .piko-link)
+				):focus-visible {
+				color: var(--_piko-button-hover-text);
+				background: var(--_piko-button-hover-background);
+			}
+
+			button:not(:disabled, .piko-disabled):not(
+					:where(.piko-neutral, .piko-link)
+				):active,
+			button:not(:disabled, .piko-disabled):not(
+					:where(.piko-neutral, .piko-link)
+				).piko-active,
+			.piko-button:not(:disabled, .piko-disabled):not(
+					:where(.piko-neutral, .piko-link)
+				):active,
+			.piko-button:not(:disabled, .piko-disabled):not(
+					:where(.piko-neutral, .piko-link)
+				).piko-active,
+			a.piko-button:not(:disabled, .piko-disabled):not(
+					:where(.piko-neutral, .piko-link)
+				):active,
+			a.piko-button:not(:disabled, .piko-disabled):not(
+					:where(.piko-neutral, .piko-link)
+				).piko-active {
+				color: var(--_piko-button-active-text);
+				background: var(--_piko-button-active-background);
+			}
+
+			.piko-button--primary,
+			a.piko-button--primary {
+				--_piko-button-color-text: var(--piko-button-primary-color-text);
+				--_piko-button-color-background: var(
+					--piko-button-primary-color-background
+				);
+				--_piko-button-hover-text: var(--piko-button-primary-color-text-hover);
+				--_piko-button-hover-background: var(
+					--piko-button-primary-color-background-hover
+				);
+				--_piko-button-active-text: var(
+					--piko-button-primary-color-text-active
+				);
+				--_piko-button-active-background: var(
+					--piko-button-primary-color-background-active
+				);
+			}
+
+			.piko-button--tertiary,
+			a.piko-button--tertiary {
+				--_piko-button-color-text: var(--piko-button-tertiary-color-text);
+				--_piko-button-color-background: var(
+					--piko-button-tertiary-color-background
+				);
+				--_piko-button-hover-text: var(--piko-button-tertiary-color-text-hover);
+				--_piko-button-hover-background: var(
+					--piko-button-tertiary-color-background-hover
+				);
+				--_piko-button-active-text: var(
+					--piko-button-tertiary-color-text-active
+				);
+				--_piko-button-active-background: var(
+					--piko-button-tertiary-color-background-active
+				);
+			}
+
+			.piko-button--danger,
+			a.piko-button--danger {
+				--_piko-button-color-text: var(--piko-button-danger-color-text);
+				--_piko-button-color-background: var(
+					--piko-button-danger-color-background
+				);
+				--_piko-button-hover-text: var(--piko-button-danger-color-text-hover);
+				--_piko-button-hover-background: var(
+					--piko-button-danger-color-background-hover
+				);
+				--_piko-button-active-text: var(--piko-button-danger-color-text-active);
+				--_piko-button-active-background: var(
+					--piko-button-danger-color-background-active
+				);
+			}
+
+			button.piko-disabled,
+			button:disabled,
+			.piko-button.piko-disabled,
+			.piko-button:disabled {
+				--_piko-button-color-text: var(--piko-button-disabled-color-text);
+				--_piko-button-color-background: var(
+					--piko-button-disabled-color-background
+				);
+				--_piko-button-hover-text: var(--piko-button-disabled-color-text-hover);
+				--_piko-button-hover-background: var(
+					--piko-button-disabled-color-background-hover
+				);
+				--_piko-button-active-text: var(
+					--piko-button-disabled-color-text-active
+				);
+				--_piko-button-active-background: var(
+					--piko-button-disabled-color-background-active
+				);
+			}
+
+			.piko-button--primary.piko-disabled,
+			a.piko-button--primary.piko-disabled,
+			.piko-button--primary:disabled {
+				--_piko-button-color-text: var(--piko-button-disabled-color-text);
+				--_piko-button-color-background: var(
+					--piko-button-disabled-color-background
+				);
+				--_piko-button-hover-text: var(--piko-button-disabled-color-text-hover);
+				--_piko-button-hover-background: var(
+					--piko-button-disabled-color-background-hover
+				);
+				--_piko-button-active-text: var(
+					--piko-button-disabled-color-text-active
+				);
+				--_piko-button-active-background: var(
+					--piko-button-disabled-color-background-active
+				);
+			}
+
+			.piko-button--tertiary.piko-disabled,
+			a.piko-button--tertiary.piko-disabled,
+			.piko-button--tertiary:disabled {
+				--_piko-button-color-background: transparent;
+				--_piko-button-hover-background: transparent;
+				--_piko-button-active-background: transparent;
+			}
+
+			.piko-button--destruction.piko-disabled,
+			a.piko-button--destruction.piko-disabled,
+			.piko-button--destruction:disabled {
+				--_piko-button-color-text: var(--piko-button-disabled-color-text);
+				--_piko-button-color-background: var(
+					--piko-button-disabled-color-background
+				);
+				--_piko-button-hover-text: var(--piko-button-disabled-color-text-hover);
+				--_piko-button-hover-background: var(
+					--piko-button-disabled-color-background-hover
+				);
+				--_piko-button-active-text: var(
+					--piko-button-disabled-color-text-active
+				);
+				--_piko-button-active-background: var(
+					--piko-button-disabled-color-background-active
+				);
+			}
+		}
+		@layer forms {
+			input,
+			optgroup,
+			select,
+			textarea {
+				color: inherit;
+				font: inherit;
+				box-sizing: border-box;
+				margin: 0;
+				width: 100%;
+				accent-color: var(--piko-color-accent);
+			}
+
+			input:not([type]),
+			input[type="text"],
+			input[type="email"],
+			input[type="number"],
+			input[type="date"],
+			input[type="datetime-local"],
+			input[type="search"],
+			input[type="tel"],
+			input[type="password"],
+			input[type="url"],
+			select,
+			textarea,
+			.piko-input {
+				--_piko-input-border-color: var(
+					--piko-color-state-border,
+					var(--piko-color-border)
+				);
+				appearance: none;
+				background-color: var(--piko-color-background);
+				border: solid 2px var(--_piko-input-border-color);
+				inline-size: 100%;
+				min-inline-size: 0;
+				color: var(--piko-color-text);
+				padding: var(--piko-space-control-padding-y)
+					var(--piko-space-control-padding-x);
+				border-radius: 0;
+				display: block;
+			}
+
+			:is(
+				input:not([type]),
+				input[type="text"],
+				input[type="email"],
+				input[type="number"],
+				input[type="date"],
+				input[type="datetime-local"],
+				input[type="search"],
+				input[type="tel"],
+				input[type="password"],
+				input[type="url"],
+				select,
+				textarea,
+				.piko-input
+			):is(:focus, :focus-visible) {
+				--_piko-input-border-color: var(
+					--piko-color-state-border,
+					currentColor
+				);
+				outline: none;
+			}
+
+			select:not([multiple]) {
+				appearance: auto;
+			}
+
+			:is(
+				input:not([type]),
+				input[type="text"],
+				input[type="email"],
+				input[type="number"],
+				input[type="date"],
+				input[type="datetime-local"],
+				input[type="search"],
+				input[type="tel"],
+				input[type="password"],
+				input[type="url"],
+				select,
+				textarea,
+				.piko-input,
+				.piko-input--select,
+				.piko-input--field,
+				.piko-input--textarea
+			):is(:disabled, .piko-disabled) {
+				--_piko-input-border-color: var(--piko-color-background-inactive);
+				background: var(--piko-color-background-inactive);
+			}
+
+			:is(
+					input:not([type]),
+					input[type="text"],
+					input[type="email"],
+					input[type="number"],
+					input[type="date"],
+					input[type="datetime-local"],
+					input[type="search"],
+					input[type="tel"],
+					input[type="password"],
+					input[type="url"],
+					select,
+					textarea,
+					.piko-input,
+					.piko-input--select,
+					.piko-input--field,
+					.piko-input--textarea
+				):is(:disabled, .piko-disabled)::placeholder {
+				color: var(--piko-color-text-subtle);
+			}
+
+			:is(
+				input:not([type]),
+				input[type="text"],
+				input[type="email"],
+				input[type="number"],
+				input[type="date"],
+				input[type="datetime-local"],
+				input[type="search"],
+				input[type="tel"],
+				input[type="password"],
+				input[type="url"],
+				select,
+				textarea,
+				.piko-input,
+				.piko-input--select,
+				.piko-input--field,
+				.piko-input--textarea
+			):user-invalid {
+				--_piko-input-border-color: var(--piko-color-state-error-border);
+			}
+
+			:is(
+				input:not([type]),
+				input[type="text"],
+				input[type="email"],
+				input[type="number"],
+				input[type="date"],
+				input[type="datetime-local"],
+				input[type="search"],
+				input[type="tel"],
+				input[type="password"],
+				input[type="url"],
+				select,
+				textarea,
+				.piko-input,
+				.piko-input--select,
+				.piko-input--field,
+				.piko-input--textarea
+			):-moz-ui-invalid {
+				--_piko-input-border-color: var(--piko-color-state-error-border);
+			}
+
+			textarea,
+			.piko-input--textarea {
+				resize: vertical;
+			}
+
+			input[type="radio"],
+			input[type="checkbox"] {
+				cursor: pointer;
+				flex-shrink: 0;
+				width: 0.85em;
+				height: 0.85em;
+			}
+
+			.piko-form-field + .piko-form-field {
+				margin-block-start: var(--piko-unit-double);
+			}
+		}
+
+		@layer utils {
+			.piko-page-container {
+				width: 100%;
+				max-inline-size: var(--piko-page-max);
+				margin-inline: auto;
+				padding-inline: var(--piko-page-gutter);
+			}
+
+			.piko-state__box {
+				color: var(--piko-color-state-text);
+				background: var(--piko-color-state-background);
+				border: solid 1px var(--piko-color-state-border);
+				padding: calc(var(--piko-space-panel-padding) / 2)
+					var(--piko-space-panel-padding);
+			}
+			.piko-state__text {
+				color: var(--piko-color-state-text);
+			}
+
+			.piko-vstack,
+			[class*="piko-vstack-"] {
+				& > :where(:not(:last-child)) {
+					margin-block-end: var(--_piko-vstack-gap, var(--piko-gap-stack));
+					display: block;
+				}
+			}
+			.piko-vstack--small {
+				--_piko-vstack-gap: var(--piko-unit-half);
+			}
+			.piko-hstack,
+			[class*="piko-hstack-"] {
+				display: flex;
+				flex-direction: row;
+				gap: var(--_piko-hstack-gap, var(--piko-gap-stack));
+			}
+			.piko-hstack--small {
+				--_piko-hstack-gap: var(--piko-unit-half);
+			}
+
+			.piko-card {
+				background: var(--piko-color-background-secondary);
+				border: solid 1px var(--piko-color-border);
+				padding: var(--piko-space-panel-padding);
+			}
+
+			.piko-hidden {
+				clip: rect(1px, 1px, 1px, 1px);
+				width: 1px;
+				height: 1px;
+				overflow: hidden;
+				position: absolute !important;
+			}
+		}
+	}
+}
+
+@layer app {
+	/* App-specific code */
+
+	@view-transition {
+		navigation: auto;
+	}
+
+	@keyframes vt-slide-out-right {
+		from {
+			transform: translateX(0);
+			opacity: 1;
+		}
+		to {
+			transform: translateX(100%);
+			opacity: 0.5;
+		}
+	}
+	@keyframes vt-slide-in-from-right {
+		from {
+			transform: translateX(100%);
+			opacity: 0.5;
+		}
+		to {
+			transform: translateX(0);
+			opacity: 1;
+		}
+	}
+	@keyframes vt-slide-out-left {
+		from {
+			transform: translateX(0);
+			opacity: 1;
+		}
+		to {
+			transform: translateX(-100%);
+			opacity: 0.5;
+		}
+	}
+	@keyframes vt-slide-in-from-left {
+		from {
+			transform: translateX(-100%);
+			opacity: 0.5;
+		}
+		to {
+			transform: translateX(0);
+			opacity: 1;
+		}
+	}
+
+	/* Suppress default root crossfade — the named columns cover the whole viewport */
+	::view-transition-old(root),
+	::view-transition-new(root) {
+		animation: none;
+	}
+
+	/* Keep each transitioning column clipped to its own original bounds. */
+	::view-transition-group(site-header-content),
+	::view-transition-group(site-content) {
+		overflow: clip;
+	}
+
+	/* Left column: exits rightward into the seam, enters from the seam (rightward) */
+	::view-transition-old(site-header-content) {
+		animation: vt-slide-out-right 0.25s ease-in both;
+	}
+	::view-transition-new(site-header-content) {
+		animation: vt-slide-in-from-right 0.25s 0.25s ease-out both;
+	}
+
+	/* Right column: exits leftward into the seam, enters from the seam (leftward) */
+	::view-transition-old(site-content) {
+		animation: vt-slide-out-left 0.25s ease-in both;
+	}
+	::view-transition-new(site-content) {
+		animation: vt-slide-in-from-left 0.25s 0.25s ease-out both;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		::view-transition-old(site-header-content),
+		::view-transition-new(site-header-content),
+		::view-transition-old(site-content),
+		::view-transition-new(site-content) {
+			animation: none;
+		}
+	}
+}

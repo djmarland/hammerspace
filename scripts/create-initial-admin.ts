@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { PrismaClient } from "../src/generated/client";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { createRawLoginToken, hashLoginToken } from "../src/lib/login-token";
+import { createRawLoginToken, hashLoginToken } from "@/lib/login-token.ts";
 
 const adapter = new PrismaPg({
 	connectionString: process.env.DATABASE_URL!,
@@ -10,7 +10,7 @@ const adapter = new PrismaPg({
 const prisma = new PrismaClient({ adapter });
 
 function getAppUrl(): string {
-	return (process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000").replace(
+	return (process.env.PUBLIC_APP_URL || "http://localhost:3000").replace(
 		/\/+$/,
 		"",
 	);

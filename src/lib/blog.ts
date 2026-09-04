@@ -1,103 +1,41 @@
-import type { PostStatus, Prisma } from "@/generated/client";
-import { prisma } from "@/lib/db";
+import type { Prisma } from "@/generated/client";
+import { nowDate } from "@/lib/temporal";
 
 export const PUBLIC_POSTS_PER_PAGE = 10;
 export const ADMIN_POSTS_PER_PAGE = 12;
+export const SYNDICATION_POSTS_PER_PAGE = 20;
 const WORDS_PER_MINUTE = 200;
 
-export function buildPublicPostWhere(now: Date = new Date()): Prisma.PostWhereInput {
+export function buildDiscoverablePostWhere(
+	now: Date = nowDate(),
+): Prisma.PostWhereInput {
 	return {
-		OR: [
-			{ status: "DRAFT" },
-			{ status: "PUBLISHED" },
-			{ status: "SCHEDULED", scheduledFor: { not: null, lte: now } },
-		],
+		publishedAt: { not: null, lte: now },
 	};
 }
 
-export function buildDiscoverablePostWhere(now: Date = new Date()): Prisma.PostWhereInput {
-	return {
-		OR: [
-			{ status: "PUBLISHED" },
-			{ status: "SCHEDULED", scheduledFor: { not: null, lte: now } },
-		],
-	};
+export function isPostPublic(publishedAt: Date | null, now: Date = nowDate()) {
+	return publishedAt !== null && publishedAt <= now;
 }
 
-export function isPostPublic(
-	status: PostStatus,
-	scheduledFor: Date | null,
-	now: Date = new Date(),
+export function resolveFirstPublicAt(post: {
+	publishedAt: Date | null;
+	createdAt: Date;
+}) {
+	return post.publishedAt ?? post.createdAt;
+}
+
+export function countWords(content: string) {
+	const plainText = stripMarkdown(content);
+	return plainText ? plainText.split(/\s+/).filter(Boolean).length : 0;
+}
+
+export function estimateReadingTimeMinutes(
+	content: string,
+	wordsPerMinute = WORDS_PER_MINUTE,
 ) {
-	switch (status) {
-		case "ARCHIVED":
-			return false;
-		case "SCHEDULED":
-			return scheduledFor !== null && scheduledFor <= now;
-		default:
-			return true;
-	}
-}
-
-export function resolveFirstPublicAt(
-	post: {
-		status: PostStatus;
-		publishedAt: Date | null;
-		scheduledFor: Date | null;
-		createdAt: Date;
-	},
-	now: Date = new Date(),
-) {
-	if (post.publishedAt) {
-		return post.publishedAt;
-	}
-
-	if (post.status === "SCHEDULED" && post.scheduledFor && post.scheduledFor <= now) {
-		return post.scheduledFor;
-	}
-
-	return post.createdAt;
-}
-
-export async function synchronizeScheduledPublicationDates(now: Date = new Date()) {
-	const duePosts = await prisma.post.findMany({
-		where: {
-			status: "SCHEDULED",
-			scheduledFor: { not: null, lte: now },
-			publishedAt: null,
-		},
-		select: {
-			id: true,
-			scheduledFor: true,
-		},
-	});
-
-	if (duePosts.length === 0) {
-		return;
-	}
-
-	const updates = duePosts.flatMap((post) =>
-		post.scheduledFor
-			? [
-					prisma.post.update({
-						where: { id: post.id },
-						data: {
-							published: true,
-							publishedAt: post.scheduledFor,
-						},
-					}),
-				]
-			: [],
-	);
-
-	if (updates.length > 0) {
-		await prisma.$transaction(updates);
-	}
-}
-
-export function estimateReadingTimeMinutes(content: string) {
-	const wordCount = content.trim().split(/\s+/).filter(Boolean).length;
-	return Math.max(1, Math.ceil(wordCount / WORDS_PER_MINUTE));
+	const wordCount = countWords(content);
+	return Math.max(1, Math.ceil(wordCount / wordsPerMinute));
 }
 
 export function stripMarkdown(content: string) {
@@ -111,7 +49,11 @@ export function stripMarkdown(content: string) {
 		.trim();
 }
 
-export function buildExcerpt(excerpt: string | null, content: string, maxLength = 180) {
+export function buildExcerpt(
+	excerpt: string | null,
+	content: string,
+	maxLength = 180,
+) {
 	if (excerpt?.trim()) {
 		return excerpt.trim();
 	}
@@ -126,7 +68,10 @@ export function buildExcerpt(excerpt: string | null, content: string, maxLength 
 
 export function parsePageNumber(value: number | string | string[] | undefined) {
 	const rawValue = Array.isArray(value) ? value[0] : value;
-	const page = typeof rawValue === "number" ? rawValue : Number.parseInt(rawValue || "1", 10);
+	const page =
+		typeof rawValue === "number"
+			? rawValue
+			: Number.parseInt(rawValue || "1", 10);
 	if (!Number.isFinite(page) || page < 1) {
 		return 1;
 	}
@@ -141,15 +86,11 @@ export function clampPage(page: number, totalCount: number, pageSize: number) {
 	};
 }
 
-export function formatPostStatus(status: PostStatus) {
+export function formatPostStatus(status: "DRAFT" | "PUBLISHED") {
 	switch (status) {
 		case "DRAFT":
 			return "Draft";
-		case "SCHEDULED":
-			return "Scheduled";
 		case "PUBLISHED":
 			return "Published";
-		case "ARCHIVED":
-			return "Archived";
 	}
 }

@@ -39,34 +39,23 @@ model WebAuthnCredential {
 }
 
 model Post {
-  id                 String       @id @default(cuid())
-  title              String
-  slug               String       @unique
-  content            String
-  excerpt            String?
-  published          Boolean      @default(false)
-  status             PostStatus   @default(DRAFT)
-  publishedAt        DateTime?
-  scheduledFor       DateTime?
-  coverImageUrl      String?
-  coverImageAlt      String?
-  author             User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId           String
-  tags               PostTag[]
-  createdAt          DateTime     @default(now())
-  updatedAt          DateTime     @updatedAt
+  id            String    @id @default(cuid())
+  title         String
+  slug          String    @unique
+  content       String
+  excerpt       String?
+  publishedAt   DateTime?
+  coverImageUrl String?
+  coverImageAlt String?
+  author        User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId      String
+  tags          PostTag[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
   @@index([authorId])
-  @@index([status, publishedAt])
-  @@index([status, scheduledFor])
+  @@index([publishedAt])
   @@index([slug])
-}
-
-enum PostStatus {
-  DRAFT
-  SCHEDULED
-  PUBLISHED
-  ARCHIVED
 }
 
 model Tag {

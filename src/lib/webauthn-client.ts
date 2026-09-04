@@ -1,5 +1,3 @@
-"use client";
-
 import { startAuthentication as startBrowserAuthentication } from "@simplewebauthn/browser";
 import { startRegistration as startBrowserRegistration } from "@simplewebauthn/browser";
 

@@ -1,0 +1,31 @@
+name: Build release artifact
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 26
+          cache: npm
+
+      - run: npm ci
+      - run: npm run generate
+      - run: npm run build
+      - run: npm ci --omit=dev
+      - run: bash scripts/package-release.sh "${GITHUB_SHA}" dist-release
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.sha }}
+          name: Build ${{ github.sha }}
+          prerelease: true
+          files: |
+            ${{ github.workspace }}/${{ github.sha }}.zip

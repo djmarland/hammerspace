@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import { nowDate } from "@/lib/temporal";
 import crypto from "crypto";
 
 const CHALLENGE_EXPIRATION_MS = 10 * 60 * 1000; // 10 minutes
@@ -25,7 +26,7 @@ export async function storeChallenge(
 		data: {
 			webauthnChallenge: challenge,
 			webauthnChallengeExpiresAt: new Date(
-				Date.now() + CHALLENGE_EXPIRATION_MS,
+				nowDate().getTime() + CHALLENGE_EXPIRATION_MS,
 			),
 		},
 	});
@@ -46,7 +47,7 @@ export async function getAndValidateChallenge(
 		return null;
 	}
 
-	if (new Date() > user.webauthnChallengeExpiresAt) {
+	if (nowDate() > user.webauthnChallengeExpiresAt) {
 		// Clear expired challenge
 		await prisma.user.update({
 			where: { id: userId },

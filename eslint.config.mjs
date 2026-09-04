@@ -1,14 +1,26 @@
-import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
-import nextTypescript from "eslint-config-next/typescript";
+import js from "@eslint/js";
+import ts from "typescript-eslint";
+import svelte from "eslint-plugin-svelte";
+import globals from "globals";
 
-const config = [
-	...nextCoreWebVitals,
-	...nextTypescript,
+export default [
+	js.configs.recommended,
+	...ts.configs.recommended,
+	...svelte.configs["flat/recommended"],
+	...svelte.configs["flat/prettier"],
 	{
-		rules: {
-			"@next/next/no-html-link-for-pages": "off",
+		ignores: [".svelte-kit/", "build/", "dist/"],
+	},
+	{
+		languageOptions: {
+			parser: svelte.parser,
+			parserOptions: {
+				parser: ts.parser,
+			},
+			globals: {
+				...globals.browser,
+				...globals.node,
+			},
 		},
 	},
 ];
-
-export default config;

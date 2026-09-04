@@ -1,6 +1,5 @@
-# Ignore artifacts:
+# Ignore generated and dependency artifacts:
+.svelte-kit
 build
-coverage
-.next
-.pnpm-store
 node_modules
+src/generated
