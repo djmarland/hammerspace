@@ -28,7 +28,7 @@
 		<meta property="og:image" content={post.coverImageUrl} />
 		<meta property="og:image:alt" content={post.coverImageAlt || post.title} />
 	{/if}
-	<link rel="canonical" href="https://www.hammerspace.com/posts/{post.slug}" />
+	<link rel="canonical" href={`https://www.hammerspace.com/posts/${post.slug}`} />
 </svelte:head>
 
 <article>

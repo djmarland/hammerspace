@@ -2,7 +2,7 @@ const fallbackSiteUrl = "http://localhost:3000";
 
 export const site = {
 	name: "Hammerspace",
-	description: "A posts about web development and other musings.",
+	description: "Posts about web development and other musings.",
 	url: (process.env.PUBLIC_SITE_URL || fallbackSiteUrl).replace(/\/$/, ""),
 };
 

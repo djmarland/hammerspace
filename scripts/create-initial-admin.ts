@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { PrismaClient } from "@/generated/client.ts";
+import { PrismaClient } from "../src/generated/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { createRawLoginToken, hashLoginToken } from "@/lib/login-token.ts";
 

@@ -17,8 +17,8 @@ jobs:
           cache: npm
 
       - run: npm ci
-      - run: npm run build
       - run: npm run generate
+      - run: npm run build
       - run: npm ci --omit=dev
       - run: bash scripts/package-release.sh "${GITHUB_SHA}" dist-release
 

@@ -18,7 +18,7 @@
 	<meta name="description" content={`Posts tagged ${archive.tag.name}`} />
 	<link
 		rel="canonical"
-		href="https://www.hammerspace.co.uk/tags/{archive.tag.slug}"
+		href={`https://www.hammerspace.co.uk/tags/${archive.tag.slug}`}
 	/>
 </svelte:head>
 

@@ -6,9 +6,6 @@ export default {
 			"@": "src",
 		},
 		adapter: adapter(),
-		csrf: {
-			trustedOrigins: ["*"],
-		},
 	},
 	vite: {
 		server: {
