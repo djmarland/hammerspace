@@ -39,4 +39,3 @@ created_at=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 EOF
 
 zip -r "${release_name}.zip" "$output_dir" >/dev/null
-mv "${release_name}.zip" "$output_dir/../${release_name}.zip"
