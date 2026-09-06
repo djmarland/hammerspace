@@ -30,7 +30,7 @@ cp package.json package-lock.json "$output_dir/"
 cp prisma.config.ts "$output_dir/"
 cp -R node_modules "$output_dir/node_modules"
 mkdir -p "$output_dir/scripts"
-cp scripts/vps-install.sh scripts/vps-first-install.sh "$output_dir/scripts/"
+cp scripts/vps-install.sh scripts/vps-first-install.sh scripts/create-initial-admin.ts "$output_dir/scripts/"
 chmod +x "$output_dir/scripts/vps-install.sh" "$output_dir/scripts/vps-first-install.sh"
 
 cat > "$output_dir/.release-info" <<EOF
