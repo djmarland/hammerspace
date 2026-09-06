@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { renderMarkdown } from "@/lib/markdown";
-	import { onMount, tick } from "svelte";
-	import { highlightAll } from "microlighter";
+    import {renderMarkdown} from "@/lib/markdown";
+    import {onMount, tick} from "svelte";
 
-	interface Props {
+    interface Props {
 		content: string;
 	}
 
@@ -20,7 +19,6 @@
 
 	onMount(async () => {
 		await tick();
-		await highlightAll();
 	});
 </script>
 

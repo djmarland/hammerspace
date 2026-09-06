@@ -62,7 +62,7 @@ docker compose exec node npm run build
 docker compose exec node npm run lint
 docker compose exec node npm run db:push
 docker compose exec node npm run db:migrate
-docker compose exec node npm run admin:create-initial | docker compose exec -T postgres psql -U postgres -d hammerspace
+docker compose exec node npm run --silent admin:create-initial | docker compose exec -T postgres psql -U postgres -d hammerspace
 ```
 
 Useful npm scripts:
@@ -243,14 +243,14 @@ Run migrations during every release install before restarting the app.
 Development (via Docker Compose):
 
 ```bash
-docker compose exec node npm run admin:create-initial | docker compose exec -T postgres psql -U postgres -d hammerspace
+docker compose exec node npm run --silent admin:create-initial | docker compose exec -T postgres psql -U postgres -d hammerspace
 ```
 
 Production (on the VPS, from the install directory):
 
 ```bash
 set -a; . .env; set +a
-npm run admin:create-initial | psql "$DATABASE_URL"
+npm run --silent admin:create-initial | psql "$DATABASE_URL"
 ```
 
 The login URL is printed to the terminal — copy it to log in as the new admin. Re-running the script will always print a new user/token, so only insert the SQL once.

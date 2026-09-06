@@ -30,7 +30,6 @@
 		"globals": "^17.11.0",
 		"marked": "^18",
 		"marked-gfm-heading-id": "^4.1.4",
-		"microlighter": "^2.1.0",
 		"prisma": "^7.9.1",
 		"remark-gfm": "^4.0.1",
 		"sveltekit-superforms": "^2.30.2",
