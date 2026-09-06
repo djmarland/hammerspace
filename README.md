@@ -62,7 +62,7 @@ docker compose exec node npm run build
 docker compose exec node npm run lint
 docker compose exec node npm run db:push
 docker compose exec node npm run db:migrate
-docker compose exec node npm run admin:create-initial
+docker compose exec node npm run admin:create-initial | docker compose exec -T postgres psql -U postgres -d hammerspace
 ```
 
 Useful npm scripts:
@@ -235,6 +235,25 @@ pm2 startup
 - Production: `npx prisma migrate deploy`
 
 Run migrations during every release install before restarting the app.
+
+### Creating the initial admin user
+
+`npm run admin:create-initial` doesn't touch the database itself — it only needs Node's built-in `crypto` and your `.env` values (`LOGIN_TOKEN_SECRET`/`AUTH_JWT_SECRET`/`AUTH_SECRET` and `PUBLIC_APP_URL`), so it works even on a production install where only the built app is deployed (no Prisma generated client required). It prints an `INSERT` statement for the `User` table to stdout, and the one-time admin login URL to stderr.
+
+Development (via Docker Compose):
+
+```bash
+docker compose exec node npm run admin:create-initial | docker compose exec -T postgres psql -U postgres -d hammerspace
+```
+
+Production (on the VPS, from the install directory):
+
+```bash
+set -a; . .env; set +a
+npm run admin:create-initial | psql "$DATABASE_URL"
+```
+
+The login URL is printed to the terminal — copy it to log in as the new admin. Re-running the script will always print a new user/token, so only insert the SQL once.
 
 ## CMS behavior
 

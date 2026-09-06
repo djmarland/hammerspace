@@ -1,13 +1,39 @@
 import "dotenv/config";
-import {PrismaClient} from "@/generated/client";
-import {PrismaPg} from "@prisma/adapter-pg";
-import {createRawLoginToken, hashLoginToken} from "@/lib/login-token.ts";
+import crypto from "crypto";
 
-const adapter = new PrismaPg({
-	connectionString: process.env.DATABASE_URL!,
-});
+// Prints a SQL statement to create the initial admin user, plus the
+// one-time login URL for it. Run manually against the production database,
+// e.g.:
+//
+//   npm run admin:create-initial | psql "$DATABASE_URL"
+//
+// This intentionally avoids depending on the Prisma generated client, so it
+// works even in environments where only the built app (no `src/generated`)
+// is deployed.
 
-const prisma = new PrismaClient({ adapter });
+function getTokenSecret(): string {
+	const secret =
+		process.env.LOGIN_TOKEN_SECRET ??
+		process.env.AUTH_JWT_SECRET ??
+		process.env.AUTH_SECRET;
+	if (!secret) {
+		throw new Error(
+			"Missing LOGIN_TOKEN_SECRET (or AUTH_JWT_SECRET/AUTH_SECRET)",
+		);
+	}
+	return secret;
+}
+
+function hashLoginToken(rawToken: string): string {
+	return crypto
+		.createHmac("sha256", getTokenSecret())
+		.update(rawToken)
+		.digest("hex");
+}
+
+function createRawLoginToken(): string {
+	return crypto.randomBytes(32).toString("base64url");
+}
 
 function getAppUrl(): string {
 	return (process.env.PUBLIC_APP_URL || "http://localhost:3000").replace(
@@ -16,40 +42,26 @@ function getAppUrl(): string {
 	);
 }
 
-async function main() {
-	const existingAdmin = await prisma.user.findFirst({
-		where: { isAdmin: true },
-		select: { id: true },
-	});
-
-	if (existingAdmin) {
-		throw new Error("Admin user already exists");
-	}
-
-	const rawToken = createRawLoginToken();
-	const loginTokenHash = hashLoginToken(rawToken);
-
-	const admin = await prisma.user.create({
-		data: {
-			isAdmin: true,
-			name: "Admin",
-			loginTokenHash,
-		},
-		select: { id: true },
-	});
-
-	const loginUrl = `${getAppUrl()}/admin/login?token=${encodeURIComponent(rawToken)}`;
-
-	console.log(`Created initial admin user: ${admin.id}`);
-	console.log(`Login URL (one-time token): ${loginUrl}`);
+function sqlQuote(value: string): string {
+	return `'${value.replace(/'/g, "''")}'`;
 }
 
-main()
-	.then(async () => {
-		await prisma.$disconnect();
-	})
-	.catch(async (error) => {
-		console.error(error instanceof Error ? error.message : error);
-		await prisma.$disconnect();
-		process.exit(1);
-	});
+function main() {
+	const id = crypto.randomUUID();
+	const rawToken = createRawLoginToken();
+	const loginTokenHash = hashLoginToken(rawToken);
+	const loginUrl = `${getAppUrl()}/admin/login?token=${encodeURIComponent(rawToken)}`;
+
+	const sql = `INSERT INTO "User" ("id", "isAdmin", "loginTokenHash", "name", "createdAt", "updatedAt")
+VALUES (${sqlQuote(id)}, true, ${sqlQuote(loginTokenHash)}, 'Admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);`;
+
+	console.log(sql);
+	console.error(""); // blank line separator on stderr, keeps stdout SQL-only
+	console.error(`Login URL (one-time token): ${loginUrl}`);
+	console.error(
+		"Run the SQL above against the production database, e.g.:",
+	);
+	console.error(`  npm run admin:create-initial | psql "$DATABASE_URL"`);
+}
+
+main();

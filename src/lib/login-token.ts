@@ -20,10 +20,6 @@ export function hashLoginToken(rawToken: string): string {
 		.digest("hex");
 }
 
-export function createRawLoginToken(): string {
-	return crypto.randomBytes(32).toString("base64url");
-}
-
 export function isValidLoginToken(
 	rawToken: string,
 	storedHash: string | null,
