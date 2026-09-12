@@ -2,6 +2,7 @@ import Link from "next/link";
 import { cx } from "@/components/cx";
 import Logo from "@/components/Atoms/Logo/Logo";
 import LogoutButton from "@/components/Organisms/LogoutButton/LogoutButton";
+import AssetLibraryNavItem from "./AssetLibraryNavItem";
 import styles from "./Masthead.module.css";
 
 export default function Masthead({
@@ -26,6 +27,7 @@ export default function Masthead({
 							<li>
 								<Link href="/admin/posts">Posts</Link>
 							</li>
+							<AssetLibraryNavItem />
 							<li>
 								<LogoutButton />
 							</li>

@@ -40,8 +40,8 @@ export async function generateMetadata({
 		openGraph: {
 			type: "article",
 			title: post.title,
-			images: post.coverImageUrl
-				? [{ url: post.coverImageUrl, alt: post.coverImageAlt || post.title }]
+			images: post.coverAsset
+				? [{ url: post.coverAsset.url, alt: post.coverAsset.alt || post.title }]
 				: undefined,
 		},
 	};

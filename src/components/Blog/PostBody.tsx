@@ -10,7 +10,7 @@ import styles from "./PostBody.module.css";
 interface PostBodyProps {
 	post: Pick<
 		PublicPostSummary,
-		"slug" | "content" | "coverImageUrl" | "coverImageAlt" | "wordCount"
+		"slug" | "content" | "coverAsset" | "wordCount"
 	>;
 	// Set when this post is listed among others (e.g. the homepage), where
 	// the post title is an h2 rather than the page's own h1. Also makes the
@@ -22,10 +22,10 @@ interface PostBodyProps {
 export default function PostBody({ post, demoteHeadings }: PostBodyProps) {
 	return (
 		<div className={styles.body}>
-			{post.coverImageUrl && (
+			{post.coverAsset && (
 				<img
-					src={post.coverImageUrl}
-					alt={post.coverImageAlt || ""}
+					src={post.coverAsset.url}
+					alt={post.coverAsset.alt || ""}
 					className={styles.image}
 				/>
 			)}

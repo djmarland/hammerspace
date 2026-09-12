@@ -1,0 +1,93 @@
+.dialog {
+	width: min(90vw, 720px);
+	max-height: 85vh;
+	overflow-y: auto;
+}
+
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: var(--piko-unit);
+}
+
+.dialogTitle {
+	font-weight: 600;
+	font-size: 1.1rem;
+	margin: 0;
+}
+
+.uploadForm {
+	border-bottom: solid 1px var(--piko-color-border-subtle);
+	padding-bottom: var(--piko-unit);
+	margin-bottom: var(--piko-unit);
+}
+
+.field {
+	display: grid;
+	gap: 0.35rem;
+}
+
+.fieldError {
+	color: #c10f0f;
+	font-size: 0.9rem;
+}
+
+.error {
+	color: #c10f0f;
+	font-weight: 600;
+	margin: 0;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+	gap: var(--piko-unit);
+}
+
+.item {
+	border: solid 1px var(--piko-color-border-subtle);
+	padding: var(--piko-unit-half, 0.5rem);
+	display: grid;
+	gap: 0.35rem;
+}
+
+.thumbnail {
+	width: 100%;
+	aspect-ratio: 4 / 3;
+	object-fit: cover;
+}
+
+.filePlaceholder {
+	width: 100%;
+	aspect-ratio: 4 / 3;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--piko-color-background-secondary);
+	font-size: 0.8rem;
+	text-align: center;
+	padding: 0.5rem;
+	word-break: break-word;
+}
+
+.itemTitle {
+	font-weight: 600;
+	margin: 0;
+}
+
+.itemAlt {
+	margin: 0;
+	font-size: 0.85rem;
+	color: color-mix(in srgb, currentColor 75%, transparent);
+}
+
+.itemActions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35rem;
+}
+
+.editForm {
+	gap: 0.5rem;
+}

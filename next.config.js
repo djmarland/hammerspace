@@ -13,7 +13,7 @@ const nextConfig = {
 			exclude: ["nesting", "light-dark"],
 		},
 		serverActions: {
-			bodySizeLimit: "2mb",
+			bodySizeLimit: "10mb",
 		},
 	},
 };

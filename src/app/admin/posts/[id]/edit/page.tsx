@@ -84,9 +84,9 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
 					title: post.title,
 					slug: post.slug,
 					content: post.content,
-					coverImageUrl: post.coverImageUrl || "",
-					coverImageAlt: post.coverImageAlt || "",
+					coverAssetId: post.coverAssetId || "",
 				}}
+				initialCoverAsset={post.coverAsset}
 			/>
 
 			<DangerZone

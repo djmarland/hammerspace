@@ -51,8 +51,7 @@ function buildPostWriteData(values: PostFormValues) {
 		title: values.title,
 		slug: values.slug,
 		content: values.content,
-		coverImageUrl: values.coverImageUrl || null,
-		coverImageAlt: values.coverImageAlt || null,
+		coverAssetId: values.coverAssetId || null,
 	};
 }
 
