@@ -267,18 +267,10 @@ npm run --silent admin:create-initial | psql "$DATABASE_URL"
 
 The login URL is printed to the terminal — copy it to log in as the new admin. Re-running the script will always print a new user/token, so only insert the SQL once.
 
-## CMS behavior
-
-- Posts use tags only; there are no categories.
-- Cover images must use absolute external URLs.
-- Draft posts remain on their slug URL but are excluded from archives, search, tag pages, RSS, and the sitemap.
-- `publishedAt` controls visibility.
-
 ## RSS feed
 
 - Endpoint: `/feed.xml`
 - Page size: 20 posts
-- `description` uses the excerpt
 - `content:encoded` uses the full post content
 
 ## Resources

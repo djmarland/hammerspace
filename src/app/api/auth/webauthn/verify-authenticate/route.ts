@@ -28,7 +28,6 @@ export async function POST(request: Request) {
 				user: {
 					select: {
 						id: true,
-						isAdmin: true,
 					},
 				},
 			},
@@ -43,14 +42,13 @@ export async function POST(request: Request) {
 					user: {
 						select: {
 							id: true,
-							isAdmin: true,
 						},
 					},
 				},
 			});
 		}
 
-		if (!credential || !credential.user.isAdmin) {
+		if (!credential) {
 			return NextResponse.json(
 				{ error: "Credential not found" },
 				{ status: 404 },

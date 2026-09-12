@@ -42,20 +42,6 @@ export default function PostCard({ post, headingLevel = "h2" }: PostCardProps) {
 				<Heading>
 					<Link href={`/posts/${post.slug}`}>{post.title}</Link>
 				</Heading>
-				{post.excerpt && (
-					<p className="piko-t-meta">
-						{post.excerpt || "No excerpt available."}
-					</p>
-				)}
-				{post.tags.length > 0 && (
-					<ul className={styles.tags}>
-						{post.tags.map((tag) => (
-							<li key={tag.slug}>
-								<Link href={`/tags/${tag.slug}`}>#{tag.name}</Link>
-							</li>
-						))}
-					</ul>
-				)}
 			</div>
 		</article>
 	);

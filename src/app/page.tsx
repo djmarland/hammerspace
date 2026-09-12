@@ -62,15 +62,6 @@ export default async function HomePage() {
 										{" · "}
 										<ReadingTime wordCount={post.wordCount} />
 									</div>
-									{post.tags.length > 0 && (
-										<ul className={styles.tags}>
-											{post.tags.map((tag) => (
-												<li key={tag.slug}>
-													<Link href={`/tags/${tag.slug}`}>#{tag.name}</Link>
-												</li>
-											))}
-										</ul>
-									)}
 								</header>
 								<PostBody post={post} />
 							</article>

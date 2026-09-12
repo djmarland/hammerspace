@@ -50,10 +50,10 @@ function main() {
 	const id = crypto.randomUUID();
 	const rawToken = createRawLoginToken();
 	const loginTokenHash = hashLoginToken(rawToken);
-	const loginUrl = `${getAppUrl()}/admin/login?token=${encodeURIComponent(rawToken)}`;
+	const loginUrl = `${getAppUrl()}/admin/login?token=${encodeURIComponent(rawToken)}&userId=${encodeURIComponent(id)}`;
 
-	const sql = `INSERT INTO "User" ("id", "isAdmin", "loginTokenHash", "name", "createdAt", "updatedAt")
-VALUES (${sqlQuote(id)}, true, ${sqlQuote(loginTokenHash)}, 'Admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);`;
+	const sql = `INSERT INTO "User" ("id", "loginTokenHash", "name", "createdAt", "updatedAt")
+VALUES (${sqlQuote(id)}, ${sqlQuote(loginTokenHash)}, 'Admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);`;
 
 	console.log(sql);
 	console.error(""); // blank line separator on stderr, keeps stdout SQL-only

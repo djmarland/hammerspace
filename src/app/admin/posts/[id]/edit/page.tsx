@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getAdminSessionUser } from "@/lib/admin-auth";
-import { getPostById, getTagsForAdmin } from "@/lib/posts";
+import { getPostById } from "@/lib/posts";
 import PostEditorForm from "@/components/Admin/PostEditorForm";
 import DangerZone from "./DangerZone";
 import {
@@ -41,7 +41,7 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
 	}
 
 	const { id } = await params;
-	const [post, tags] = await Promise.all([getPostById(id), getTagsForAdmin()]);
+	const post = await getPostById(id);
 
 	if (!post) {
 		redirect("/admin/posts");
@@ -79,16 +79,13 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
 			<PostEditorForm
 				formAction={updatePostFormAction.bind(null, post.id)}
 				submitLabel="Update Post"
-				tags={tags}
 				mode="edit"
 				initialValues={{
 					title: post.title,
 					slug: post.slug,
-					excerpt: post.excerpt || "",
 					content: post.content,
 					coverImageUrl: post.coverImageUrl || "",
 					coverImageAlt: post.coverImageAlt || "",
-					tagIds: post.tags.map((tag) => tag.tagId),
 				}}
 			/>
 

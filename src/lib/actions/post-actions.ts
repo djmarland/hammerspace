@@ -18,11 +18,8 @@ import type { PostFormValues, PublishFormValues } from "@/lib/post-form";
  * Actions; a plain `export { x } from "..."` re-export would not be.
  */
 
-export async function createPostAction(
-	values: PostFormValues,
-	authorId: string,
-) {
-	return createPostFromValues(values, authorId);
+export async function createPostAction(values: PostFormValues) {
+	return createPostFromValues(values);
 }
 
 export async function updatePostAction(postId: string, values: PostFormValues) {

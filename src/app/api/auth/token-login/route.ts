@@ -5,19 +5,24 @@ import { isValidLoginToken } from "@/lib/login-token";
 
 interface TokenLoginRequest {
 	token?: string;
+	userId?: string;
 }
 
 export async function POST(request: Request) {
 	try {
 		const body: TokenLoginRequest = await request.json();
 		const token = body.token?.trim();
+		const userId = body.userId?.trim();
 
-		if (!token) {
-			return NextResponse.json({ error: "Token is required" }, { status: 400 });
+		if (!token || !userId) {
+			return NextResponse.json(
+				{ error: "Token and user ID are required" },
+				{ status: 400 },
+			);
 		}
 
-		const user = await prisma.user.findFirst({
-			where: { isAdmin: true },
+		const user = await prisma.user.findUnique({
+			where: { id: userId },
 			select: {
 				id: true,
 				loginTokenHash: true,

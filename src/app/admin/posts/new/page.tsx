@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getAdminSessionUser } from "@/lib/admin-auth";
-import { getTagsForAdmin } from "@/lib/posts";
 import PostEditorForm from "@/components/Admin/PostEditorForm";
 import { createPostFormAction } from "./actions";
 
@@ -15,8 +14,6 @@ export default async function NewPostPage() {
 		redirect("/admin/login");
 	}
 
-	const tags = await getTagsForAdmin();
-
 	return (
 		<div className="piko-vstack">
 			<div className="piko-page-container">
@@ -25,7 +22,6 @@ export default async function NewPostPage() {
 			<PostEditorForm
 				formAction={createPostFormAction}
 				submitLabel="Create Post"
-				tags={tags}
 				mode="create"
 			/>
 		</div>

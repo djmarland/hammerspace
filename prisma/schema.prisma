@@ -11,28 +11,26 @@ datasource db {
 }
 
 model User {
-  id                    String     @id @default(cuid())
-  isAdmin               Boolean    @default(false)
-  loginTokenHash        String?
-  name                  String?
-  webauthnChallenge     String?    // Temporary challenge for WebAuthn registration
+  id                         String               @id @default(cuid())
+  loginTokenHash             String?
+  name                       String?
+  webauthnChallenge          String? // Temporary challenge for WebAuthn registration
   webauthnChallengeExpiresAt DateTime? // Challenge expiration
-  createdAt             DateTime   @default(now())
-  updatedAt             DateTime   @updatedAt
-  posts                 Post[]
-  credentials           WebAuthnCredential[]
+  createdAt                  DateTime             @default(now())
+  updatedAt                  DateTime             @updatedAt
+  credentials                WebAuthnCredential[]
 }
 
 model WebAuthnCredential {
-  id               String   @id @default(cuid())
-  userId           String
-  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  credentialId     Bytes
+  id                  String   @id @default(cuid())
+  userId              String
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  credentialId        Bytes
   credentialPublicKey Bytes
-  counter          Int
-  transports       String[] // e.g., ["usb", "nfc", "ble", "internal"]
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  counter             Int
+  transports          String[] // e.g., ["usb", "nfc", "ble", "internal"]
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
   @@unique([userId, credentialId])
   @@index([userId])
@@ -43,38 +41,12 @@ model Post {
   title         String
   slug          String    @unique
   content       String
-  excerpt       String?
   publishedAt   DateTime?
   coverImageUrl String?
   coverImageAlt String?
-  author        User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId      String
-  tags          PostTag[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  @@index([authorId])
   @@index([publishedAt])
   @@index([slug])
-}
-
-model Tag {
-  id        String    @id @default(cuid())
-  name      String
-  slug      String    @unique
-  posts     PostTag[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-
-  @@unique([name])
-}
-
-model PostTag {
-  postId String
-  tagId  String
-  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
-  tag    Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
-
-  @@id([postId, tagId])
-  @@index([tagId, postId])
 }

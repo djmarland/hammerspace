@@ -40,6 +40,7 @@ function withTimeout<T>(
 export default function LoginForm() {
 	const searchParams = useSearchParams();
 	const token = searchParams.get("token");
+	const userId = searchParams.get("userId");
 
 	const [error, setError] = useState("");
 	const [tokenLoading, setTokenLoading] = useState(false);
@@ -61,7 +62,7 @@ export default function LoginForm() {
 	}, []);
 
 	useEffect(() => {
-		if (!token || tokenProcessed) {
+		if (!token || !userId || tokenProcessed) {
 			return;
 		}
 
@@ -77,7 +78,7 @@ export default function LoginForm() {
 					headers: {
 						"Content-Type": "application/json",
 					},
-					body: JSON.stringify({ token }),
+					body: JSON.stringify({ token, userId }),
 				});
 
 				if (!response.ok) {
@@ -111,7 +112,7 @@ export default function LoginForm() {
 		return () => {
 			cancelled = true;
 		};
-	}, [token, tokenProcessed]);
+	}, [token, userId, tokenProcessed]);
 
 	async function handlePasskeyLogin(source: "auto" | "manual") {
 		setError("");

@@ -2,10 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { getAdminSessionUser } from "@/lib/admin-auth";
-import {
-	slugBelongsToDifferentPost,
-	validateTagIds,
-} from "@/lib/post-form-actions";
+import { slugBelongsToDifferentPost } from "@/lib/post-form-actions";
 import {
 	deletePostAction,
 	unpublishPostAction,
@@ -43,10 +40,6 @@ export async function updatePostFormAction(
 
 	if (await slugBelongsToDifferentPost(parsed.data.slug, postId)) {
 		return { errors: { slug: ["This slug is already in use."] } };
-	}
-
-	if (!(await validateTagIds(parsed.data.tagIds))) {
-		return { message: "One or more selected tags no longer exist." };
 	}
 
 	try {

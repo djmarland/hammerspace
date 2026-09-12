@@ -19,13 +19,9 @@ export function parsePostFormData(formData: FormData) {
 	return postSchema.safeParse({
 		title: getString(formData, "title"),
 		slug: getString(formData, "slug"),
-		excerpt: getString(formData, "excerpt"),
 		content: getString(formData, "content"),
 		coverImageUrl: getString(formData, "coverImageUrl"),
 		coverImageAlt: getString(formData, "coverImageAlt"),
-		tagIds: formData
-			.getAll("tagIds")
-			.filter((value): value is string => typeof value === "string"),
 	});
 }
 

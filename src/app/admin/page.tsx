@@ -49,9 +49,6 @@ export default async function AdminDashboardPage({
 				<Link href="/admin/posts/new" className="piko-button">
 					New Post
 				</Link>
-				<Link href="/admin/tags" className="piko-button">
-					Manage Tags
-				</Link>
 				<LogoutButton />
 			</nav>
 

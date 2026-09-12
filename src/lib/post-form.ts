@@ -30,11 +30,9 @@ export const postSchema = z
 				slugRegex,
 				"Slug must use lowercase letters, numbers, and hyphens only.",
 			),
-		excerpt: z.string().trim().optional().default(""),
 		content: z.string().trim().min(1, "Content is required."),
 		coverImageUrl: z.string().trim().optional().default(""),
 		coverImageAlt: z.string().trim().optional().default(""),
-		tagIds: z.array(z.string()).optional().default([]),
 	})
 	.superRefine((values, ctx) => {
 		if (!isAbsoluteHttpUrl(values.coverImageUrl)) {

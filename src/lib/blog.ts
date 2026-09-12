@@ -49,23 +49,6 @@ export function stripMarkdown(content: string) {
 		.trim();
 }
 
-export function buildExcerpt(
-	excerpt: string | null,
-	content: string,
-	maxLength = 180,
-) {
-	if (excerpt?.trim()) {
-		return excerpt.trim();
-	}
-
-	const plainText = stripMarkdown(content);
-	if (plainText.length <= maxLength) {
-		return plainText;
-	}
-
-	return `${plainText.slice(0, maxLength).trimEnd()}…`;
-}
-
 export function parsePageNumber(value: number | string | string[] | undefined) {
 	const rawValue = Array.isArray(value) ? value[0] : value;
 	const page =

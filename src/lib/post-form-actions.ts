@@ -17,23 +17,15 @@ export async function ensureAdminSession() {
  * Slightly over-inclusive by design: it's safer to revalidate a path that
  * didn't strictly need it than to miss one and serve stale content.
  */
-function revalidatePostPaths(
-	slugs: (string | null | undefined)[],
-	tagSlugs: string[],
-) {
+function revalidatePostPaths(slugs: (string | null | undefined)[]) {
 	revalidatePath("/");
 	revalidatePath("/posts");
 	revalidatePath("/feed.xml");
 	revalidatePath("/admin/posts");
-	revalidatePath("/tags");
-	revalidatePath("/admin/tags");
 	for (const slug of new Set(
 		slugs.filter((slug): slug is string => Boolean(slug)),
 	)) {
 		revalidatePath(`/posts/${slug}`);
-	}
-	for (const tagSlug of new Set(tagSlugs)) {
-		revalidatePath(`/tags/${tagSlug}`);
 	}
 }
 
@@ -54,31 +46,17 @@ export async function slugBelongsToDifferentPost(
 	return true;
 }
 
-export async function validateTagIds(tagIds: string[]) {
-	if (tagIds.length === 0) return true;
-	const count = await prisma.tag.count({ where: { id: { in: tagIds } } });
-	return count === new Set(tagIds).size;
-}
-
-function tagRelations(tagIds: string[]) {
-	return { create: [...new Set(tagIds)].map((tagId) => ({ tagId })) };
-}
-
 function buildPostWriteData(values: PostFormValues) {
 	return {
 		title: values.title,
 		slug: values.slug,
-		excerpt: values.excerpt || null,
 		content: values.content,
 		coverImageUrl: values.coverImageUrl || null,
 		coverImageAlt: values.coverImageAlt || null,
 	};
 }
 
-export async function createPostFromValues(
-	values: PostFormValues,
-	authorId: string,
-) {
+export async function createPostFromValues(values: PostFormValues) {
 	if (!(await ensureAdminSession())) {
 		throw new Error("Unauthorized");
 	}
@@ -87,19 +65,13 @@ export async function createPostFromValues(
 		data: {
 			...buildPostWriteData(values),
 			publishedAt: null,
-			tags: tagRelations(values.tagIds),
-			authorId,
 		},
 		select: {
 			slug: true,
-			tags: { select: { tag: { select: { slug: true } } } },
 		},
 	});
 
-	revalidatePostPaths(
-		[created.slug],
-		created.tags.map(({ tag }) => tag.slug),
-	);
+	revalidatePostPaths([created.slug]);
 }
 
 export async function updatePostFromValues(
@@ -115,7 +87,6 @@ export async function updatePostFromValues(
 		select: {
 			id: true,
 			slug: true,
-			tags: { select: { tag: { select: { slug: true } } } },
 		},
 	});
 	if (!existingPost) {
@@ -124,23 +95,13 @@ export async function updatePostFromValues(
 
 	const updated = await prisma.post.update({
 		where: { id: postId },
-		data: {
-			...buildPostWriteData(values),
-			tags: {
-				deleteMany: {},
-				...tagRelations(values.tagIds),
-			},
-		},
+		data: buildPostWriteData(values),
 		select: {
 			slug: true,
-			tags: { select: { tag: { select: { slug: true } } } },
 		},
 	});
 
-	revalidatePostPaths(
-		[existingPost.slug, updated.slug],
-		[...existingPost.tags, ...updated.tags].map(({ tag }) => tag.slug),
-	);
+	revalidatePostPaths([existingPost.slug, updated.slug]);
 }
 
 async function buildUniquePublishSlug(
@@ -180,7 +141,6 @@ export async function publishPostAction(
 			id: true,
 			slug: true,
 			publishedAt: true,
-			tags: { select: { tag: { select: { slug: true } } } },
 		},
 	});
 	if (!existingPost) {
@@ -197,10 +157,7 @@ export async function publishPostAction(
 		data: { publishedAt: publishDate, slug },
 	});
 
-	revalidatePostPaths(
-		[existingPost.slug, slug],
-		existingPost.tags.map(({ tag }) => tag.slug),
-	);
+	revalidatePostPaths([existingPost.slug, slug]);
 
 	return { slug };
 }
@@ -215,7 +172,6 @@ export async function unpublishPostAction(postId: string) {
 		select: {
 			id: true,
 			slug: true,
-			tags: { select: { tag: { select: { slug: true } } } },
 		},
 	});
 	if (!existingPost) {
@@ -227,10 +183,7 @@ export async function unpublishPostAction(postId: string) {
 		data: { publishedAt: null },
 	});
 
-	revalidatePostPaths(
-		[existingPost.slug],
-		existingPost.tags.map(({ tag }) => tag.slug),
-	);
+	revalidatePostPaths([existingPost.slug]);
 }
 
 export async function deletePostAction(id: string) {
@@ -242,7 +195,6 @@ export async function deletePostAction(id: string) {
 		where: { id },
 		select: {
 			slug: true,
-			tags: { select: { tag: { select: { slug: true } } } },
 		},
 	});
 	if (!existingPost) {
@@ -251,8 +203,5 @@ export async function deletePostAction(id: string) {
 
 	await prisma.post.delete({ where: { id } });
 
-	revalidatePostPaths(
-		[existingPost.slug],
-		existingPost.tags.map(({ tag }) => tag.slug),
-	);
+	revalidatePostPaths([existingPost.slug]);
 }

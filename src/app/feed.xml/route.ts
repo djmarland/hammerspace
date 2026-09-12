@@ -31,7 +31,6 @@ export async function GET(request: Request) {
 	<title>${escapeXml(post.title)}</title>
 	<link>${postUrl}</link>
 	<guid isPermaLink="true">${postUrl}</guid>
-	<description>${escapeXml(post.excerpt || "")}</description>
 	<content:encoded>${wrapCdata(renderMarkdown(post.content))}</content:encoded>
 	<pubDate>${post.publishedAt!.toUTCString()}</pubDate>
 </item>`;

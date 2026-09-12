@@ -6,7 +6,6 @@ import { credentialIdToBase64url, storeChallenge } from "@/lib/webauthn";
 export async function POST() {
 	try {
 		const user = await prisma.user.findFirst({
-			where: { isAdmin: true },
 			include: {
 				credentials: {
 					select: {
@@ -18,10 +17,7 @@ export async function POST() {
 		});
 
 		if (!user) {
-			return NextResponse.json(
-				{ error: "No admin user found" },
-				{ status: 400 },
-			);
+			return NextResponse.json({ error: "No user found" }, { status: 400 });
 		}
 
 		// Allow authentication even with no credentials (first-time setup)

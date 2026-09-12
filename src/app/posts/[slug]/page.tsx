@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { cache } from "react";
 import { notFound } from "next/navigation";
-import PostCard from "@/components/Blog/PostCard";
 import PostBody from "@/components/Blog/PostBody";
 import SidePageHeader from "@/components/Blog/SidePageHeader";
 import ReadingTime from "@/components/Blog/ReadingTime";
 import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate";
 import { isPostPublic } from "@/lib/blog";
-import { getPostBySlug, getRelatedPosts } from "@/lib/posts";
+import { getPostBySlug } from "@/lib/posts";
 import styles from "./page.module.css";
 
 export const revalidate = 600;
@@ -38,14 +36,12 @@ export async function generateMetadata({
 
 	return {
 		title: `${post.title} | Hammerspace`,
-		description: post.excerpt || "",
 		alternates: {
 			canonical: `https://www.hammerspace.com/posts/${post.slug}`,
 		},
 		openGraph: {
 			type: "article",
 			title: post.title,
-			description: post.excerpt || "",
 			images: post.coverImageUrl
 				? [{ url: post.coverImageUrl, alt: post.coverImageAlt || post.title }]
 				: undefined,
@@ -60,8 +56,6 @@ export default async function PostPage({ params }: PostPageProps) {
 	if (!post) {
 		notFound();
 	}
-
-	const relatedPosts = await getRelatedPosts(post.id, post.tags);
 
 	return (
 		<article>
@@ -83,15 +77,6 @@ export default async function PostPage({ params }: PostPageProps) {
 								<ReadingTime wordCount={post.wordCount} />
 							</div>
 						</div>
-						{post.tags.length > 0 && (
-							<ul className={styles.tags}>
-								{post.tags.map((tag) => (
-									<li key={tag.slug}>
-										<Link href={`/tags/${tag.slug}`}>#{tag.name}</Link>
-									</li>
-								))}
-							</ul>
-						)}
 					</SidePageHeader>
 				}
 			>
@@ -119,19 +104,6 @@ export default async function PostPage({ params }: PostPageProps) {
 				)}
 
 				<PostBody post={post} />
-
-				{relatedPosts.length > 0 && (
-					<aside className="piko-vstack--small">
-						<h2>Related posts</h2>
-						<ul className={styles.relatedList}>
-							{relatedPosts.map((relatedPost) => (
-								<li key={relatedPost.id}>
-									<PostCard post={relatedPost} headingLevel="h3" />
-								</li>
-							))}
-						</ul>
-					</aside>
-				)}
 			</SiteTemplate>
 		</article>
 	);

@@ -27,9 +27,6 @@ export default function Masthead({
 								<Link href="/admin/posts">Posts</Link>
 							</li>
 							<li>
-								<Link href="/admin/tags">Tags</Link>
-							</li>
-							<li>
 								<LogoutButton />
 							</li>
 						</ul>

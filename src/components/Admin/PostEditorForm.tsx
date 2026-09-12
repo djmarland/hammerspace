@@ -23,7 +23,6 @@ interface PostEditorFormProps {
 		formData: FormData,
 	) => Promise<PostFormActionState>;
 	submitLabel: string;
-	tags: { id: string; name: string }[];
 	initialValues?: Partial<PostFormValues>;
 	mode: "create" | "edit";
 }
@@ -35,7 +34,6 @@ interface PostEditorFormProps {
 export default function PostEditorForm({
 	formAction,
 	submitLabel,
-	tags,
 	initialValues,
 }: PostEditorFormProps) {
 	const [state, action, pending] = useActionState<
@@ -47,7 +45,6 @@ export default function PostEditorForm({
 		initialValues?.content || "",
 	);
 
-	const selectedTagIds = new Set(initialValues?.tagIds || []);
 	const allErrors = state?.errors ? Object.values(state.errors).flat() : [];
 
 	function handleContentInput(event: ChangeEvent<HTMLTextAreaElement>) {
@@ -77,25 +74,6 @@ export default function PostEditorForm({
 					)}
 				</label>
 
-				{tags.length > 0 && (
-					<fieldset className={styles.fieldset}>
-						<legend>Tags</legend>
-						<div className={styles.tagGrid}>
-							{tags.map((tag) => (
-								<label key={tag.id} className={styles.checkboxField}>
-									<input
-										type="checkbox"
-										name="tagIds"
-										value={tag.id}
-										defaultChecked={selectedTagIds.has(tag.id)}
-									/>
-									<span>{tag.name}</span>
-								</label>
-							))}
-						</div>
-					</fieldset>
-				)}
-
 				<label className={styles.field}>
 					<span>Slug</span>
 					<input
@@ -108,15 +86,6 @@ export default function PostEditorForm({
 					{state?.errors?.slug && (
 						<span className={styles.fieldError}>{state.errors.slug[0]}</span>
 					)}
-				</label>
-
-				<label className={styles.field}>
-					<span>Excerpt</span>
-					<textarea
-						name="excerpt"
-						rows={3}
-						defaultValue={initialValues?.excerpt}
-					/>
 				</label>
 			</div>
 			<div className={cx(styles.editor, "piko-vstack--small")}>
