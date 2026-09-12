@@ -14,10 +14,9 @@ function isAbsoluteHttpUrl(value: string): boolean {
 }
 
 /**
- * Single source of truth for post form validation. Runs identically on the
- * server (in +page.server.ts actions via superValidate) and on the client
- * (in PostEditorForm.svelte via superForm's client-side validator), so the
- * user gets the same rules and messages in both places.
+ * Single source of truth for post form validation, run inside the Server
+ * Actions that create/update/publish posts (see
+ * src/lib/actions/post-actions.ts and the admin route action adapters).
  */
 export const postSchema = z
 	.object({

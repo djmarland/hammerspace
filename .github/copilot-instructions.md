@@ -4,7 +4,7 @@ This file instructs how to work with this project's development environment.
 
 This project uses **Docker Compose** (`docker compose` NOT `docker-compose`) to manage all development services:
 
-- **SvelteKit** - Application server (port 3000)
+- **NextJS** - Application server (port 3000)
 - **PostgreSQL** - Database
 - **Nginx** - Reverse proxy and caching layer
 
@@ -93,14 +93,13 @@ When you need to:
 
 ```
 ├── docker compose.yml    # Docker setup
-├── Dockerfile            # Node/SvelteKit image
+├── Dockerfile            # Node/NextJS image
 ├── nginx.conf           # Caching configuration
 ├── prisma/              # Database schema
 ├── src/
-│   ├── routes/          # SvelteKit pages
-│   ├── components/      # Svelte components
+│   ├── app/             # NextJS pages
+│   ├── components/      # React components
 │   ├── lib/             # Utilities
-│   ├── actions/         # Server actions
 │   └── styles/          # CSS Modules
 └── package.json         # Dependencies
 ```

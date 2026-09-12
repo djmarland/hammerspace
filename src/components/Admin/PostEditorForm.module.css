@@ -1,0 +1,87 @@
+.editor {
+	padding-inline: var(--piko-page-gutter);
+}
+
+.editorGrid {
+	display: grid;
+	gap: var(--piko-gap-grid);
+}
+
+@media (min-width: 800px) {
+	.editorGrid {
+		grid-template-columns: 1fr 1fr;
+		height: 80vh;
+	}
+
+	.editorGrid textarea {
+		height: 100%;
+	}
+}
+
+.preview {
+	border: 1px solid var(--piko-color-border);
+	padding: var(--piko-space-panel-padding);
+	height: 100%;
+	overflow-y: auto;
+}
+
+.form {
+	display: grid;
+	gap: 1.25rem;
+	margin-bottom: var(--piko-unit-quad);
+}
+
+.field,
+.fieldset {
+	display: grid;
+	gap: 0.45rem;
+}
+
+.fieldset {
+	padding: 1rem;
+	border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.tagGrid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+	gap: 0.75rem;
+}
+
+.fieldError {
+	color: #c10f0f;
+	font-size: 0.9rem;
+}
+
+.checkboxField {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.helpText {
+	margin: 0;
+	color: color-mix(in srgb, currentColor 75%, transparent);
+	font-size: 0.95rem;
+}
+
+.error {
+	margin: 0;
+	color: #c10f0f;
+	font-weight: 600;
+}
+
+.actions {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: var(--piko-color-background);
+	padding-block: var(--piko-unit);
+	border-top: solid 1px var(--piko-color-border);
+}
+
+.actionsInner {
+	display: flex;
+	justify-content: end;
+}

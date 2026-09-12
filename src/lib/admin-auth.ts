@@ -1,5 +1,6 @@
 import crypto from "crypto";
-import { getRequestEvent } from "$app/server";
+import { cookies } from "next/headers";
+import type { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
 export const ADMIN_AUTH_COOKIE = "admin_session";
@@ -91,6 +92,10 @@ function parsePayload(token: string): AdminSessionPayload | null {
 	}
 }
 
+export function hasValidAdminSessionToken(token: string | undefined): boolean {
+	return Boolean(token && parsePayload(token));
+}
+
 export function createAdminSessionToken(
 	userId: string,
 	bootstrap: boolean,
@@ -110,10 +115,10 @@ export function createAdminSessionToken(
 }
 
 export function issueAdminSession(
-	response: any,
+	response: NextResponse,
 	userId: string,
 	bootstrap: boolean,
-): any {
+): NextResponse {
 	response.cookies.set(
 		ADMIN_AUTH_COOKIE,
 		createAdminSessionToken(userId, bootstrap),
@@ -128,7 +133,7 @@ export function issueAdminSession(
 	return response;
 }
 
-export function clearAdminSession(response: any): any {
+export function clearAdminSession(response: NextResponse): NextResponse {
 	response.cookies.set(ADMIN_AUTH_COOKIE, "", {
 		httpOnly: true,
 		sameSite: "lax",
@@ -140,10 +145,8 @@ export function clearAdminSession(response: any): any {
 }
 
 export async function getAdminSessionUser(): Promise<AdminSessionUser | null> {
-	const event = getRequestEvent();
-	const cookieValue = event.cookies.get(ADMIN_AUTH_COOKIE);
-
-	const payload = cookieValue ? parsePayload(cookieValue) : null;
+	const cookieStore = await cookies();
+	const payload = parsePayload(cookieStore.get(ADMIN_AUTH_COOKIE)?.value ?? "");
 	if (!payload) {
 		return null;
 	}

@@ -47,7 +47,10 @@ npx prisma migrate deploy
 if [[ -f "$install_dir/ecosystem.config.cjs" ]]; then
 	pm2 restart "$pm2_app_name" --update-env || pm2 start ecosystem.config.cjs --only "$pm2_app_name"
 else
-	pm2 restart "$pm2_app_name" --update-env || pm2 start node --name "$pm2_app_name" -- build/index.js
+	# Fallback for a first-time install with no ecosystem.config.cjs yet.
+	# The release unpacks the Next.js `output: "standalone"` server into
+	# <install-dir>/standalone/server.js (see scripts/package-release.sh).
+	pm2 restart "$pm2_app_name" --update-env || pm2 start node --name "$pm2_app_name" --cwd "$install_dir/standalone" -- server.js
 fi
 
 rm -rf "$tmp_dir"

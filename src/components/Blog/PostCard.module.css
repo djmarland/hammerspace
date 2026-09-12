@@ -1,0 +1,22 @@
+.image {
+	width: 100%;
+	height: auto;
+	object-fit: cover;
+}
+
+.tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.6rem;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.tags a {
+	display: inline-flex;
+	padding: 0.15rem 0.55rem;
+	border-radius: 999px;
+	background: color-mix(in srgb, currentColor 10%, transparent);
+	font-size: 0.95rem;
+}

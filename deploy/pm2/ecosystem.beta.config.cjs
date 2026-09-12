@@ -8,6 +8,21 @@
 // ecosystem.config.cjs inside the install directory, so place this file
 // there once during initial setup and it will be preserved across releases.
 //
+// Deploy layout (see scripts/package-release.sh and scripts/vps-install.sh):
+// each release tarball unpacks flat into the install directory as:
+//   <install-dir>/standalone/       Next.js `output: "standalone"` server
+//                                    (server.js, .next/, its own pruned
+//                                    node_modules/, public/) — this is what
+//                                    PM2 actually runs.
+//   <install-dir>/prisma/            schema + migrations
+//   <install-dir>/node_modules/      pruned prod deps, present only so
+//                                    `npx prisma migrate deploy` has the
+//                                    `prisma` CLI to run (the app itself
+//                                    doesn't need this — it's self-contained
+//                                    under standalone/node_modules/)
+//   <install-dir>/package.json, package-lock.json, prisma.config.ts
+//   <install-dir>/.env, ecosystem.config.cjs   (preserved across releases)
+//
 // Secrets (DATABASE_URL, AUTH_JWT_SECRET, etc.) come from
 // /var/www/beta.hammerspace.co.uk/.env, which the install scripts source
 // into the shell before calling `pm2 start`/`pm2 restart`.
@@ -20,8 +35,8 @@ module.exports = {
 	apps: [
 		{
 			name: "beta-hammerspace",
-			script: "build/index.js",
-			cwd: "/var/www/beta.hammerspace.co.uk",
+			script: "server.js",
+			cwd: "/var/www/beta.hammerspace.co.uk/standalone",
 			interpreter: "node",
 			instances: 1,
 			exec_mode: "fork",

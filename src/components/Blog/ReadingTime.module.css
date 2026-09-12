@@ -1,0 +1,56 @@
+.readingTime {
+	white-space: nowrap;
+}
+
+.readingTimeButton {
+	padding: 0;
+	border: 0;
+	background: transparent;
+	cursor: pointer;
+	color: inherit;
+	font: inherit;
+	text-decoration: underline;
+	text-underline-offset: 0.15rem;
+}
+
+.readingTimeButton:hover,
+.readingTimeButton:focus-visible {
+	opacity: 0.8;
+}
+
+.footerAction {
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 1rem;
+}
+
+.dialogContent {
+	display: grid;
+	gap: 0.75rem;
+	text-align: start;
+}
+
+.dialogTitle {
+	margin: 0;
+	font-weight: 700;
+}
+
+.helperText,
+.timerStatus {
+	margin: 0;
+	color: color-mix(in srgb, currentColor 75%, transparent);
+}
+
+.dialogContent label {
+	font-weight: 600;
+}
+
+.dialogActions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.75rem;
+}
+
+.stackedActions {
+	margin-top: 0.25rem;
+}

@@ -1,0 +1,15 @@
+.warnCard,
+.dangerZone {
+	display: grid;
+	gap: var(--piko-space-3);
+	padding: var(--piko-space-4);
+	border: 1px solid var(--piko-color-border);
+}
+
+.dangerZone {
+	border-color: #cc0000;
+}
+
+.dangerZone h2 {
+	color: #cc0000;
+}
