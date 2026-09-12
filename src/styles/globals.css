@@ -1209,6 +1209,7 @@
 			textarea {
 				color: inherit;
 				font: inherit;
+				font-weight: normal;
 				box-sizing: border-box;
 				margin: 0;
 				width: 100%;

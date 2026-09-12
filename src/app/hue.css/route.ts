@@ -1,7 +1,4 @@
-import {
-	getDailyHue,
-	getSecondsUntilNextHue,
-} from "@/lib/dynamic-hue.server";
+import { getDailyHue, getSecondsUntilNextHue } from "@/lib/dynamic-hue.server";
 
 export const dynamic = "force-dynamic";
 

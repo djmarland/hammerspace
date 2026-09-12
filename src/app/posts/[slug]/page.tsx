@@ -11,7 +11,7 @@ import { isPostPublic } from "@/lib/blog";
 import { getPostBySlug, getRelatedPosts } from "@/lib/posts";
 import styles from "./page.module.css";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 600;
 
 const dateFormatter = new Intl.DateTimeFormat("en-GB", {
 	dateStyle: "medium",

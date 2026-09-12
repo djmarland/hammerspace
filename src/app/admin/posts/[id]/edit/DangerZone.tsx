@@ -1,7 +1,6 @@
 "use client";
 
 import ConfirmDelete from "@/components/ConfirmDelete";
-import styles from "./DangerZone.module.css";
 
 interface DangerZoneProps {
 	isPublished: boolean;
@@ -9,12 +8,6 @@ interface DangerZoneProps {
 	deleteAction: (formData: FormData) => Promise<void>;
 }
 
-/**
- * Renders the "Unpublish" (only when currently published) and "Delete"
- * confirmation controls for the edit page. Reuses the already-built
- * `ConfirmDelete` dialog component for both - it isn't delete-specific,
- * just a generic "confirm, then submit a bound Server Action" dialog.
- */
 export default function DangerZone({
 	isPublished,
 	unpublishAction,
@@ -23,8 +16,8 @@ export default function DangerZone({
 	return (
 		<section className="piko-page-container piko-vstack">
 			{isPublished && (
-				<div className={styles.warnCard}>
-					<h3>Unpublish Post</h3>
+				<div data-state="warning" className="piko-state__box  piko-vstack">
+					<h2 className="piko-t-h2">Unpublish Post</h2>
 					<p>
 						Move this post back to Draft. It will no longer be visible on the
 						public site.
@@ -37,8 +30,8 @@ export default function DangerZone({
 				</div>
 			)}
 
-			<div className={styles.dangerZone}>
-				<h2>Danger Zone</h2>
+			<div data-state="error" className="piko-state__box piko-vstack">
+				<h2 className="piko-t-h2">Delete Post</h2>
 				<p>These actions are permanent and cannot be undone.</p>
 				<ConfirmDelete
 					deleteAction={deleteAction}

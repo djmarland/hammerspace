@@ -81,7 +81,7 @@ export default async function AdminPostsPage({
 							{result.posts.map((post) => {
 								const state = post.publishedAt
 									? isPostPublic(post.publishedAt)
-										? "success"
+										? undefined
 										: "warning"
 									: "error";
 								const statusLabel = post.publishedAt

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { getAdminSessionUser } from "@/lib/admin-auth";
 import Masthead from "@/components/Organisms/Masthead/Masthead";
 import styles from "./layout.module.css";
 
@@ -12,10 +13,16 @@ import styles from "./layout.module.css";
  * guidance that's a defense-in-depth measure, not a replacement for the
  * per-page check.
  */
-export default function AdminLayout({ children }: { children: ReactNode }) {
+export default async function AdminLayout({
+	children,
+}: {
+	children: ReactNode;
+}) {
+	const user = await getAdminSessionUser();
+
 	return (
 		<div className={styles.adminShell}>
-			<Masthead />
+			<Masthead isAuthenticated={Boolean(user)} />
 			{children}
 		</div>
 	);

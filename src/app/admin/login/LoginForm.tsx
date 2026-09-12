@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import {
 	startAuthentication,
 	verifyAuthentication,
@@ -38,7 +38,6 @@ function withTimeout<T>(
  * (POSTing to `/api/auth/token-login`).
  */
 export default function LoginForm() {
-	const router = useRouter();
 	const searchParams = useSearchParams();
 	const token = searchParams.get("token");
 
@@ -88,7 +87,12 @@ export default function LoginForm() {
 
 				const data = await response.json();
 				if (!cancelled) {
-					router.replace(data.redirectTo || "/admin");
+					// Hard navigation: a client-side router.replace can serve a
+					// stale Router Cache entry for the target route that was
+					// prefetched (and redirected to /admin/login) while we were
+					// still unauthenticated. A full navigation always re-fetches
+					// with the now-valid session cookie.
+					window.location.href = data.redirectTo || "/admin";
 				}
 			} catch (err) {
 				if (!cancelled) {
@@ -107,7 +111,7 @@ export default function LoginForm() {
 		return () => {
 			cancelled = true;
 		};
-	}, [token, tokenProcessed, router]);
+	}, [token, tokenProcessed]);
 
 	async function handlePasskeyLogin(source: "auto" | "manual") {
 		setError("");
@@ -131,7 +135,9 @@ export default function LoginForm() {
 				PASSKEY_TIMEOUT_MS,
 				"Timed out verifying passkey response. Please retry.",
 			);
-			router.push("/admin");
+			// See the token-login redirect above for why this is a hard
+			// navigation rather than router.push.
+			window.location.href = "/admin";
 		} catch (err) {
 			console.error("Passkey login failed", err);
 			if (err instanceof Error && err.message === "WebAuthn not supported") {
@@ -164,10 +170,6 @@ export default function LoginForm() {
 			setAutoPrompted(true);
 			await handlePasskeyLogin("auto");
 		})();
-		// handlePasskeyLogin intentionally omitted: it's stable enough for this
-		// one-shot auto-attempt-on-mount effect, and including it would need to
-		// be memoized to avoid re-triggering the attempt on every render.
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [token, autoPrompted]);
 
 	return (

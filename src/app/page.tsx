@@ -7,7 +7,7 @@ import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate";
 import { getLatestPublicPosts } from "@/lib/posts";
 import styles from "./page.module.css";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 600;
 
 export const metadata: Metadata = {
 	title:

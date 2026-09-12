@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import {
-	ADMIN_AUTH_COOKIE,
-	hasValidAdminSessionToken,
-} from "@/lib/admin-auth";
+import { ADMIN_AUTH_COOKIE, hasValidAdminSessionToken } from "@/lib/admin-auth";
 
 export async function proxy(request: NextRequest) {
 	if (request.nextUrl.pathname === "/admin/login") {

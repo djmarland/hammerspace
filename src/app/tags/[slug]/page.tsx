@@ -12,7 +12,7 @@ interface TagPageProps {
 	searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
-export const dynamic = "force-dynamic";
+export const revalidate = 600;
 
 function buildTagHref(slug: string, page: number) {
 	return page > 1 ? `/tags/${slug}?page=${page}` : `/tags/${slug}`;

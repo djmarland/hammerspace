@@ -16,7 +16,7 @@ function wrapCdata(value: string) {
 	return `<![CDATA[${value.replaceAll("]]>", "]]]]><![CDATA[>")}]]>`;
 }
 
-export const dynamic = "force-dynamic";
+export const revalidate = 600;
 
 export async function GET(request: Request) {
 	const url = new URL(request.url);
