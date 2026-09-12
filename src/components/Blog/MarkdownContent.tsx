@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect } from "react";
 import { renderMarkdown } from "@/lib/markdown";
 import { cx } from "@/components/cx";
 import styles from "./MarkdownContent.module.css";
@@ -14,6 +17,12 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
 		console.error("Markdown rendering error:", error);
 		html = `<p>${content}</p>`;
 	}
+
+	useEffect(() => {
+		// microlighter only highlights on load, so re-trigger it whenever this
+		// content mounts/changes (e.g. client-side navigation between posts).
+		document.dispatchEvent(new Event("syntax-highlight"));
+	}, [html]);
 
 	return (
 		<div
