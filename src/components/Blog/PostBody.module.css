@@ -1,0 +1,9 @@
+.body {
+	display: grid;
+	gap: 1.25rem;
+}
+
+.image {
+	width: 100%;
+	height: auto;
+}

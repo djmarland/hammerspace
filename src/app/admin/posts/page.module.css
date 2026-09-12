@@ -1,0 +1,8 @@
+.slugCell {
+	color: var(--piko-color-text-subtle);
+	font-family: monospace;
+}
+
+.statusRow {
+	background-color: var(--piko-color-state-background);
+}

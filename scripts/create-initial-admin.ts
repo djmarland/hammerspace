@@ -58,9 +58,7 @@ VALUES (${sqlQuote(id)}, true, ${sqlQuote(loginTokenHash)}, 'Admin', CURRENT_TIM
 	console.log(sql);
 	console.error(""); // blank line separator on stderr, keeps stdout SQL-only
 	console.error(`Login URL (one-time token): ${loginUrl}`);
-	console.error(
-		"Run the SQL above against the production database, e.g.:",
-	);
+	console.error("Run the SQL above against the production database, e.g.:");
 	console.error(`  npm run admin:create-initial | psql "$DATABASE_URL"`);
 }
 

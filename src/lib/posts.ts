@@ -1,20 +1,20 @@
-import type {Prisma} from "@/generated/client";
-import {getAdminSessionUser} from "@/lib/admin-auth";
+import type { Prisma } from "@/generated/client";
+import { getAdminSessionUser } from "@/lib/admin-auth";
 import {
-    ADMIN_POSTS_PER_PAGE,
-    buildDiscoverablePostWhere,
-    buildExcerpt,
-    clampPage,
-    countWords,
-    estimateReadingTimeMinutes,
-    formatPostStatus,
-    parsePageNumber,
-    PUBLIC_POSTS_PER_PAGE,
-    resolveFirstPublicAt,
-    SYNDICATION_POSTS_PER_PAGE,
+	ADMIN_POSTS_PER_PAGE,
+	buildDiscoverablePostWhere,
+	buildExcerpt,
+	clampPage,
+	countWords,
+	estimateReadingTimeMinutes,
+	formatPostStatus,
+	parsePageNumber,
+	PUBLIC_POSTS_PER_PAGE,
+	resolveFirstPublicAt,
+	SYNDICATION_POSTS_PER_PAGE,
 } from "@/lib/blog";
-import {prisma} from "@/lib/db";
-import {nowDate} from "@/lib/temporal";
+import { prisma } from "@/lib/db";
+import { nowDate } from "@/lib/temporal";
 
 interface AdminPostFilters {
 	page?: number | string | string[];
@@ -338,7 +338,9 @@ export async function getRelatedPosts(
 			if (right.sharedTagCount !== left.sharedTagCount) {
 				return right.sharedTagCount - left.sharedTagCount;
 			}
-			return right.post.publishedAt.getTime() - left.post.publishedAt.getTime();
+			return (
+				right.post.publishedAt!.getTime() - left.post.publishedAt!.getTime()
+			);
 		})
 		.slice(0, limit)
 		.map(({ post }) => post);

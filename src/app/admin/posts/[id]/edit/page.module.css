@@ -1,0 +1,10 @@
+.header {
+	display: grid;
+	gap: var(--piko-unit-half);
+	padding-inline: var(--piko-page-gutter);
+	max-width: var(--piko-page-max);
+	margin-inline: auto;
+	width: 100%;
+	border-bottom: 1px solid var(--piko-color-border);
+	padding-bottom: var(--piko-unit);
+}

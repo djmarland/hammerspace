@@ -1,0 +1,54 @@
+.masthead {
+	background-color: color-mix(
+		in srgb,
+		var(--piko-palette-dynamic-8) 10%,
+		var(--piko-color-background) 90%
+	);
+	position: sticky;
+	top: 0;
+	margin-bottom: var(--piko-unit-double);
+}
+
+.masthead :global(svg) {
+	width: 200px;
+	margin-block: var(--piko-unit);
+}
+
+.masthead__container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: var(--piko-half) var(--piko-unit);
+	align-items: stretch;
+}
+
+.masthead__nav {
+	display: flex;
+	justify-self: center;
+	align-items: stretch;
+	height: 100%;
+}
+
+.masthead__nav :global(form) {
+	height: 100%;
+}
+
+.masthead__nav :global(a),
+.masthead__nav :global(button) {
+	display: flex;
+	align-items: center;
+	height: 100%;
+	padding: var(--piko-unit);
+	text-decoration: none;
+	color: var(--piko-color-link);
+}
+
+.masthead__nav :global(a):hover,
+.masthead__nav :global(button):hover {
+	background-color: var(--piko-color-link);
+	color: color-mix(
+		in srgb,
+		var(--piko-palette-dynamic-8) 10%,
+		var(--piko-color-background) 90%
+	);
+}

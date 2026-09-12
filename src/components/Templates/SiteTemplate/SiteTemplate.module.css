@@ -1,0 +1,56 @@
+.siteTemplate {
+	display: grid;
+	min-height: 100vh;
+	grid-template-columns: 1fr 2fr;
+}
+
+.siteTemplate > header {
+	background-color: color-mix(
+		in srgb,
+		var(--piko-palette-dynamic-8) 10%,
+		var(--piko-color-background) 90%
+	);
+	overflow: clip;
+}
+
+.headerContent {
+	position: sticky;
+	top: 0;
+	height: 100vh;
+	width: min(100%, 480px);
+	margin-left: auto;
+	padding: var(--piko-unit-double);
+	display: grid;
+	align-content: center;
+}
+
+.contentColumn {
+	margin-top: 33vh;
+	overflow: clip;
+}
+
+.contentColumn > main {
+	max-width: 75ch;
+	padding: var(--piko-unit-double);
+}
+
+@media (max-width: 56rem) {
+	.siteTemplate {
+		grid-template-columns: 1fr;
+		grid-template-rows: auto 1fr;
+	}
+
+	.headerContent {
+		position: static;
+		height: auto;
+		width: 100%;
+		max-width: none;
+		margin-left: 0;
+		padding-block: var(--piko-unit);
+		align-content: start;
+	}
+
+	.contentColumn {
+		margin-top: 0;
+	}
+}

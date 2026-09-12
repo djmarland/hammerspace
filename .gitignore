@@ -1,7 +1,8 @@
 .env
 .env.local
 .env.*.local
-.svelte-kit
-build
+.next
+next-env.d.ts
+*.tsbuildinfo
 node_modules
 src/generated

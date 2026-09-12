@@ -1,0 +1,24 @@
+.formField__label {
+	display: block;
+}
+
+.formField__input {
+	margin-top: var(--piko-unit-half);
+}
+
+.formField__required {
+	color: var(--piko-color-state-error-text);
+	font-variant-caps: small-caps;
+	font-size: var(--piko-fontsize--2);
+}
+
+.formField__hint {
+	font-size: var(--piko-t-small);
+	color: var(--piko-color-text-subtle);
+}
+
+.formField__stateMessage {
+	margin-top: var(--piko-unit-quarter);
+	font-size: var(--piko-t-body-small);
+	font-weight: bold;
+}

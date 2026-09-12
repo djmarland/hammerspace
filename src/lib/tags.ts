@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { getAdminSessionUser } from "@/lib/admin-auth";
 import { prisma } from "@/lib/db";
 
@@ -13,6 +14,27 @@ async function requireAdmin() {
 	if (!(await getAdminSessionUser())) throw new Error("Unauthorized");
 }
 
+function revalidateTagPaths(
+	tagSlugs: (string | null | undefined)[],
+	affectedPostSlugs: (string | null | undefined)[] = [],
+) {
+	revalidatePath("/");
+	revalidatePath("/posts");
+	revalidatePath("/feed.xml");
+	revalidatePath("/admin/posts");
+	revalidatePath("/admin/tags");
+	for (const tagSlug of new Set(
+		tagSlugs.filter((slug): slug is string => Boolean(slug)),
+	)) {
+		revalidatePath(`/tags/${tagSlug}`);
+	}
+	for (const postSlug of new Set(
+		affectedPostSlugs.filter((slug): slug is string => Boolean(slug)),
+	)) {
+		revalidatePath(`/posts/${postSlug}`);
+	}
+}
+
 export async function createTagAction(formData: FormData) {
 	await requireAdmin();
 	const nameValue = formData.get("name");
@@ -24,6 +46,7 @@ export async function createTagAction(formData: FormData) {
 	});
 	if (existingTag) throw new Error("Tag already exists");
 	await prisma.tag.create({ data: { name, slug } });
+	revalidateTagPaths([slug]);
 }
 
 export async function deleteTagAction(formData: FormData) {
@@ -41,6 +64,10 @@ export async function deleteTagAction(formData: FormData) {
 		throw new Error("Tag not found.");
 	}
 	await prisma.tag.delete({ where: { id: tagId } });
+	revalidateTagPaths(
+		[existingTag.slug],
+		existingTag.posts.map(({ post }) => post.slug),
+	);
 }
 
 export async function updateTagAction(formData: FormData) {
@@ -68,4 +95,8 @@ export async function updateTagAction(formData: FormData) {
 	});
 	if (duplicateTag) throw new Error("Tag name already exists");
 	await prisma.tag.update({ where: { id: tagId }, data: { name, slug } });
+	revalidateTagPaths(
+		[existingTag.slug, slug],
+		existingTag.posts.map(({ post }) => post.slug),
+	);
 }

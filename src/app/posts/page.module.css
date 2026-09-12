@@ -1,0 +1,16 @@
+.content {
+	display: grid;
+	gap: 1.5rem;
+	max-width: 75ch;
+	padding: var(--piko-unit-double);
+}
+
+.filterMeta {
+	margin: 0;
+	color: color-mix(in srgb, currentColor 75%, transparent);
+}
+
+.list {
+	display: grid;
+	gap: 1rem;
+}

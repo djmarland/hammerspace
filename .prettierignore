@@ -1,5 +1,6 @@
 # Ignore generated and dependency artifacts:
-.svelte-kit
-build
+.next
 node_modules
 src/generated
+.agents
+skills-lock.json

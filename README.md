@@ -1,6 +1,6 @@
 # Hammerspace Blog
 
-Hammerspace is a SvelteKit blog/CMS with PostgreSQL, Prisma, and passkey-based admin authentication. Development runs in Docker Compose; production is deployed to a VPS as a release zip built by GitHub Actions and run under PM2.
+Hammerspace is a Next.js blog/CMS with PostgreSQL, Prisma, and passkey-based admin authentication. Development runs in Docker Compose; production is deployed to a VPS as a release zip built by GitHub Actions and run under PM2.
 
 ## Quick start
 
@@ -31,7 +31,7 @@ docker compose down
 
 ## Architecture
 
-- **App**: SvelteKit 2 + Vite
+- **App**: Next.js 16 + React 19
 - **Language**: TypeScript
 - **Database**: PostgreSQL 15
 - **ORM**: Prisma
@@ -48,7 +48,7 @@ nginx.conf           # Local dev reverse proxy config
 deploy/              # VPS nginx + PM2 configs for beta and prod
 prisma/              # Schema and migrations
 scripts/             # Install/release helpers
-src/routes/          # SvelteKit routes
+src/app/             # Next.js App Router routes
 src/lib/             # Application helpers
 .github/workflows/   # CI and release automation
 ```
@@ -69,7 +69,7 @@ Useful npm scripts:
 
 - `npm run dev`
 - `npm run build`
-- `npm run preview`
+- `npm run start`
 - `npm run lint`
 - `npm run generate`
 - `npm run db:push`
@@ -107,11 +107,11 @@ Production is a VPS install, not Docker-based.
 ### Release flow
 
 1. Push a commit to `main`.
-2. GitHub Actions runs `npm ci`, `npm run build`, and `npm run generate`, then re-runs `npm ci --omit=dev` to reduce `node_modules` to production dependencies only.
-3. The workflow packages:
-   - the built SvelteKit output
+2. GitHub Actions runs `npm ci`, `npm run generate`, and `npm run build` (`next build`, producing `output: "standalone"`), then re-runs `npm ci --omit=dev --ignore-scripts` to reduce `node_modules` to production dependencies only.
+3. `scripts/package-release.sh` copies `.next/static/` and the top-level `public/` into `.next/standalone/` (Next.js does not include either in the standalone output — see the [output docs](https://nextjs.org/docs/app/api-reference/config/next-config-js/output)), then packages:
+   - `.next/standalone/`, renamed `standalone/` — the self-contained Next.js server (`server.js` + its own pruned `node_modules/`), plus the copied-in static assets and `public/`
    - `prisma/`
-   - the pruned production `node_modules/`
+   - the pruned production `node_modules/` — not used to run the app (which is self-contained under `standalone/node_modules/`), only so `npx prisma migrate deploy` has the `prisma` CLI on the VPS
    - the VPS install scripts
    - `package.json`, `package-lock.json`, and `prisma.config.ts`
 4. The tar is attached to a GitHub prerelease for that commit.
@@ -120,10 +120,10 @@ Production is a VPS install, not Docker-based.
 
 Two environments run side by side on the same VPS, each as its own release directory, `.env`, PM2 app, and nginx site:
 
-| Environment | Domain                  | Install dir                            | PM2 app name       | App port |
-| ----------- | ------------------------ | --------------------------------------- | ------------------- | -------- |
-| Beta        | beta.hammerspace.co.uk   | `/var/www/beta.hammerspace.co.uk`       | `beta-hammerspace`  | 3000     |
-| Production  | www.hammerspace.co.uk    | `/var/www/www.hammerspace.co.uk`        | `www-hammerspace`   | 3001     |
+| Environment | Domain                 | Install dir                       | PM2 app name       | App port |
+| ----------- | ---------------------- | --------------------------------- | ------------------ | -------- |
+| Beta        | beta.hammerspace.co.uk | `/var/www/beta.hammerspace.co.uk` | `beta-hammerspace` | 3000     |
+| Production  | www.hammerspace.co.uk  | `/var/www/www.hammerspace.co.uk`  | `www-hammerspace`  | 3001     |
 
 Config-as-code for both is kept in [`deploy/`](deploy/):
 
@@ -138,7 +138,19 @@ deploy/
     └── www.hammerspace.co.uk.conf        # site config for sites-available/
 ```
 
-`scripts/vps-install.sh` / `scripts/vps-first-install.sh` never delete an existing `ecosystem.config.cjs` inside the install directory, and will use it (via `pm2 start ecosystem.config.cjs --only <name>`) if present, falling back to a plain `pm2 start node --name <name> -- build/index.js` otherwise.
+Each release unpacks flat into its install directory, so an installed environment looks like:
+
+```text
+/var/www/beta.hammerspace.co.uk/
+├── standalone/          # Next.js standalone server (server.js, .next/, its own node_modules/, public/) — what PM2 runs
+├── prisma/              # schema + migrations
+├── node_modules/        # pruned prod deps, present only for the `prisma` CLI (`npx prisma migrate deploy`)
+├── package.json, package-lock.json, prisma.config.ts
+├── .env                 # preserved across releases
+└── ecosystem.config.cjs # preserved across releases
+```
+
+`scripts/vps-install.sh` / `scripts/vps-first-install.sh` never delete an existing `ecosystem.config.cjs` inside the install directory, and will use it (via `pm2 start ecosystem.config.cjs --only <name>`) if present, falling back to a plain `pm2 start node --name <name> --cwd <install-dir>/standalone -- server.js` otherwise.
 
 ### Initial VPS install
 
@@ -157,7 +169,7 @@ deploy/
    cp deploy/pm2/ecosystem.prod.config.cjs /var/www/www.hammerspace.co.uk/ecosystem.config.cjs
    ```
 
-4. Place each environment's `.env` file at `/var/www/beta.hammerspace.co.uk/.env` and `/var/www/www.hammerspace.co.uk/.env` respectively. Each `.env` must set its own `DATABASE_URL`, `PUBLIC_APP_URL`/`PUBLIC_SITE_URL`/`PUBLIC_RP_ID` (matching that environment's domain), and an `ORIGIN` value equal to the public site URL (required by `@sveltejs/adapter-node` when running behind the nginx reverse proxy). Do **not** set `PORT` in `.env` — it's hardcoded in each `ecosystem.config.cjs` (3000 for beta, 3001 for prod) so the two apps can never accidentally collide.
+4. Place each environment's `.env` file at `/var/www/beta.hammerspace.co.uk/.env` and `/var/www/www.hammerspace.co.uk/.env` respectively. Each `.env` must set its own `DATABASE_URL` and `PUBLIC_APP_URL`/`PUBLIC_SITE_URL`/`PUBLIC_RP_ID` (matching that environment's domain). Do **not** set `PORT` in `.env` — it's hardcoded in each `ecosystem.config.cjs` (3000 for beta, 3001 for prod) so the two apps can never accidentally collide.
 5. Set up nginx (see below).
 6. Download the release zip from the GitHub release page and, for each environment, run:
 
@@ -215,7 +227,7 @@ Each site config proxies to its own upstream port (3000 for beta, 3001 for prod)
 
 ### PM2
 
-Each environment has its own `ecosystem.config.cjs` (see `deploy/pm2/`), naming the PM2 app (`beta-hammerspace` / `www-hammerspace`) and pointing `cwd`/`script` at that environment's release directory. Actual secrets (`DATABASE_URL`, `AUTH_JWT_SECRET`, `PORT`, etc.) live in each environment's `.env`, which the install scripts source into the shell before starting/restarting PM2.
+Each environment has its own `ecosystem.config.cjs` (see `deploy/pm2/`), naming the PM2 app (`beta-hammerspace` / `www-hammerspace`) and pointing `cwd` at that environment's `standalone/` directory with `script: "server.js"`. Actual secrets (`DATABASE_URL`, `AUTH_JWT_SECRET`, `PORT`, etc.) live in each environment's `.env`, which the install scripts source into the shell before starting/restarting PM2.
 
 Useful PM2 commands:
 
@@ -272,5 +284,5 @@ The login URL is printed to the terminal — copy it to log in as the new admin.
 ## Resources
 
 - Prisma: https://www.prisma.io/docs/
-- SvelteKit: https://svelte.dev/docs/kit
+- Next.js: https://nextjs.org/docs
 - PM2: https://pm2.keymetrics.io/

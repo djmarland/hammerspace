@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { getAdminSessionUser } from "@/lib/admin-auth";
 import { prisma } from "@/lib/db";
 import {
@@ -9,6 +10,31 @@ import type { PostFormValues, PublishFormValues } from "@/lib/post-form";
 
 export async function ensureAdminSession() {
 	return getAdminSessionUser();
+}
+
+/**
+ * Revalidates every public/admin route that a post mutation can affect.
+ * Slightly over-inclusive by design: it's safer to revalidate a path that
+ * didn't strictly need it than to miss one and serve stale content.
+ */
+function revalidatePostPaths(
+	slugs: (string | null | undefined)[],
+	tagSlugs: string[],
+) {
+	revalidatePath("/");
+	revalidatePath("/posts");
+	revalidatePath("/feed.xml");
+	revalidatePath("/admin/posts");
+	revalidatePath("/tags");
+	revalidatePath("/admin/tags");
+	for (const slug of new Set(
+		slugs.filter((slug): slug is string => Boolean(slug)),
+	)) {
+		revalidatePath(`/posts/${slug}`);
+	}
+	for (const tagSlug of new Set(tagSlugs)) {
+		revalidatePath(`/tags/${tagSlug}`);
+	}
 }
 
 export async function slugBelongsToDifferentPost(
@@ -53,7 +79,11 @@ export async function createPostFromValues(
 	values: PostFormValues,
 	authorId: string,
 ) {
-	await prisma.post.create({
+	if (!(await ensureAdminSession())) {
+		throw new Error("Unauthorized");
+	}
+
+	const created = await prisma.post.create({
 		data: {
 			...buildPostWriteData(values),
 			publishedAt: null,
@@ -65,21 +95,34 @@ export async function createPostFromValues(
 			tags: { select: { tag: { select: { slug: true } } } },
 		},
 	});
+
+	revalidatePostPaths(
+		[created.slug],
+		created.tags.map(({ tag }) => tag.slug),
+	);
 }
 
 export async function updatePostFromValues(
 	postId: string,
 	values: PostFormValues,
 ) {
+	if (!(await ensureAdminSession())) {
+		throw new Error("Unauthorized");
+	}
+
 	const existingPost = await prisma.post.findUnique({
 		where: { id: postId },
-		select: { id: true },
+		select: {
+			id: true,
+			slug: true,
+			tags: { select: { tag: { select: { slug: true } } } },
+		},
 	});
 	if (!existingPost) {
 		throw new Error("That post no longer exists.");
 	}
 
-	await prisma.post.update({
+	const updated = await prisma.post.update({
 		where: { id: postId },
 		data: {
 			...buildPostWriteData(values),
@@ -93,6 +136,11 @@ export async function updatePostFromValues(
 			tags: { select: { tag: { select: { slug: true } } } },
 		},
 	});
+
+	revalidatePostPaths(
+		[existingPost.slug, updated.slug],
+		[...existingPost.tags, ...updated.tags].map(({ tag }) => tag.slug),
+	);
 }
 
 async function buildUniquePublishSlug(
@@ -122,9 +170,18 @@ export async function publishPostAction(
 	postId: string,
 	values: PublishFormValues,
 ) {
+	if (!(await ensureAdminSession())) {
+		throw new Error("Unauthorized");
+	}
+
 	const existingPost = await prisma.post.findUnique({
 		where: { id: postId },
-		select: { id: true, slug: true, publishedAt: true },
+		select: {
+			id: true,
+			slug: true,
+			publishedAt: true,
+			tags: { select: { tag: { select: { slug: true } } } },
+		},
 	});
 	if (!existingPost) {
 		throw new Error("That post no longer exists.");
@@ -140,13 +197,26 @@ export async function publishPostAction(
 		data: { publishedAt: publishDate, slug },
 	});
 
+	revalidatePostPaths(
+		[existingPost.slug, slug],
+		existingPost.tags.map(({ tag }) => tag.slug),
+	);
+
 	return { slug };
 }
 
 export async function unpublishPostAction(postId: string) {
+	if (!(await ensureAdminSession())) {
+		throw new Error("Unauthorized");
+	}
+
 	const existingPost = await prisma.post.findUnique({
 		where: { id: postId },
-		select: { id: true },
+		select: {
+			id: true,
+			slug: true,
+			tags: { select: { tag: { select: { slug: true } } } },
+		},
 	});
 	if (!existingPost) {
 		throw new Error("That post no longer exists.");
@@ -156,6 +226,11 @@ export async function unpublishPostAction(postId: string) {
 		where: { id: postId },
 		data: { publishedAt: null },
 	});
+
+	revalidatePostPaths(
+		[existingPost.slug],
+		existingPost.tags.map(({ tag }) => tag.slug),
+	);
 }
 
 export async function deletePostAction(id: string) {
@@ -163,10 +238,21 @@ export async function deletePostAction(id: string) {
 		throw new Error("Unauthorized");
 	}
 
-	const existingPost = await prisma.post.findUnique({ where: { id } });
+	const existingPost = await prisma.post.findUnique({
+		where: { id },
+		select: {
+			slug: true,
+			tags: { select: { tag: { select: { slug: true } } } },
+		},
+	});
 	if (!existingPost) {
 		throw new Error("Post not found.");
 	}
 
 	await prisma.post.delete({ where: { id } });
+
+	revalidatePostPaths(
+		[existingPost.slug],
+		existingPost.tags.map(({ tag }) => tag.slug),
+	);
 }

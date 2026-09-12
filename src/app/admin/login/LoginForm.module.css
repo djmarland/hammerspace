@@ -1,0 +1,6 @@
+.container {
+	text-align: center;
+	padding: var(--piko-unit);
+	max-width: 600px;
+	margin-inline: auto;
+}

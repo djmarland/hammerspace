@@ -25,6 +25,11 @@ jobs:
       - run: npm ci
       - run: npm run generate
       - run: npm run build
+      # `next build` (output: "standalone") produces its own self-contained
+      # node_modules under .next/standalone/, so this pruned node_modules is
+      # no longer needed to run the app itself. package-release.sh still
+      # ships it at the release root, purely so `npx prisma migrate deploy`
+      # has the `prisma` CLI to run on the VPS.
       - run: npm ci --omit=dev --ignore-scripts
       - run: bash scripts/package-release.sh "${GITHUB_SHA}" dist-release
 

@@ -1,0 +1,24 @@
+.markdownContent :global(.table-of-contents) li:has(:global(.h3)) {
+	margin-inline-start: 1em;
+}
+
+.markdownContent :global(.table-of-contents) li:has(:global(.h4)) {
+	margin-inline-start: 2em;
+}
+
+.markdownContent :global(.table-of-contents) li:has(:global(.h5)) {
+	margin-inline-start: 3em;
+}
+
+.markdownContent :global(.table-of-contents) li:has(:global(.h6)) {
+	margin-inline-start: 4em;
+}
+
+.markdownContent :global(.heading-anchor) {
+	color: inherit;
+	text-decoration: inherit;
+}
+
+.markdownContent :global(.heading-anchor):hover {
+	text-decoration: underline;
+}
