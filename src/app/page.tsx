@@ -1,10 +1,10 @@
-import type {Metadata} from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 import Logo from "@/components/Atoms/Logo/Logo";
 import PostBody from "@/components/Blog/PostBody";
 import ReadingTime from "@/components/Blog/ReadingTime";
 import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate";
-import {getLatestPublicPosts} from "@/lib/posts";
+import { getLatestPublicPosts } from "@/lib/posts";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";

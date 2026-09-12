@@ -41,6 +41,7 @@
 		"eslint": "^9",
 		"eslint-config-next": "^16.3.5",
 		"husky": "^9.1.7",
+		"lint-staged": "^16.4.0",
 		"prettier": "3.9.6",
 		"tsx": "^4.23.1",
 		"typescript": "^6.0.3"
@@ -51,6 +52,15 @@
 	],
 	"prettier": {
 		"useTabs": true
+	},
+	"lint-staged": {
+		"*.{js,jsx,ts,tsx}": [
+			"eslint --fix",
+			"prettier --write"
+		],
+		"*.{json,css,md}": [
+			"prettier --write"
+		]
 	},
 	"allowScripts": {
 		"@prisma/engines@7.10.0": true,
