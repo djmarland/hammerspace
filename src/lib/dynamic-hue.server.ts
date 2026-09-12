@@ -28,3 +28,13 @@ export function getDailyHue(): number {
 	const today = Temporal.Now.plainDateISO();
 	return getDeterministicHue(today.dayOfYear, today.year);
 }
+
+export function getSecondsUntilNextHue(): number {
+	const now = Temporal.Now.zonedDateTimeISO();
+	const startOfTomorrow = now
+		.toPlainDate()
+		.add({ days: 1 })
+		.toZonedDateTime(now.timeZoneId);
+
+	return Math.ceil(startOfTomorrow.since(now).total({ unit: "seconds" }));
+}
