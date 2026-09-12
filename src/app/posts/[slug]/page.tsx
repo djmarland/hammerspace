@@ -13,10 +13,6 @@ import { PublicationDate } from "@/components/Atoms/PublicationDate.tsx";
 
 export const revalidate = 600;
 
-const dateFormatter = new Intl.DateTimeFormat("en-GB", {
-	dateStyle: "medium",
-});
-
 // generateMetadata and the page component both need the post; React's
 // per-request cache() dedupes the underlying DB call between them without
 // needing to touch src/lib/posts.ts.

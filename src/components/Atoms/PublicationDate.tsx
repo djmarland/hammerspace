@@ -1,7 +1,7 @@
-import { FC } from "react";
+import { FC, HTMLAttributes } from "react";
 
 export const PublicationDate: FC<
-	{ date: string | undefined } & HTMLElement
+	{ date: Date | null | undefined } & HTMLAttributes<HTMLElement>
 > = ({ date, ...rest }) => {
 	if (!date) {
 		return <span {...rest}>Unpublished</span>;
@@ -9,10 +9,9 @@ export const PublicationDate: FC<
 	const dateFormatter = new Intl.DateTimeFormat("en-GB", {
 		dateStyle: "medium",
 	});
-	const dateObj = new Date(date);
 	return (
-		<time dateTime={dateObj.toISOString()} {...rest}>
-			{dateFormatter.format(dateObj)}
+		<time dateTime={date.toISOString()} {...rest}>
+			{dateFormatter.format(date)}
 		</time>
 	);
 };
