@@ -92,6 +92,10 @@ function parsePayload(token: string): AdminSessionPayload | null {
 	}
 }
 
+export function hasValidAdminSessionToken(token: string | undefined): boolean {
+	return Boolean(token && parsePayload(token));
+}
+
 export function createAdminSessionToken(
 	userId: string,
 	bootstrap: boolean,
@@ -142,9 +146,7 @@ export function clearAdminSession(response: NextResponse): NextResponse {
 
 export async function getAdminSessionUser(): Promise<AdminSessionUser | null> {
 	const cookieStore = await cookies();
-	const cookieValue = cookieStore.get(ADMIN_AUTH_COOKIE)?.value;
-
-	const payload = cookieValue ? parsePayload(cookieValue) : null;
+	const payload = parsePayload(cookieStore.get(ADMIN_AUTH_COOKIE)?.value ?? "");
 	if (!payload) {
 		return null;
 	}
