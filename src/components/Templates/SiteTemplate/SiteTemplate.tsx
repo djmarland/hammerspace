@@ -18,7 +18,7 @@ export default function SiteTemplate({ children, header }: SiteTemplateProps) {
 			</header>
 			<ViewTransition name="site-content">
 				<div className={styles.contentColumn}>
-					<main>{children}</main>
+					<main className="piko-vstack--large">{children}</main>
 					<Footer />
 				</div>
 			</ViewTransition>

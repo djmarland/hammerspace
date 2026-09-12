@@ -3,14 +3,8 @@ import styles from "./Socials.module.css";
 
 export default function Socials() {
 	return (
-		<div
-			className={cx(
-				styles.socials,
-				"piko-t-meta",
-				"piko-card",
-				"piko-prose__block",
-			)}
-		>
+		<div className={cx(styles.socials, "piko-card", "piko-prose__block")}>
+			<h3 className="piko-t-h5">Find me in these places:</h3>
 			<dl className={styles.list}>
 				<dt>Mastodon:</dt>
 				<dd>

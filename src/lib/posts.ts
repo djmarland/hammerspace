@@ -223,6 +223,64 @@ export async function getPostBySlug(slug: string) {
 	} satisfies PublicPostDetail;
 }
 
+export async function getNextPost(
+	post: Pick<PublicPostDetail, "publishedAt">,
+): Promise<PublicPostSummary | null> {
+	if (post.publishedAt === null) {
+		return null;
+	}
+
+	const now = nowDate();
+	const nextPost = await prisma.post.findFirst({
+		where: {
+			publishedAt: {
+				not: null,
+				gt: post.publishedAt,
+				lte: now,
+			},
+		},
+		orderBy: {
+			publishedAt: "asc",
+		},
+		select: publicPostSelect,
+	});
+
+	if (!nextPost) {
+		return null;
+	}
+
+	return mapPublicPost(nextPost);
+}
+
+export async function getPreviousPost(
+	post: Pick<PublicPostDetail, "publishedAt">,
+): Promise<PublicPostSummary | null> {
+	if (post.publishedAt === null) {
+		return null;
+	}
+
+	const now = nowDate();
+	const previousPost = await prisma.post.findFirst({
+		where: {
+			publishedAt: {
+				not: null,
+				lt: post.publishedAt,
+				lte: now,
+			},
+		},
+		orderBy: {
+			publishedAt: "desc",
+		},
+		select: publicPostSelect,
+	});
+
+	if (!previousPost) {
+		return null;
+	}
+
+	return mapPublicPost(previousPost);
+}
+
 export async function getPublicSyndicationPosts(
 	filters: PublicPostFilters = {},
 ) {

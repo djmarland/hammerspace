@@ -1,0 +1,46 @@
+.postNavigator {
+	/* use auto fit grid to make the layout responsive, min-width of columns is 280px */
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	gap: var(--piko-unit);
+}
+
+/* Use clip-path to make the edges into an arrow shape */
+.link {
+	--_arrow-width: var(--piko-unit-double);
+	background-color: color-mix(
+		in srgb,
+		var(--piko-palette-dynamic-7) 20%,
+		var(--piko-color-background) 80%
+	);
+	padding: var(--piko-unit);
+	text-decoration: none;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	&:hover {
+		background-color: var(--piko-color-background-dynamic);
+	}
+}
+
+.prev {
+	padding-inline-start: calc(var(--piko-unit) + var(--_arrow-width));
+	clip-path: polygon(
+		0 50%,
+		var(--_arrow-width) 0,
+		100% 0,
+		100% 100%,
+		var(--_arrow-width) 100%
+	);
+}
+.next {
+	text-align: right;
+	padding-inline-end: calc(var(--piko-unit) + var(--_arrow-width));
+	clip-path: polygon(
+		0 0,
+		calc(100% - var(--_arrow-width)) 0,
+		100% 50%,
+		calc(100% - var(--_arrow-width)) 100%,
+		0 100%
+	);
+}

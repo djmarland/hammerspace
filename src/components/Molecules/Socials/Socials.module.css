@@ -1,9 +1,8 @@
 .socials {
 	container-type: inline-size;
 }
-
-@container (max-width: 400px) {
-	.list {
+.list {
+	@container (max-width: 400px) {
 		grid-template-columns: 1fr;
 	}
 }

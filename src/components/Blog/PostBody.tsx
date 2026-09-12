@@ -10,11 +10,16 @@ import styles from "./PostBody.module.css";
 interface PostBodyProps {
 	post: Pick<
 		PublicPostSummary,
-		"content" | "coverImageUrl" | "coverImageAlt" | "wordCount"
+		"slug" | "content" | "coverImageUrl" | "coverImageAlt" | "wordCount"
 	>;
+	// Set when this post is listed among others (e.g. the homepage), where
+	// the post title is an h2 rather than the page's own h1. Also makes the
+	// post body's heading links point back to the post's own page, since
+	// this isn't it.
+	demoteHeadings?: boolean;
 }
 
-export default function PostBody({ post }: PostBodyProps) {
+export default function PostBody({ post, demoteHeadings }: PostBodyProps) {
 	return (
 		<div className={styles.body}>
 			{post.coverImageUrl && (
@@ -25,7 +30,11 @@ export default function PostBody({ post }: PostBodyProps) {
 				/>
 			)}
 			<div className="markdown piko-prose">
-				<MarkdownContent content={post.content} />
+				<MarkdownContent
+					content={post.content}
+					demoteHeadings={demoteHeadings}
+					headingLinkBase={demoteHeadings ? `/posts/${post.slug}` : undefined}
+				/>
 				<Socials />
 			</div>
 			<ReadingTime wordCount={post.wordCount} variant="footer" />

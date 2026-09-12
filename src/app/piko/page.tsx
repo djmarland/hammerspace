@@ -73,6 +73,7 @@ const typographyClasses = [
 	"piko-t-h5",
 	"piko-t-h6",
 	"piko-t-body",
+	"piko-t-meta",
 ] as const;
 
 const coreSpacingTokens = [
@@ -688,6 +689,10 @@ export default function PikoPage() {
 					<pre>
 						<strong>Preformatted:</strong>Testing one row and another
 					</pre>
+					<details>
+						<summary>Details Summary</summary>
+						<p>Details content</p>
+					</details>
 					<p>
 						I am <a href="/piko?abc123">the a tag</a> example
 						<br />I am <abbr title="test">the abbr tag</abbr> example

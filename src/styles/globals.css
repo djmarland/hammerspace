@@ -814,6 +814,22 @@
 			dialog::backdrop {
 				background: rgba(0, 0, 0, 0.4);
 			}
+
+			details {
+				border: solid 1px var(--piko-color-border-subtle);
+				summary {
+					font-weight: bold;
+					cursor: pointer;
+					padding: var(--piko-unit);
+					&:hover {
+						background: var(--piko-color-background-secondary);
+					}
+				}
+				&[open]::details-content {
+					padding: var(--piko-unit);
+					border-top: solid 1px var(--piko-color-border-subtle);
+				}
+			}
 		}
 
 		@layer typography {
@@ -1402,6 +1418,9 @@
 			}
 			.piko-vstack--small {
 				--_piko-vstack-gap: var(--piko-unit-half);
+			}
+			.piko-vstack--large {
+				--_piko-vstack-gap: var(--piko-unit-double);
 			}
 			.piko-hstack,
 			[class*="piko-hstack-"] {

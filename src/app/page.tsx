@@ -63,7 +63,7 @@ export default async function HomePage() {
 										<ReadingTime wordCount={post.wordCount} />
 									</div>
 								</header>
-								<PostBody post={post} />
+								<PostBody post={post} demoteHeadings />
 							</article>
 						))}
 					</div>

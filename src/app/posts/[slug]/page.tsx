@@ -8,6 +8,8 @@ import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate";
 import { isPostPublic } from "@/lib/blog";
 import { getPostBySlug } from "@/lib/posts";
 import styles from "./page.module.css";
+import { PostNavigator } from "@/components/Organisms/PostNavigator/PostNavigator.tsx";
+import { PublicationDate } from "@/components/Atoms/PublicationDate.tsx";
 
 export const revalidate = 600;
 
@@ -66,14 +68,7 @@ export default async function PostPage({ params }: PostPageProps) {
 							<div className={styles.meta}>
 								By <b>David Marland</b>
 								<br />
-								{post.publishedAt && (
-									<>
-										<time dateTime={post.publishedAt.toISOString()}>
-											{dateFormatter.format(post.publishedAt)}
-										</time>{" "}
-										·{" "}
-									</>
-								)}
+								<PublicationDate date={post.publishedAt} /> ·{" "}
 								<ReadingTime wordCount={post.wordCount} />
 							</div>
 						</div>
@@ -104,6 +99,8 @@ export default async function PostPage({ params }: PostPageProps) {
 				)}
 
 				<PostBody post={post} />
+				<hr />
+				<PostNavigator currentPost={post} />
 			</SiteTemplate>
 		</article>
 	);
