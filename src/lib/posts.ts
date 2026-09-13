@@ -13,6 +13,7 @@ import {
 	SYNDICATION_POSTS_PER_PAGE,
 } from "@/lib/blog";
 import { prisma } from "@/lib/db";
+import { buildPublicUrl } from "@/lib/storage";
 import { nowDate } from "@/lib/temporal";
 
 interface AdminPostFilters {
@@ -33,8 +34,7 @@ export interface PublicPostSummary {
 	status: "DRAFT" | "PUBLISHED";
 	statusLabel: string;
 	publishedAt: Date | null;
-	coverImageUrl: string | null;
-	coverImageAlt: string | null;
+	coverAsset: { url: string; alt: string } | null;
 	wordCount: number;
 	readingTimeMinutes: number;
 }
@@ -82,8 +82,7 @@ const publicPostSelect = {
 	slug: true,
 	content: true,
 	publishedAt: true,
-	coverImageUrl: true,
-	coverImageAlt: true,
+	coverAsset: { select: { filename: true, alt: true } },
 	createdAt: true,
 	updatedAt: true,
 } satisfies Prisma.PostSelect;
@@ -122,8 +121,12 @@ function mapPublicPost(record: PublicPostRecord): PublicPostSummary {
 		status,
 		statusLabel: formatPostStatus(status),
 		publishedAt: resolveFirstPublicAt(record),
-		coverImageUrl: record.coverImageUrl,
-		coverImageAlt: record.coverImageAlt,
+		coverAsset: record.coverAsset
+			? {
+					url: buildPublicUrl(record.coverAsset.filename),
+					alt: record.coverAsset.alt,
+				}
+			: null,
 		wordCount: countWords(record.content),
 		readingTimeMinutes: estimateReadingTimeMinutes(record.content),
 	};
@@ -324,7 +327,7 @@ export async function getAllPostsForAdmin(filters: AdminPostFilters = {}) {
 
 export async function getPostById(postId: string) {
 	await requireAdminSession();
-	return await prisma.post.findUnique({
+	const post = await prisma.post.findUnique({
 		where: { id: postId },
 		select: {
 			id: true,
@@ -334,8 +337,24 @@ export async function getPostById(postId: string) {
 			publishedAt: true,
 			createdAt: true,
 			updatedAt: true,
-			coverImageUrl: true,
-			coverImageAlt: true,
+			coverAssetId: true,
+			coverAsset: {
+				select: { id: true, filename: true, alt: true, title: true },
+			},
 		},
 	});
+	if (!post) return post;
+
+	const { coverAsset, ...rest } = post;
+	return {
+		...rest,
+		coverAsset: coverAsset
+			? {
+					id: coverAsset.id,
+					url: buildPublicUrl(coverAsset.filename),
+					alt: coverAsset.alt,
+					title: coverAsset.title,
+				}
+			: null,
+	};
 }

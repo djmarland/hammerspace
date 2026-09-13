@@ -16,10 +16,10 @@ export default function PostCard({ post, headingLevel = "h2" }: PostCardProps) {
 
 	return (
 		<article className="piko-card">
-			{post.coverImageUrl && (
+			{post.coverAsset && (
 				<img
-					src={post.coverImageUrl}
-					alt={post.coverImageAlt || ""}
+					src={post.coverAsset.url}
+					alt={post.coverAsset.alt || ""}
 					className={styles.image}
 				/>
 			)}

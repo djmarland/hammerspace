@@ -37,16 +37,31 @@ model WebAuthnCredential {
 }
 
 model Post {
-  id            String    @id @default(cuid())
-  title         String
-  slug          String    @unique
-  content       String
-  publishedAt   DateTime?
-  coverImageUrl String?
-  coverImageAlt String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id           String    @id @default(cuid())
+  title        String
+  slug         String    @unique
+  content      String
+  publishedAt  DateTime?
+  coverAssetId String?
+  coverAsset   Asset?    @relation(fields: [coverAssetId], references: [id], onDelete: SetNull)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   @@index([publishedAt])
   @@index([slug])
+}
+
+model Asset {
+  id        String   @id @default(uuid())
+  title     String
+  alt       String
+  filename  String   @unique
+  mimeType  String
+  size      Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  posts Post[]
+
+  @@index([createdAt])
 }

@@ -25,7 +25,13 @@
 //
 // Secrets (DATABASE_URL, AUTH_JWT_SECRET, etc.) come from
 // /var/www/beta.hammerspace.co.uk/.env, which the install scripts source
-// into the shell before calling `pm2 start`/`pm2 restart`.
+// into the shell before calling `pm2 start`/`pm2 restart`. That .env must
+// also set UPLOAD_DIR=/var/www/assets.hammerspace.co.uk/uploaded and
+// PUBLIC_ASSETS_URL=https://assets.hammerspace.co.uk/uploaded for uploaded
+// assets to work. Note beta and prod share this same physical uploaded/
+// directory (there's only one assets.hammerspace.co.uk vhost) while having
+// separate databases — each environment's Asset rows only ever reference
+// files it wrote itself.
 //
 // PORT is hardcoded here (not left to .env) so beta is guaranteed to run on
 // 3000 regardless of what's in that shared .env file, and can never

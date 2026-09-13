@@ -20,8 +20,7 @@ export function parsePostFormData(formData: FormData) {
 		title: getString(formData, "title"),
 		slug: getString(formData, "slug"),
 		content: getString(formData, "content"),
-		coverImageUrl: getString(formData, "coverImageUrl"),
-		coverImageAlt: getString(formData, "coverImageAlt"),
+		coverAssetId: getString(formData, "coverAssetId"),
 	});
 }
 

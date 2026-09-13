@@ -3,52 +3,27 @@ import { isValidDateTimeLocal } from "@/lib/temporal";
 
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-function isAbsoluteHttpUrl(value: string): boolean {
-	if (!value) return true;
-	try {
-		const url = new URL(value);
-		return url.protocol === "https:" || url.protocol === "http:";
-	} catch {
-		return false;
-	}
-}
-
 /**
  * Single source of truth for post form validation, run inside the Server
  * Actions that create/update/publish posts (see
  * src/lib/actions/post-actions.ts and the admin route action adapters).
  */
-export const postSchema = z
-	.object({
-		title: z.string().trim().min(1, "Title is required."),
-		slug: z
-			.string()
-			.trim()
-			.toLowerCase()
-			.min(1, "Slug is required.")
-			.regex(
-				slugRegex,
-				"Slug must use lowercase letters, numbers, and hyphens only.",
-			),
-		content: z.string().trim().min(1, "Content is required."),
-		coverImageUrl: z.string().trim().optional().default(""),
-		coverImageAlt: z.string().trim().optional().default(""),
-	})
-	.superRefine((values, ctx) => {
-		if (!isAbsoluteHttpUrl(values.coverImageUrl)) {
-			ctx.addIssue({
-				code: "custom",
-				path: ["coverImageUrl"],
-				message: "Use an absolute http or https URL.",
-			});
-		} else if (values.coverImageUrl && !values.coverImageAlt) {
-			ctx.addIssue({
-				code: "custom",
-				path: ["coverImageAlt"],
-				message: "Describe the cover image for screen readers.",
-			});
-		}
-	});
+export const postSchema = z.object({
+	title: z.string().trim().min(1, "Title is required."),
+	slug: z
+		.string()
+		.trim()
+		.toLowerCase()
+		.min(1, "Slug is required.")
+		.regex(
+			slugRegex,
+			"Slug must use lowercase letters, numbers, and hyphens only.",
+		),
+	content: z.string().trim().min(1, "Content is required."),
+	// References an existing Asset's id, chosen via the AssetLibraryModal
+	// picker in PostEditorForm. Existence is checked server-side, not here.
+	coverAssetId: z.string().trim().optional().default(""),
+});
 
 export type PostFormValues = z.infer<typeof postSchema>;
 

@@ -3,6 +3,8 @@
 import { useActionState, useState } from "react";
 import type { ChangeEvent } from "react";
 import { cx } from "@/components/cx";
+import AssetLibraryModal from "@/components/Admin/AssetLibrary/AssetLibraryModal";
+import type { SelectedAsset } from "@/components/Admin/AssetLibrary/AssetLibraryModal";
 import MarkdownContent from "@/components/Blog/MarkdownContent";
 import type { PostFormValues } from "@/lib/post-form";
 import styles from "./PostEditorForm.module.css";
@@ -24,6 +26,7 @@ interface PostEditorFormProps {
 	) => Promise<PostFormActionState>;
 	submitLabel: string;
 	initialValues?: Partial<PostFormValues>;
+	initialCoverAsset?: SelectedAsset | null;
 	mode: "create" | "edit";
 }
 
@@ -35,6 +38,7 @@ export default function PostEditorForm({
 	formAction,
 	submitLabel,
 	initialValues,
+	initialCoverAsset,
 }: PostEditorFormProps) {
 	const [state, action, pending] = useActionState<
 		PostFormActionState,
@@ -43,6 +47,10 @@ export default function PostEditorForm({
 
 	const [previewContent, setPreviewContent] = useState(
 		initialValues?.content || "",
+	);
+
+	const [coverAsset, setCoverAsset] = useState<SelectedAsset | null>(
+		initialCoverAsset ?? null,
 	);
 
 	const allErrors = state?.errors ? Object.values(state.errors).flat() : [];
@@ -116,38 +124,44 @@ export default function PostEditorForm({
 			</div>
 
 			<div className="piko-page-container">
-				<label className={styles.field}>
-					<span>Cover image URL</span>
+				<div className={styles.field}>
+					<span>Cover image</span>
 					<input
-						type="url"
-						name="coverImageUrl"
-						defaultValue={initialValues?.coverImageUrl}
-						aria-invalid={state?.errors?.coverImageUrl ? "true" : "false"}
+						type="hidden"
+						name="coverAssetId"
+						value={coverAsset?.id || ""}
 					/>
-					<p className={styles.helpText}>
-						Only absolute external image URLs are supported.
-					</p>
-					{state?.errors?.coverImageUrl && (
+					{coverAsset && (
+						<img
+							src={coverAsset.url}
+							alt={coverAsset.alt}
+							className={styles.coverPreview}
+						/>
+					)}
+					<div className="piko-hstack">
+						<AssetLibraryModal
+							triggerLabel={
+								coverAsset ? "Change cover image" : "Choose cover image"
+							}
+							filter="image"
+							onSelect={setCoverAsset}
+						/>
+						{coverAsset && (
+							<button
+								type="button"
+								className="piko-button"
+								onClick={() => setCoverAsset(null)}
+							>
+								Remove
+							</button>
+						)}
+					</div>
+					{state?.errors?.coverAssetId && (
 						<span className={styles.fieldError}>
-							{state.errors.coverImageUrl[0]}
+							{state.errors.coverAssetId[0]}
 						</span>
 					)}
-				</label>
-
-				<label className={styles.field}>
-					<span>Cover image alt text</span>
-					<input
-						type="text"
-						name="coverImageAlt"
-						defaultValue={initialValues?.coverImageAlt}
-						aria-invalid={state?.errors?.coverImageAlt ? "true" : "false"}
-					/>
-					{state?.errors?.coverImageAlt && (
-						<span className={styles.fieldError}>
-							{state.errors.coverImageAlt[0]}
-						</span>
-					)}
-				</label>
+				</div>
 
 				<div className={styles.actions}>
 					<div className={cx("piko-page-container", styles.actionsInner)}>

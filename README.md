@@ -93,6 +93,12 @@ Copy `.env.example` and set these values for both development and production:
 - `PUBLIC_RP_ID` (WebAuthn relying-party ID / domain)
 - `PUBLIC_APP_URL`
 - `PUBLIC_SITE_URL` (canonical public site URL)
+- `UPLOAD_DIR` (filesystem path uploaded assets are written to - the
+  `assets.hammerspace.co.uk` nginx vhost's root + `/uploaded` in production;
+  see `docker-compose.yml`'s `assets_data` volume for local dev)
+- `PUBLIC_ASSETS_URL` (public base URL those files are served from - the
+  local dev nginx's `/uploaded/` location, or `https://assets.hammerspace.co.uk/uploaded`
+  in production/beta)
 
 Generate secrets with:
 
@@ -221,9 +227,26 @@ This replaces the release contents (keeping `.env` and `ecosystem.config.cjs`), 
    ```bash
    sudo certbot --nginx -d beta.hammerspace.co.uk
    sudo certbot --nginx -d www.hammerspace.co.uk -d hammerspace.co.uk
+   sudo certbot --nginx -d assets.hammerspace.co.uk
    ```
 
-Each site config proxies to its own upstream port (3000 for beta, 3001 for prod), matching the `PORT` hardcoded in that environment's `ecosystem.config.cjs`, so the two PM2 processes never collide.
+Each site config proxies to its own upstream port (3000 for beta, 3001 for prod), matching the `PORT` hardcoded in that environment's `ecosystem.config.cjs`, so the two PM2 processes never collide. `assets.hammerspace.co.uk` isn't a proxy - it serves uploaded files straight off disk (see "Uploaded assets" below).
+
+### Uploaded assets
+
+Both `beta` and `www` write uploaded files to the same shared directory, served statically by the `assets.hammerspace.co.uk` vhost - this is a one-time setup step, not part of the per-release install flow:
+
+```bash
+sudo mkdir -p /var/www/assets.hammerspace.co.uk/uploaded
+sudo chown -R <app-user>:<app-user> /var/www/assets.hammerspace.co.uk
+```
+
+Set `UPLOAD_DIR=/var/www/assets.hammerspace.co.uk/uploaded` and
+`PUBLIC_ASSETS_URL=https://assets.hammerspace.co.uk/uploaded` in **both**
+`/var/www/beta.hammerspace.co.uk/.env` and `/var/www/www.hammerspace.co.uk/.env`.
+The two environments intentionally share this one physical directory (there's
+only one assets vhost) while keeping separate databases - each environment's
+`Asset` rows only ever reference files it wrote itself.
 
 ### PM2
 
