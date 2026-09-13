@@ -1,20 +1,6 @@
 .dialog {
 	width: min(90vw, 720px);
 	max-height: 85vh;
-	overflow-y: auto;
-}
-
-.header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: var(--piko-unit);
-}
-
-.dialogTitle {
-	font-weight: 600;
-	font-size: 1.1rem;
-	margin: 0;
 }
 
 .uploadForm {

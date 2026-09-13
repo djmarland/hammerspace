@@ -1,0 +1,41 @@
+.dialog {
+	padding: 0;
+	overflow-y: auto;
+	max-height: 85vh;
+	width: min(90vw, 480px);
+}
+
+.titleBar {
+	position: sticky;
+	top: 0;
+	z-index: 1;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--piko-unit);
+	padding: var(--piko-unit);
+	background: var(--piko-color-background);
+	border-bottom: solid 1px var(--piko-color-border-subtle);
+}
+
+.title {
+	margin: 0;
+	font-size: 1.1rem;
+	font-weight: 600;
+}
+
+.body {
+	padding: var(--piko-unit);
+}
+
+.actionsBar {
+	position: sticky;
+	bottom: 0;
+	z-index: 1;
+	display: flex;
+	justify-content: flex-end;
+	gap: var(--piko-unit-half);
+	padding: var(--piko-unit);
+	background: var(--piko-color-background);
+	border-top: solid 1px var(--piko-color-border-subtle);
+}

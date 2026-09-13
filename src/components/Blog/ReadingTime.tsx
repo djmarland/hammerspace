@@ -7,8 +7,8 @@ import {
 	useState,
 	useSyncExternalStore,
 } from "react";
-import type { ChangeEvent, FormEvent } from "react";
-import { cx } from "@/components/cx";
+import type { ChangeEvent } from "react";
+import Modal from "@/components/Molecules/Modal/Modal";
 import { readLocalStorage, writeLocalStorage } from "@/lib/local-storage";
 import {
 	calculateWordsPerMinute,
@@ -143,8 +143,7 @@ export default function ReadingTime({
 		dialogRef.current?.showModal();
 	}, []);
 
-	const closeDialog = useCallback((event?: FormEvent) => {
-		event?.preventDefault();
+	const closeDialog = useCallback(() => {
 		dialogRef.current?.close();
 	}, []);
 
@@ -206,8 +205,7 @@ export default function ReadingTime({
 		stopDialogRef.current?.showModal();
 	}
 
-	function closeStopDialog(event?: FormEvent) {
-		event?.preventDefault();
+	function closeStopDialog() {
 		stopDialogRef.current?.close();
 	}
 
@@ -226,17 +224,40 @@ export default function ReadingTime({
 					</button>
 					<span>)</span>
 				</span>
-				<dialog
+				<Modal
 					ref={dialogRef}
-					className={styles.dialog}
-					aria-label="Adjust reading speed"
+					title="Reading speed"
+					actions={
+						timerState.isRunning ? (
+							<>
+								<button
+									type="button"
+									className="piko-button--primary"
+									onClick={stopTimer}
+								>
+									Stop Timer
+								</button>
+								<button type="button" onClick={closeDialog}>
+									Close
+								</button>
+							</>
+						) : (
+							<>
+								<button
+									type="button"
+									className="piko-button--primary"
+									onClick={startTimer}
+								>
+									Start Timer
+								</button>
+								<button type="button" onClick={closeDialog}>
+									Close
+								</button>
+							</>
+						)
+					}
 				>
-					<form
-						method="dialog"
-						className={styles.dialogContent}
-						onSubmit={closeDialog}
-					>
-						<p className={styles.dialogTitle}>Reading speed</p>
+					<div className={styles.dialogContent}>
 						<label htmlFor="reading-speed">Words read per minute</label>
 						<input
 							id="reading-speed"
@@ -247,47 +268,19 @@ export default function ReadingTime({
 							onChange={updateWordsPerMinute}
 						/>
 						{timerState.isRunning ? (
-							<>
-								<p className={styles.timerStatus}>
-									Timer running: {formatDuration(liveElapsedMs)}
-								</p>
-								<div
-									className={cx(styles.dialogActions, styles.stackedActions)}
-								>
-									<button
-										type="button"
-										className="piko-button--primary"
-										onClick={stopTimer}
-									>
-										Stop Timer
-									</button>
-									<button type="submit">Close</button>
-								</div>
-							</>
+							<p className={styles.timerStatus}>
+								Timer running: {formatDuration(liveElapsedMs)}
+							</p>
 						) : (
-							<>
-								<p className={styles.helperText}>
-									Don&apos;t know your reading speed?
-									<br />
-									Start a timer while reading this post. When finished, stop the
-									timer to find your reading speed.
-								</p>
-								<div
-									className={cx(styles.dialogActions, styles.stackedActions)}
-								>
-									<button
-										type="button"
-										className="piko-button--primary"
-										onClick={startTimer}
-									>
-										Start Timer
-									</button>
-									<button type="submit">Close</button>
-								</div>
-							</>
+							<p className={styles.helperText}>
+								Don&apos;t know your reading speed?
+								<br />
+								Start a timer while reading this post. When finished, stop the
+								timer to find your reading speed.
+							</p>
 						)}
-					</form>
-				</dialog>
+					</div>
+				</Modal>
 			</>
 		);
 	}
@@ -306,13 +299,25 @@ export default function ReadingTime({
 				</div>
 			)}
 
-			<dialog ref={stopDialogRef} aria-label="Stop reading timer">
-				<form
-					method="dialog"
-					className={styles.dialogContent}
-					onSubmit={closeStopDialog}
-				>
-					<p className={styles.dialogTitle}>Stop reading timer</p>
+			<Modal
+				ref={stopDialogRef}
+				title="Stop reading timer"
+				actions={
+					<>
+						<button type="button" onClick={closeStopDialog}>
+							Cancel
+						</button>
+						<button
+							type="button"
+							className="piko-button--primary"
+							onClick={saveStopTimer}
+						>
+							Save for next time
+						</button>
+					</>
+				}
+			>
+				<div className={styles.dialogContent}>
 					<p className={styles.timerStatus}>
 						Elapsed time: {formatDuration(liveElapsedMs)}
 					</p>
@@ -329,20 +334,8 @@ export default function ReadingTime({
 							)
 						}
 					/>
-					<div className={cx(styles.dialogActions, styles.stackedActions)}>
-						<button type="button" onClick={closeStopDialog}>
-							Cancel
-						</button>
-						<button
-							type="button"
-							className="piko-button--primary"
-							onClick={saveStopTimer}
-						>
-							Save for next time
-						</button>
-					</div>
-				</form>
-			</dialog>
+				</div>
+			</Modal>
 		</>
 	);
 }

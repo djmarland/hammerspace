@@ -30,11 +30,6 @@
 	text-align: start;
 }
 
-.dialogTitle {
-	margin: 0;
-	font-weight: 700;
-}
-
 .helperText,
 .timerStatus {
 	margin: 0;
@@ -43,14 +38,4 @@
 
 .dialogContent label {
 	font-weight: 600;
-}
-
-.dialogActions {
-	display: flex;
-	justify-content: flex-end;
-	gap: 0.75rem;
-}
-
-.stackedActions {
-	margin-top: 0.25rem;
 }

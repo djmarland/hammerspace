@@ -9,6 +9,7 @@ import {
 } from "react";
 import { cx } from "@/components/cx";
 import ConfirmDelete from "@/components/ConfirmDelete";
+import Modal from "@/components/Molecules/Modal/Modal";
 import {
 	createAssetAction,
 	deleteAssetAction,
@@ -103,6 +104,15 @@ export default function AssetLibraryModal({
 		);
 	}
 
+	async function copyURL(asset: AssetSummary) {
+		await navigator.clipboard.writeText(asset.url);
+		setCopiedId(asset.id);
+		setTimeout(
+			() => setCopiedId((current) => (current === asset.id ? null : current)),
+			1500,
+		);
+	}
+
 	function saveMeta(asset: AssetSummary, title: string, alt: string) {
 		startTransition(async () => {
 			await updateAssetMetaAction(asset.id, { title, alt });
@@ -119,22 +129,7 @@ export default function AssetLibraryModal({
 				{triggerLabel}
 			</button>
 
-			<dialog
-				ref={dialogRef}
-				className={styles.dialog}
-				aria-label="Asset library"
-			>
-				<div className={styles.header}>
-					<p className={styles.dialogTitle}>Assets</p>
-					<button
-						type="button"
-						className="piko-button"
-						onClick={() => dialogRef.current?.close()}
-					>
-						Close
-					</button>
-				</div>
-
+			<Modal ref={dialogRef} title="Assets" className={styles.dialog}>
 				<form
 					ref={uploadFormRef}
 					action={uploadAction}
@@ -214,13 +209,22 @@ export default function AssetLibraryModal({
 												Select
 											</button>
 										) : (
-											<button
-												type="button"
-												className="piko-button"
-												onClick={() => copyMarkdown(asset)}
-											>
-												{copiedId === asset.id ? "Copied!" : "Copy markdown"}
-											</button>
+											<>
+												<button
+													type="button"
+													className="piko-button"
+													onClick={() => copyMarkdown(asset)}
+												>
+													{copiedId === asset.id ? "Copied!" : "Copy markdown"}
+												</button>
+												<button
+													type="button"
+													className="piko-button"
+													onClick={() => copyURL(asset)}
+												>
+													{copiedId === asset.id ? "Copied!" : "Copy URL"}
+												</button>
+											</>
 										)}
 										<button
 											type="button"
@@ -242,7 +246,7 @@ export default function AssetLibraryModal({
 					))}
 					{visibleAssets.length === 0 && <p>No assets yet.</p>}
 				</div>
-			</dialog>
+			</Modal>
 		</>
 	);
 }

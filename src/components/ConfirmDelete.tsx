@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import type { SyntheticEvent } from "react";
+import Modal from "@/components/Molecules/Modal/Modal";
 import styles from "./ConfirmDelete.module.css";
 
 interface ConfirmDeleteProps {
@@ -55,16 +56,6 @@ export default function ConfirmDelete({
 		dialogRef.current?.close();
 	}
 
-	useEffect(() => {
-		const dialog = dialogRef.current;
-		if (!dialog) return;
-		const onCloseInternal = () => {
-			onClose?.();
-		};
-		dialog.addEventListener("close", onCloseInternal);
-		return () => dialog.removeEventListener("close", onCloseInternal);
-	}, [onClose]);
-
 	return (
 		<>
 			<button
@@ -77,18 +68,26 @@ export default function ConfirmDelete({
 				{buttonLabel}
 			</button>
 
-			<dialog ref={dialogRef} onCancel={handleCancel}>
-				<form action={deleteAction} onSubmit={handleSubmit}>
-					<p>{message}</p>
-
-					<div className={styles.dialogActions}>
-						<button
-							type="submit"
-							className="piko-button--danger"
-							disabled={disabled}
+			<Modal
+				ref={dialogRef}
+				title="Confirm delete"
+				onCancel={handleCancel}
+				onClose={onClose}
+				actions={
+					<>
+						<form
+							action={deleteAction}
+							onSubmit={handleSubmit}
+							className={styles.deleteForm}
 						>
-							Yes, Delete
-						</button>
+							<button
+								type="submit"
+								className="piko-button--danger"
+								disabled={disabled}
+							>
+								Yes, Delete
+							</button>
+						</form>
 						<button
 							type="button"
 							className="piko-button"
@@ -97,9 +96,11 @@ export default function ConfirmDelete({
 						>
 							Cancel
 						</button>
-					</div>
-				</form>
-			</dialog>
+					</>
+				}
+			>
+				<p>{message}</p>
+			</Modal>
 		</>
 	);
 }

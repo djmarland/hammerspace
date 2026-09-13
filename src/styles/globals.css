@@ -987,6 +987,11 @@
 				border-inline-start: 4px solid var(--piko-color-border);
 				padding-inline-start: var(--piko-unit);
 			}
+
+			.piko-prose :where(img, video, canvas, audio, iframe) {
+				display: block;
+				margin-inline: auto;
+			}
 		}
 
 		@layer buttons {
@@ -1038,6 +1043,10 @@
 				flex-shrink: 0;
 				text-decoration: none;
 				display: inline-flex;
+
+				&:has(> .piko-icon:only-child) {
+					padding-inline: var(--piko-space-control-padding-y);
+				}
 			}
 
 			a.piko-button {
@@ -1444,6 +1453,12 @@
 				height: 1px;
 				overflow: hidden;
 				position: absolute !important;
+			}
+
+			.piko-icon {
+				height: 1em;
+				width: 1em;
+				fill: currentColor;
 			}
 		}
 	}
