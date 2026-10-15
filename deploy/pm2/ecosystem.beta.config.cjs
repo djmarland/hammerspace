@@ -23,7 +23,7 @@
 //   <install-dir>/package.json, package-lock.json, prisma.config.ts
 //   <install-dir>/.env, ecosystem.config.cjs   (preserved across releases)
 //
-// Secrets (DATABASE_URL, AUTH_JWT_SECRET, etc.) come from
+// Secrets and settings (DATABASE_PATH, AUTH_JWT_SECRET, etc.) come from
 // /var/www/beta.hammerspace.co.uk/.env, which the install scripts source
 // into the shell before calling `pm2 start`/`pm2 restart`. That .env must
 // also set UPLOAD_DIR=/var/www/assets.hammerspace.co.uk/uploaded and

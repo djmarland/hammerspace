@@ -7,7 +7,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
 }
 
 model User {
@@ -28,7 +28,7 @@ model WebAuthnCredential {
   credentialId        Bytes
   credentialPublicKey Bytes
   counter             Int
-  transports          String[] // e.g., ["usb", "nfc", "ble", "internal"]
+  transports          String   @default("") // Comma-separated, e.g. "usb,nfc,internal" (SQLite has no array columns)
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
 

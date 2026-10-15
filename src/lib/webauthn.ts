@@ -1,3 +1,4 @@
+import type { AuthenticatorTransport } from "@simplewebauthn/server";
 import { prisma } from "@/lib/db";
 import { nowDate } from "@/lib/temporal";
 import crypto from "crypto";
@@ -95,6 +96,16 @@ export function credentialIdFromLegacyBase64urlString(
 	credentialId: string,
 ): Uint8Array<ArrayBuffer> {
 	return toStrictUint8Array(Buffer.from(credentialId, "utf8"));
+}
+
+// WebAuthnCredential.transports is stored as a comma-separated string, since
+// SQLite has no array columns.
+export function serializeTransports(transports: string[]): string {
+	return transports.join(",");
+}
+
+export function parseTransports(transports: string): AuthenticatorTransport[] {
+	return transports.split(",").filter(Boolean) as AuthenticatorTransport[];
 }
 
 function isLikelyBase64url(value: string): boolean {

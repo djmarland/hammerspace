@@ -152,9 +152,9 @@ function buildAdminWhere(
 	if (filters.query) {
 		clauses.push({
 			OR: [
-				{ title: { contains: filters.query, mode: "insensitive" } },
-				{ slug: { contains: filters.query, mode: "insensitive" } },
-				{ content: { contains: filters.query, mode: "insensitive" } },
+				{ title: { contains: filters.query } },
+				{ slug: { contains: filters.query } },
+				{ content: { contains: filters.query } },
 			],
 		});
 	}

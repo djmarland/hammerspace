@@ -8,6 +8,7 @@ import {
 	credentialIdFromBase64url,
 	credentialIdFromLegacyBase64urlString,
 	getAndValidateChallenge,
+	parseTransports,
 } from "@/lib/webauthn";
 
 export async function POST(request: Request) {
@@ -72,8 +73,8 @@ export async function POST(request: Request) {
 				id: Buffer.from(credential.credentialId).toString("base64url"),
 				publicKey: credential.credentialPublicKey,
 				counter: credential.counter,
-				transports: credential.transports.length
-					? credential.transports
+				transports: credential.transports
+					? parseTransports(credential.transports)
 					: undefined,
 			},
 		});

@@ -5,7 +5,7 @@ This file instructs how to work with this project's development environment.
 This project uses **Docker Compose** (`docker compose` NOT `docker-compose`) to manage all development services:
 
 - **NextJS** - Application server (port 3000)
-- **PostgreSQL** - Database
+- **SQLite** - Database (file at `data/hammerspace.db` in development)
 - **Nginx** - Reverse proxy and caching layer
 
 ## Running Commands
@@ -67,8 +67,8 @@ docker compose exec node npx prisma db push
 # Create a new migration
 docker compose exec node npx prisma migrate dev
 
-# Access database directly (if needed)
-docker compose exec postgres psql -U postgres -d hammerspace
+# Access database directly (if needed, from the host)
+sqlite3 data/hammerspace.db
 ```
 
 ## File Modifications
@@ -107,6 +107,6 @@ When you need to:
 ## Troubleshooting
 
 - **Port already in use**: Change ports in docker compose.yml or .env
-- **Database connection errors**: Check `docker compose logs postgres`
+- **Database errors**: Check `DATABASE_PATH` is set and `data/` is writable
 - **Build failures**: Run `docker compose up --build` to rebuild images
 - **Module not found**: Run `docker compose exec node npm install`

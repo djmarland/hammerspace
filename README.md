@@ -1,6 +1,6 @@
 # Hammerspace Blog
 
-Hammerspace is a Next.js blog/CMS with PostgreSQL, Prisma, and passkey-based admin authentication. Development runs in Docker Compose; production is deployed to a VPS as a release zip built by GitHub Actions and run under PM2.
+Hammerspace is a Next.js blog/CMS with SQLite, Prisma, and passkey-based admin authentication. Development runs in Docker Compose; production is deployed to a VPS as a release zip built by GitHub Actions and run under PM2.
 
 ## Quick start
 
@@ -33,7 +33,7 @@ docker compose down
 
 - **App**: Next.js 16 + React 19
 - **Language**: TypeScript
-- **Database**: PostgreSQL 15
+- **Database**: SQLite (via `better-sqlite3`), one file per environment
 - **ORM**: Prisma
 - **Auth**: JWT cookie sessions + WebAuthn passkeys
 - **Reverse proxy**: Nginx
@@ -62,7 +62,7 @@ docker compose exec node npm run build
 docker compose exec node npm run lint
 docker compose exec node npm run db:push
 docker compose exec node npm run db:migrate
-docker compose exec node npm run --silent admin:create-initial | docker compose exec -T postgres psql -U postgres -d hammerspace
+docker compose exec node npm run --silent admin:create-initial | sqlite3 data/hammerspace.db
 ```
 
 Useful npm scripts:
@@ -82,12 +82,9 @@ Useful npm scripts:
 Copy `.env.example` and set these values for both development and production:
 
 - `NODE_ENV`
-- `DB_USER`
-- `DB_PASSWORD`
-- `DB_NAME`
-- `DB_PORT`
 - `APP_PORT`
-- `DATABASE_URL`
+- `DATABASE_PATH` (absolute path to the SQLite database file; in production
+  this must be outside the install directory, e.g. `/var/lib/hammerspace/www.db`)
 - `AUTH_JWT_SECRET`
 - `LOGIN_TOKEN_SECRET`
 - `PUBLIC_RP_ID` (WebAuthn relying-party ID / domain)
@@ -156,16 +153,18 @@ Each release unpacks flat into its install directory, so an installed environmen
 └── ecosystem.config.cjs # preserved across releases
 ```
 
+Everything else in the install directory is deleted on every release, so each environment's SQLite database lives outside it, in `/var/lib/hammerspace/` (`beta.db` / `www.db`), pointed to by `DATABASE_PATH` in that environment's `.env`. The install scripts refuse to run if `DATABASE_PATH` is unset, relative, or inside the install directory.
+
 `scripts/vps-install.sh` / `scripts/vps-first-install.sh` never delete an existing `ecosystem.config.cjs` inside the install directory, and will use it (via `pm2 start ecosystem.config.cjs --only <name>`) if present, falling back to a plain `pm2 start node --name <name> --cwd <install-dir>/standalone -- server.js` otherwise.
 
 ### Initial VPS install
 
-1. Install Node.js 26+, npm, PostgreSQL client tools, unzip, curl, nginx, and PM2.
-2. Create both app directories, e.g.:
+1. Install Node.js 26+, npm, the `sqlite3` CLI, unzip, curl, nginx, and PM2.
+2. Create both app directories and the database directory, e.g.:
 
    ```bash
-   sudo mkdir -p /var/www/beta.hammerspace.co.uk /var/www/www.hammerspace.co.uk
-   sudo chown "$USER" /var/www/beta.hammerspace.co.uk /var/www/www.hammerspace.co.uk
+   sudo mkdir -p /var/www/beta.hammerspace.co.uk /var/www/www.hammerspace.co.uk /var/lib/hammerspace
+   sudo chown "$USER" /var/www/beta.hammerspace.co.uk /var/www/www.hammerspace.co.uk /var/lib/hammerspace
    ```
 
 3. Copy the matching ecosystem file into each install dir:
@@ -175,7 +174,7 @@ Each release unpacks flat into its install directory, so an installed environmen
    cp deploy/pm2/ecosystem.prod.config.cjs /var/www/www.hammerspace.co.uk/ecosystem.config.cjs
    ```
 
-4. Place each environment's `.env` file at `/var/www/beta.hammerspace.co.uk/.env` and `/var/www/www.hammerspace.co.uk/.env` respectively. Each `.env` must set its own `DATABASE_URL` and `PUBLIC_APP_URL`/`PUBLIC_SITE_URL`/`PUBLIC_RP_ID` (matching that environment's domain). Do **not** set `PORT` in `.env` — it's hardcoded in each `ecosystem.config.cjs` (3000 for beta, 3001 for prod) so the two apps can never accidentally collide.
+4. Place each environment's `.env` file at `/var/www/beta.hammerspace.co.uk/.env` and `/var/www/www.hammerspace.co.uk/.env` respectively. Each `.env` must set its own `DATABASE_PATH` (`/var/lib/hammerspace/beta.db` / `/var/lib/hammerspace/www.db`) and `PUBLIC_APP_URL`/`PUBLIC_SITE_URL`/`PUBLIC_RP_ID` (matching that environment's domain). Do **not** set `PORT` in `.env` — it's hardcoded in each `ecosystem.config.cjs` (3000 for beta, 3001 for prod) so the two apps can never accidentally collide.
 5. Set up nginx (see below).
 6. Download the release zip from the GitHub release page and, for each environment, run:
 
@@ -184,7 +183,14 @@ Each release unpacks flat into its install directory, so an installed environmen
    bash scripts/vps-first-install.sh <release-zip-url> /var/www/www.hammerspace.co.uk www-hammerspace /var/www/www.hammerspace.co.uk/.env
    ```
 
-   This unpacks the release, runs Prisma migrations, and starts the app under PM2 using the environment's `ecosystem.config.cjs`.
+   This unpacks the release, runs Prisma migrations (creating the SQLite database if it doesn't exist), and starts the app under PM2 using the environment's `ecosystem.config.cjs`.
+
+   Then switch each database to WAL mode, which lets the site keep reading while the admin writes. This is stored in the database file, so it only needs doing once:
+
+   ```bash
+   sqlite3 /var/lib/hammerspace/beta.db 'PRAGMA journal_mode=WAL;'
+   sqlite3 /var/lib/hammerspace/www.db 'PRAGMA journal_mode=WAL;'
+   ```
 
 7. Persist PM2 across reboots:
 
@@ -250,7 +256,7 @@ only one assets vhost) while keeping separate databases - each environment's
 
 ### PM2
 
-Each environment has its own `ecosystem.config.cjs` (see `deploy/pm2/`), naming the PM2 app (`beta-hammerspace` / `www-hammerspace`) and pointing `cwd` at that environment's `standalone/` directory with `script: "server.js"`. Actual secrets (`DATABASE_URL`, `AUTH_JWT_SECRET`, `PORT`, etc.) live in each environment's `.env`, which the install scripts source into the shell before starting/restarting PM2.
+Each environment has its own `ecosystem.config.cjs` (see `deploy/pm2/`), naming the PM2 app (`beta-hammerspace` / `www-hammerspace`) and pointing `cwd` at that environment's `standalone/` directory with `script: "server.js"`. Actual secrets and settings (`DATABASE_PATH`, `AUTH_JWT_SECRET`, etc.) live in each environment's `.env`, which the install scripts source into the shell before starting/restarting PM2.
 
 Useful PM2 commands:
 
@@ -271,6 +277,37 @@ pm2 startup
 
 Run migrations during every release install before restarting the app.
 
+### Backups
+
+Each environment's whole database is the one file at `DATABASE_PATH`. Don't just `cp` it while the app is running (in WAL mode, recent writes may still be in the `-wal` file); use SQLite's online backup instead, e.g. from a nightly cron job:
+
+```bash
+sqlite3 /var/lib/hammerspace/www.db ".backup '/var/backups/hammerspace/www-$(date +%F).db'"
+```
+
+### Postgres → SQLite cutover (one-off)
+
+Environments installed before the switch to SQLite still have their data in Postgres. Move each one over once, beta first, then www:
+
+1. Create `/var/lib/hammerspace` (see "Initial VPS install") and install the `sqlite3` CLI.
+2. In the environment's `.env`, rename `DATABASE_URL` to `SOURCE_DATABASE_URL` and add `DATABASE_PATH`, e.g. `DATABASE_PATH=/var/lib/hammerspace/beta.db`.
+3. Install the first SQLite release as usual with `scripts/vps-install.sh`. This creates an empty, migrated database and restarts the app on it, so the site is briefly empty.
+4. Copy the data across, then restart:
+
+   ```bash
+   cd /var/www/beta.hammerspace.co.uk
+   set -a; . .env; set +a
+   node scripts/migrate-postgres-to-sqlite.ts
+   sqlite3 "$DATABASE_PATH" 'PRAGMA journal_mode=WAL;'
+   pm2 restart beta-hammerspace --update-env
+   ```
+
+   The script refuses to run if the SQLite database already has data, and prints how many rows it copied per table.
+
+5. Check the site, the admin login and a passkey sign-in.
+
+Once both environments are verified, Postgres can be uninstalled, and the copy script, `pg` dependency and `SOURCE_DATABASE_URL` removed.
+
 ### Creating the initial admin user
 
 `npm run admin:create-initial` doesn't touch the database itself — it only needs Node's built-in `crypto` and your `.env` values (`LOGIN_TOKEN_SECRET`/`AUTH_JWT_SECRET`/`AUTH_SECRET` and `PUBLIC_APP_URL`), so it works even on a production install where only the built app is deployed (no Prisma generated client required). It prints an `INSERT` statement for the `User` table to stdout, and the one-time admin login URL to stderr.
@@ -278,14 +315,14 @@ Run migrations during every release install before restarting the app.
 Development (via Docker Compose):
 
 ```bash
-docker compose exec node npm run --silent admin:create-initial | docker compose exec -T postgres psql -U postgres -d hammerspace
+docker compose exec node npm run --silent admin:create-initial | sqlite3 data/hammerspace.db
 ```
 
 Production (on the VPS, from the install directory):
 
 ```bash
 set -a; . .env; set +a
-npm run --silent admin:create-initial | psql "$DATABASE_URL"
+npm run --silent admin:create-initial | sqlite3 "$DATABASE_PATH"
 ```
 
 The login URL is printed to the terminal — copy it to log in as the new admin. Re-running the script will always print a new user/token, so only insert the SQL once.
