@@ -33,6 +33,33 @@ export async function storeChallenge(
 	});
 }
 
+// At sign-in we don't know which user is signing in until their passkey
+// responds, so the challenge is stored on every user who has a passkey.
+// verify-authenticate then checks it against the passkey owner's copy.
+export async function storeSignInChallenge(challenge: string): Promise<void> {
+	await prisma.user.updateMany({
+		where: { credentials: { some: {} } },
+		data: {
+			webauthnChallenge: challenge,
+			webauthnChallengeExpiresAt: new Date(
+				nowDate().getTime() + CHALLENGE_EXPIRATION_MS,
+			),
+		},
+	});
+}
+
+// Clears a used sign-in challenge from every user it was stored on, so it
+// can't be replayed against another user's passkey.
+export async function clearSignInChallenge(challenge: string): Promise<void> {
+	await prisma.user.updateMany({
+		where: { webauthnChallenge: challenge },
+		data: {
+			webauthnChallenge: null,
+			webauthnChallengeExpiresAt: null,
+		},
+	});
+}
+
 export async function getAndValidateChallenge(
 	userId: string,
 ): Promise<string | null> {

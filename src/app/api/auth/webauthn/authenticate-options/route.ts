@@ -1,38 +1,31 @@
 import { generateAuthenticationOptions } from "@simplewebauthn/server";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { credentialIdToBase64url, storeChallenge } from "@/lib/webauthn";
+import { credentialIdToBase64url, storeSignInChallenge } from "@/lib/webauthn";
 
 export async function POST() {
 	try {
-		const user = await prisma.user.findFirst({
-			include: {
-				credentials: {
-					select: {
-						credentialId: true,
-						transports: true,
-					},
-				},
-			},
+		// Offer every registered passkey, whichever user it belongs to.
+		const credentials = await prisma.webAuthnCredential.findMany({
+			select: { credentialId: true },
 		});
 
-		if (!user) {
-			return NextResponse.json({ error: "No user found" }, { status: 400 });
+		if (credentials.length === 0) {
+			return NextResponse.json(
+				{ error: "No passkeys registered" },
+				{ status: 400 },
+			);
 		}
-
-		// Allow authentication even with no credentials (first-time setup)
-		const allowCredentials = user.credentials.map((cred) => ({
-			id: credentialIdToBase64url(cred.credentialId),
-		}));
 
 		const options = await generateAuthenticationOptions({
 			rpID: process.env.PUBLIC_RP_ID || "localhost",
 			userVerification: "preferred",
-			allowCredentials:
-				allowCredentials.length > 0 ? allowCredentials : undefined,
+			allowCredentials: credentials.map((cred) => ({
+				id: credentialIdToBase64url(cred.credentialId),
+			})),
 		});
 
-		await storeChallenge(user.id, options.challenge);
+		await storeSignInChallenge(options.challenge);
 
 		return NextResponse.json(options);
 	} catch (error) {
