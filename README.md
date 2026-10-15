@@ -62,7 +62,7 @@ docker compose exec node npm run build
 docker compose exec node npm run lint
 docker compose exec node npm run db:push
 docker compose exec node npm run db:migrate
-docker compose exec node npm run --silent admin:create-initial | sqlite3 data/hammerspace.db
+docker compose exec node npm run --silent admin:create-initial | sqlite3 build/hammerspace.db
 ```
 
 Useful npm scripts:
@@ -315,7 +315,7 @@ Once both environments are verified, Postgres can be uninstalled, and the copy s
 Development (via Docker Compose):
 
 ```bash
-docker compose exec node npm run --silent admin:create-initial | sqlite3 data/hammerspace.db
+docker compose exec node npm run --silent admin:create-initial | sqlite3 build/hammerspace.db
 ```
 
 Production (on the VPS, from the install directory):

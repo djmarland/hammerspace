@@ -6,8 +6,8 @@ services:
     container_name: hammerspace-app
     environment:
       NODE_ENV: ${NODE_ENV:-development}
-      # Lives in ./data/ via the .:/app bind mount (gitignored).
-      DATABASE_PATH: /app/data/hammerspace.db
+      # Lives in ./build/ via the .:/app bind mount (gitignored).
+      DATABASE_PATH: /app/build/hammerspace.db
       AUTH_SECRET: ${AUTH_SECRET:-your-secret-key-change-in-production}
       CI: "true"
       PORT: ${APP_PORT:-3000}
@@ -17,6 +17,9 @@ services:
       - "${APP_PORT:-3000}:3000"
     volumes:
       - .:/app
+      # Keep the image's Linux node_modules instead of the host's, which
+      # have macOS builds of native modules (e.g. better-sqlite3).
+      - /app/node_modules
       - assets_data:/var/www/assets.hammerspace.co.uk
     networks:
       - hammerspace-network

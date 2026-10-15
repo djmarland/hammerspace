@@ -6,7 +6,7 @@ next-env.d.ts
 *.tsbuildinfo
 node_modules
 src/generated
-data/
+build/
 *.db
 *.db-journal
 *.db-wal
