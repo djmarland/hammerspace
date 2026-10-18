@@ -1,8 +1,5 @@
-.slugCell {
-	color: var(--piko-color-text-subtle);
-	font-family: monospace;
-}
-
-.statusRow {
-	background-color: var(--piko-color-state-background);
+.cards {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+	gap: var(--piko-gap-stack);
 }

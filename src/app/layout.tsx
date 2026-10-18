@@ -5,6 +5,14 @@ import "@/styles/globals.css";
 
 export const metadata: Metadata = {
 	title: "Hammerspace",
+	icons: {
+		// favicon.ico must declare a fixed size, or Chrome prefers it over the SVG.
+		icon: [
+			{ url: "/favicon.ico", sizes: "32x32" },
+			{ url: "/icon.svg", type: "image/svg+xml" },
+		],
+		apple: "/apple-touch-icon.png",
+	},
 	alternates: {
 		types: {
 			"application/rss+xml": [{ url: "/feed.xml", title: "RSS" }],

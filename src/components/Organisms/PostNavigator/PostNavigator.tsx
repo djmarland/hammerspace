@@ -4,6 +4,7 @@ import styles from "./PostNavigator.module.css";
 import Link from "next/link";
 import { cx } from "@/components/cx.ts";
 import { PublicationDate } from "@/components/Atoms/PublicationDate.tsx";
+import { RssIcon } from "@/components/Icons/RssIcon.tsx";
 
 export const PostNavigator = async ({
 	currentPost,
@@ -16,31 +17,46 @@ export const PostNavigator = async ({
 	]);
 
 	return (
-		<nav className={styles.postNavigator}>
-			{previousPost && (
+		<aside className={styles.wrap}>
+			<nav className={styles.postNavigator}>
+				{previousPost && (
+					<Link
+						href={`/posts/${previousPost.slug}`}
+						className={cx(styles.link, styles.arrow, styles.prev)}
+					>
+						{previousPost.title}
+						<PublicationDate
+							date={previousPost.publishedAt}
+							className="piko-t-meta"
+						/>
+					</Link>
+				)}
+				{nextPost && (
+					<Link
+						href={`/posts/${nextPost.slug}`}
+						className={cx(styles.link, styles.arrow, styles.next)}
+					>
+						{nextPost.title}
+						<PublicationDate
+							date={nextPost.publishedAt}
+							className="piko-t-meta"
+						/>
+					</Link>
+				)}
 				<Link
-					href={`/posts/${previousPost.slug}`}
-					className={cx(styles.link, styles.prev)}
+					href="/posts"
+					className={cx(styles.link, styles.all, "piko-icon-link")}
 				>
-					{previousPost.title}
-					<PublicationDate
-						date={previousPost.publishedAt}
-						className="piko-t-meta"
-					/>
+					All Posts
 				</Link>
-			)}
-			{nextPost && (
-				<Link
-					href={`/posts/${nextPost.slug}`}
-					className={cx(styles.link, styles.next)}
+				<a
+					href="/feed.xml"
+					className={cx(styles.link, styles.feed, "piko-icon-link")}
 				>
-					{nextPost.title}
-					<PublicationDate
-						date={nextPost.publishedAt}
-						className="piko-t-meta"
-					/>
-				</Link>
-			)}
-		</nav>
+					<RssIcon />
+					RSS feed
+				</a>
+			</nav>
+		</aside>
 	);
 };

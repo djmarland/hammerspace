@@ -325,6 +325,30 @@ export async function getAllPostsForAdmin(filters: AdminPostFilters = {}) {
 	} satisfies AdminPostsResult;
 }
 
+export async function getAdminDashboardPosts(recentLimit = 4) {
+	await requireAdminSession();
+	const now = nowDate();
+
+	const [inProgress, recentlyPublished] = await Promise.all([
+		prisma.post.findMany({
+			where: { OR: [{ publishedAt: null }, { publishedAt: { gt: now } }] },
+			orderBy: [{ updatedAt: "desc" }],
+			select: adminPostSelect,
+		}),
+		prisma.post.findMany({
+			where: buildDiscoverablePostWhere(now),
+			orderBy: orderPostsByRecency(),
+			take: recentLimit,
+			select: adminPostSelect,
+		}),
+	]);
+
+	return {
+		inProgress: inProgress.map(mapAdminPost),
+		recentlyPublished: recentlyPublished.map(mapAdminPost),
+	};
+}
+
 export async function getPostById(postId: string) {
 	await requireAdminSession();
 	const post = await prisma.post.findUnique({

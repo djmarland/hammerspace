@@ -6,6 +6,7 @@ import ReadingTime from "@/components/Blog/ReadingTime";
 import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate";
 import { getLatestPublicPosts } from "@/lib/posts";
 import styles from "./page.module.css";
+import { RssIcon } from "@/components/Icons/RssIcon.tsx";
 
 export const dynamic = "force-dynamic";
 
@@ -39,7 +40,10 @@ export default async function HomePage() {
 					</p>
 					<nav className={styles.actions}>
 						<Link href="/posts">Browse archive</Link>
-						<Link href="/feed.xml">RSS feed</Link>
+						<a href="/feed.xml" className="piko-icon-link">
+							<RssIcon />
+							RSS feed
+						</a>
 					</nav>
 				</header>
 			}

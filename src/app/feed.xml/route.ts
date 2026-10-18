@@ -1,6 +1,7 @@
 import { renderMarkdown } from "@/lib/markdown";
 import { getPublicSyndicationPosts } from "@/lib/posts";
 import { absoluteUrl, site } from "@/lib/site";
+import { socials } from "@/lib/socials";
 
 function escapeXml(value: string) {
 	return value.replace(/[<>&'"]/g, (character) => {
@@ -16,6 +17,16 @@ function wrapCdata(value: string) {
 	return `<![CDATA[${value.replaceAll("]]>", "]]]]><![CDATA[>")}]]>`;
 }
 
+function renderSocialsHtml() {
+	const items = socials
+		.map(
+			(social) =>
+				`<li>${escapeXml(social.name)}: <a href="${escapeXml(social.href)}">${escapeXml(social.handle)}</a></li>`,
+		)
+		.join("");
+	return `<hr><p><strong>Find me in these places:</strong></p><ul>${items}</ul>`;
+}
+
 export const revalidate = 600;
 
 export async function GET(request: Request) {
@@ -24,6 +35,7 @@ export async function GET(request: Request) {
 	const archive = await getPublicSyndicationPosts({ page });
 	const currentPageHref =
 		archive.page > 1 ? `/feed.xml?page=${archive.page}` : "/feed.xml";
+	const socialsHtml = renderSocialsHtml();
 	const items = archive.posts
 		.map((post) => {
 			const postUrl = absoluteUrl(`/posts/${post.slug}`);
@@ -31,7 +43,7 @@ export async function GET(request: Request) {
 	<title>${escapeXml(post.title)}</title>
 	<link>${postUrl}</link>
 	<guid isPermaLink="true">${postUrl}</guid>
-	<content:encoded>${wrapCdata(renderMarkdown(post.content))}</content:encoded>
+	<content:encoded>${wrapCdata(renderMarkdown(post.content) + socialsHtml)}</content:encoded>
 	<pubDate>${post.publishedAt!.toUTCString()}</pubDate>
 </item>`;
 		})

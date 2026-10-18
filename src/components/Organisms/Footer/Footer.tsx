@@ -1,23 +1,34 @@
 import Link from "next/link";
 import { cx } from "@/components/cx";
 import styles from "./Footer.module.css";
+import { RssIcon } from "@/components/Icons/RssIcon.tsx";
 
 export default function Footer() {
 	return (
-		<footer className={cx(styles.footer, "piko-prose")}>
-			<p>
-				&copy; 2011 - {new Date().getFullYear()} hammerspace.co.uk /{" "}
-				<Link href="/piko">Piko design system</Link> /{" "}
-				<Link href="/admin">Admin</Link>
-			</p>
+		<footer className={cx(styles.footer)}>
+			<ul className={styles.matter}>
+				<li>&copy; 2011 - {new Date().getFullYear()} hammerspace.co.uk</li>
+				<li>
+					<Link href="/feed.xml" className="piko-icon-link">
+						<RssIcon />
+						RSS
+					</Link>
+				</li>
+				<li>
+					<Link href="/about">About me</Link>
+				</li>
+				<li>
+					<Link href="/piko">Piko design system</Link>
+				</li>
+				<li>
+					<Link href="/admin">Admin</Link>
+				</li>
+			</ul>
 			<p>
 				<small>
 					The opinions expressed on this site are my own and do not necessarily
 					reflect the views of my employers, past or present.
-				</small>
-			</p>
-			<p>
-				<small>
+					<br />
 					Look Ma, no cookie banner. Anything stored in your browser is purely
 					functional. No information is stored about you or shared with anyone.
 					Your IP address may be used to estimate your location to see which

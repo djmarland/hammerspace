@@ -6,6 +6,7 @@ import PaginationNav from "@/components/PaginationNav";
 import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate";
 import { getPublicArchive } from "@/lib/posts";
 import styles from "./page.module.css";
+import { RssIcon } from "@/components/Icons/RssIcon.tsx";
 
 export const revalidate = 600;
 
@@ -29,7 +30,8 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
 		<SiteTemplate
 			header={
 				<SidePageHeader title="Archive">
-					<Link href="/feed.xml" className="actionLink">
+					<Link href="/feed.xml" className="piko-icon-link">
+						<RssIcon />
 						RSS feed
 					</Link>
 				</SidePageHeader>

@@ -16,7 +16,8 @@
 		"db:migrate": "prisma migrate dev",
 		"db:seed": "node --import tsx prisma/seed.ts",
 		"db:studio": "prisma studio",
-		"admin:create-initial": "node --import tsx scripts/create-initial-admin.ts"
+		"admin:create-initial": "node --import tsx scripts/create-initial-admin.ts",
+		"icons:generate": "node --import tsx scripts/generate-icons.ts"
 	},
 	"dependencies": {
 		"@prisma/adapter-better-sqlite3": "^7.10.0",

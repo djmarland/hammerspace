@@ -4,3 +4,17 @@
 	background: var(--piko-color-background-secondary);
 	padding: var(--piko-unit);
 }
+.matter {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--piko-unit-half);
+	& > * {
+		display: flex;
+		align-items: center;
+	}
+	& > :not(:first-child):before {
+		content: " /";
+		margin-right: var(--piko-unit-half);
+	}
+}

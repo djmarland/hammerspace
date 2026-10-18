@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { getAdminSessionUser } from "@/lib/admin-auth";
-import LogoutButton from "@/components/Organisms/LogoutButton/LogoutButton";
+import AdminPostCard from "@/components/Admin/AdminPostCard";
 import PasskeySetup from "@/components/PasskeySetup";
-import { cx } from "@/components/cx";
+import { getAdminDashboardPosts } from "@/lib/posts";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -25,14 +24,10 @@ export default async function AdminDashboardPage({
 
 	const { setupPasskey: setupPasskeyParam } = await searchParams;
 	const setupPasskey = setupPasskeyParam === "1";
+	const { inProgress, recentlyPublished } = await getAdminDashboardPosts();
 
 	return (
 		<div className="piko-page-container piko-vstack">
-			<header className={cx(styles.header, "piko-vstack--small")}>
-				<h1 className="piko-t-h1">Admin Dashboard</h1>
-				<p>Welcome, {session.name || "Admin"}</p>
-			</header>
-
 			{setupPasskey && !session.hasPasskey && (
 				<p data-state="info" className="piko-state__box">
 					Please add your passkey now. Your login token will be invalidated
@@ -42,18 +37,30 @@ export default async function AdminDashboardPage({
 
 			<PasskeySetup hasPasskey={session.hasPasskey} />
 
-			<nav className={cx(styles.nav, "piko-hstack")}>
-				<Link href="/admin/posts" className="piko-button">
-					Manage Posts
-				</Link>
-				<Link href="/admin/posts/new" className="piko-button">
-					New Post
-				</Link>
-				<LogoutButton />
-			</nav>
+			<section className="piko-vstack">
+				<h2 className="piko-t-h2">In progress</h2>
+				{inProgress.length === 0 ? (
+					<p>Nothing in progress.</p>
+				) : (
+					<div className={styles.cards}>
+						{inProgress.map((post) => (
+							<AdminPostCard key={post.id} post={post} />
+						))}
+					</div>
+				)}
+			</section>
 
-			<section>
-				<p>Manage drafts, publish posts, and edit existing content.</p>
+			<section className="piko-vstack">
+				<h2 className="piko-t-h2">Recently Published</h2>
+				{recentlyPublished.length === 0 ? (
+					<p>No posts published yet.</p>
+				) : (
+					<div className={styles.cards}>
+						{recentlyPublished.map((post) => (
+							<AdminPostCard key={post.id} post={post} />
+						))}
+					</div>
+				)}
 			</section>
 		</div>
 	);

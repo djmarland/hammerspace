@@ -10,6 +10,42 @@
 		var(--piko-palette-dynamic-8) 10%,
 		var(--piko-color-background) 90%
 	);
+	/* Mesh blobs: dynamic palette steps (light end in light mode, dark end in dark mode); the subtle ones are hue-shifted */
+	--mesh-main: light-dark(
+		var(--piko-palette-dynamic-3),
+		var(--piko-palette-dynamic-9)
+	);
+	--mesh-deep: light-dark(
+		var(--piko-palette-dynamic-4),
+		var(--piko-palette-dynamic-8)
+	);
+	--mesh-mid: light-dark(
+		var(--piko-palette-dynamic-4),
+		var(--piko-palette-dynamic-8)
+	);
+	--mesh-soft: light-dark(
+		var(--piko-palette-dynamic-3),
+		var(--piko-palette-dynamic-9)
+	);
+	--mesh-pale: light-dark(
+		var(--piko-palette-dynamic-2),
+		var(--piko-palette-dynamic-9)
+	);
+	--mesh-shift-warm: oklch(from var(--mesh-mid) l c calc(h + 35));
+	--mesh-shift-cool: oklch(from var(--mesh-pale) l c calc(h - 30));
+
+	background-image:
+		radial-gradient(at 76% 56%, var(--mesh-main) 0px, transparent 50%),
+		radial-gradient(at 3% 59%, var(--mesh-soft) 0px, transparent 50%),
+		radial-gradient(at 23% 80%, var(--mesh-mid) 0px, transparent 50%),
+		radial-gradient(at 78% 67%, var(--mesh-pale) 0px, transparent 50%),
+		radial-gradient(at 26% 27%, var(--mesh-deep) 0px, transparent 50%),
+		radial-gradient(at 64% 96%, var(--mesh-shift-warm) 0px, transparent 50%),
+		radial-gradient(at 93% 45%, var(--mesh-shift-cool) 0px, transparent 50%);
+	background-attachment: fixed;
+	background-repeat: no-repeat;
+	background-position: left top;
+	background-size: calc(100vw / 3) 100vh;
 	overflow: clip;
 }
 
@@ -38,6 +74,11 @@
 	.siteTemplate {
 		grid-template-columns: 1fr;
 		grid-template-rows: auto 1fr;
+	}
+
+	.siteTemplate > header {
+		background-attachment: scroll;
+		background-size: 100% 100%;
 	}
 
 	.headerContent {

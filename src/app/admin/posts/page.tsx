@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getAdminSessionUser } from "@/lib/admin-auth";
 import { getAllPostsForAdmin } from "@/lib/posts";
-import { isPostPublic } from "@/lib/blog";
+import AdminPostCard from "@/components/Admin/AdminPostCard";
 import PaginationNav from "@/components/PaginationNav";
 import styles from "./page.module.css";
 
@@ -67,75 +66,11 @@ export default async function AdminPostsPage({
 				</p>
 			) : (
 				<>
-					<table>
-						<thead>
-							<tr>
-								<th>Title</th>
-								<th>Slug</th>
-								<th>Status</th>
-								<th>Publication Datetime</th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody>
-							{result.posts.map((post) => {
-								const state = post.publishedAt
-									? isPostPublic(post.publishedAt)
-										? undefined
-										: "warning"
-									: "error";
-								const statusLabel = post.publishedAt
-									? isPostPublic(post.publishedAt)
-										? "Published"
-										: "Scheduled"
-									: "Draft";
-
-								return (
-									<tr
-										key={post.id}
-										className={styles.statusRow}
-										data-state={state}
-									>
-										<td>
-											<Link href={`/admin/posts/${post.id}/edit`}>
-												{post.title}
-											</Link>
-										</td>
-										<td className={styles.slugCell}>{post.slug}</td>
-										<td>{statusLabel}</td>
-										<td>
-											{post.publishedAt
-												? new Date(post.publishedAt).toLocaleDateString(
-														"en-US",
-														{
-															year: "numeric",
-															month: "short",
-															day: "numeric",
-															hour: "2-digit",
-															minute: "2-digit",
-															hour12: false,
-														},
-													)
-												: "-"}
-										</td>
-										<td>
-											<Link href={`/posts/${post.slug}`}>
-												{post.publishedAt ? "View" : "Preview"}
-											</Link>
-											{!post.publishedAt && (
-												<>
-													{" "}
-													<Link href={`/admin/posts/${post.id}/publish`}>
-														Publish
-													</Link>
-												</>
-											)}
-										</td>
-									</tr>
-								);
-							})}
-						</tbody>
-					</table>
+					<div className={styles.cards}>
+						{result.posts.map((post) => (
+							<AdminPostCard key={post.id} post={post} headingLevel="h2" />
+						))}
+					</div>
 
 					<PaginationNav
 						page={result.page}
