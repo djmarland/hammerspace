@@ -7,7 +7,9 @@ import { isPostPublic } from "@/lib/blog";
 import { getPostBySlug } from "@/lib/posts";
 import styles from "./page.module.css";
 
-export const revalidate = 600;
+// Reads the DB on every request: a static prerender would query it at build
+// time (where there is no real database) and bake that result in.
+export const dynamic = "force-dynamic";
 
 // Slug of the post whose content is rendered on the about page.
 const ABOUT_POST_SLUG = "about-me-10-2026";

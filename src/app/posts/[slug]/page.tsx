@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { cache } from "react";
 import { notFound } from "next/navigation";
+import CoverBackdrop from "@/components/Blog/CoverBackdrop";
 import PostBody from "@/components/Blog/PostBody";
 import SidePageHeader from "@/components/Blog/SidePageHeader";
 import ReadingTime from "@/components/Blog/ReadingTime";
 import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate";
 import { isPostPublic } from "@/lib/blog";
 import { getPostBySlug } from "@/lib/posts";
+import { absoluteUrl, site } from "@/lib/site";
 import styles from "./page.module.css";
 import { PostNavigator } from "@/components/Organisms/PostNavigator/PostNavigator.tsx";
 import { PublicationDate } from "@/components/Atoms/PublicationDate.tsx";
@@ -32,17 +34,28 @@ export async function generateMetadata({
 		return { title: "Post not found | Hammerspace" };
 	}
 
+	const url = absoluteUrl(`/posts/${post.slug}`);
+	// A child segment's openGraph/twitter replace the parent's wholesale, so
+	// everything wanted in the tags has to be set here.
+	const images = post.coverAsset
+		? [{ url: post.coverAsset.url, alt: post.coverAsset.alt || post.title }]
+		: undefined;
+
 	return {
 		title: `${post.title} | Hammerspace`,
-		alternates: {
-			canonical: `https://www.hammerspace.com/posts/${post.slug}`,
-		},
+		alternates: { canonical: url },
 		openGraph: {
 			type: "article",
 			title: post.title,
-			images: post.coverAsset
-				? [{ url: post.coverAsset.url, alt: post.coverAsset.alt || post.title }]
-				: undefined,
+			url,
+			siteName: site.name,
+			publishedTime: post.publishedAt?.toISOString(),
+			images,
+		},
+		twitter: {
+			card: images ? "summary_large_image" : "summary",
+			title: post.title,
+			images,
 		},
 	};
 }
@@ -58,6 +71,9 @@ export default async function PostPage({ params }: PostPageProps) {
 	return (
 		<article>
 			<SiteTemplate
+				backdrop={
+					post.coverAsset && <CoverBackdrop coverAsset={post.coverAsset} />
+				}
 				header={
 					<SidePageHeader title={post.title}>
 						<div className={styles.metaRow}>

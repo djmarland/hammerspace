@@ -60,12 +60,16 @@
 	align-content: center;
 }
 
+/* Padding (not margin) so an absolutely positioned backdrop can start at the very top. */
 .contentColumn {
-	margin-top: 33vh;
+	position: relative;
+	padding-top: 33vh;
 	overflow: clip;
 }
 
 .contentColumn > main {
+	position: relative;
+	z-index: 1;
 	max-width: 75ch;
 	padding: var(--piko-unit-double);
 }
@@ -92,6 +96,6 @@
 	}
 
 	.contentColumn {
-		margin-top: 0;
+		padding-top: 0;
 	}
 }

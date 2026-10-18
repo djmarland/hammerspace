@@ -1,10 +1,14 @@
 import type { ReactNode } from "react";
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
+import { site } from "@/lib/site";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
+	metadataBase: new URL(site.url),
 	title: "Hammerspace",
+	openGraph: { siteName: site.name },
+	twitter: { card: "summary" },
 	icons: {
 		// favicon.ico must declare a fixed size, or Chrome prefers it over the SVG.
 		icon: [

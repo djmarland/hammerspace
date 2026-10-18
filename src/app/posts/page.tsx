@@ -41,11 +41,13 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
 				<p className={styles.filterMeta}>
 					Showing {archive.posts.length} of {archive.totalCount} posts.
 				</p>
-				<div className={styles.list}>
+				<ol className={styles.list}>
 					{archive.posts.map((post) => (
-						<PostCard key={post.id} post={post} />
+						<li key={post.id}>
+							<PostCard post={post} />
+						</li>
 					))}
-				</div>
+				</ol>
 				<PaginationNav
 					page={archive.page}
 					totalPages={archive.totalPages}

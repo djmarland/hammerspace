@@ -1,5 +1,39 @@
-.image {
-	width: 100%;
-	height: auto;
-	object-fit: cover;
+.card {
+	display: grid;
+	gap: var(--piko-unit-half);
+	/* Stroke colour for text over a cover: match the card, not the page. */
+	--cover-stroke: var(--piko-color-background-secondary);
+}
+
+.card > p,
+.card > h2,
+.card > h3 {
+	margin: 0;
+}
+
+/* The whole card is the link: stretch the title link over it. */
+.link {
+	text-decoration: none;
+}
+
+.link::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+}
+
+.link:focus-visible {
+	outline: none;
+}
+
+.link:focus-visible::after {
+	outline: 2px solid currentColor;
+	outline-offset: -4px;
+}
+
+/* Keep the text clear of the cut top-right corner. */
+.card {
+	padding-block-start: calc(
+		var(--piko-unit-double) + var(--piko-space-panel-padding)
+	);
 }

@@ -34,7 +34,12 @@ export interface PublicPostSummary {
 	status: "DRAFT" | "PUBLISHED";
 	statusLabel: string;
 	publishedAt: Date | null;
-	coverAsset: { url: string; alt: string } | null;
+	coverAsset: {
+		url: string;
+		alt: string;
+		mimeType: string;
+		size: number;
+	} | null;
 	wordCount: number;
 	readingTimeMinutes: number;
 }
@@ -82,7 +87,9 @@ const publicPostSelect = {
 	slug: true,
 	content: true,
 	publishedAt: true,
-	coverAsset: { select: { filename: true, alt: true } },
+	coverAsset: {
+		select: { filename: true, alt: true, mimeType: true, size: true },
+	},
 	createdAt: true,
 	updatedAt: true,
 } satisfies Prisma.PostSelect;
@@ -125,6 +132,8 @@ function mapPublicPost(record: PublicPostRecord): PublicPostSummary {
 			? {
 					url: buildPublicUrl(record.coverAsset.filename),
 					alt: record.coverAsset.alt,
+					mimeType: record.coverAsset.mimeType,
+					size: record.coverAsset.size,
 				}
 			: null,
 		wordCount: countWords(record.content),

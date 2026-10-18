@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Logo from "@/components/Atoms/Logo/Logo";
 import PostBody from "@/components/Blog/PostBody";
+import CoverHeading from "@/components/Blog/CoverHeading";
 import ReadingTime from "@/components/Blog/ReadingTime";
 import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate";
 import { getLatestPublicPosts } from "@/lib/posts";
@@ -53,7 +54,10 @@ export default async function HomePage() {
 					<div className={styles.postList}>
 						{posts.map((post) => (
 							<article key={post.id} className={styles.post}>
-								<header className={styles.postHeader}>
+								<CoverHeading
+									coverAsset={post.coverAsset}
+									className={styles.postHeader}
+								>
 									<h2 className={`${styles.postTitle} piko-t-h2`}>
 										<Link href={`/posts/${post.slug}`}>{post.title}</Link>
 									</h2>
@@ -66,7 +70,7 @@ export default async function HomePage() {
 										{" · "}
 										<ReadingTime wordCount={post.wordCount} />
 									</div>
-								</header>
+								</CoverHeading>
 								<PostBody post={post} demoteHeadings />
 							</article>
 						))}

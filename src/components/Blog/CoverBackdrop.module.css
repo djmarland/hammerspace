@@ -1,0 +1,74 @@
+.backdrop {
+	position: absolute;
+	inset: 0 0 auto 0;
+	z-index: 0;
+	height: 55vh;
+	overflow: hidden;
+	pointer-events: none;
+	opacity: light-dark(0.9, 0.7);
+	/* Fade out at the bottom, and dissolve into the header column on the left. */
+	mask-image:
+		linear-gradient(to bottom, #000 20%, transparent 85%),
+		linear-gradient(to right, transparent, #000 40%);
+	mask-composite: intersect;
+}
+
+/* Oversized so it can drift down for the parallax without exposing an edge. */
+.image {
+	position: absolute;
+	inset: -25vh 0 0 0;
+	display: block;
+	width: 100%;
+	height: calc(100% + 25vh);
+	object-fit: cover;
+	transform-origin: 50% 0;
+}
+
+@keyframes drift {
+	to {
+		transform: translateY(25vh) scale(1.08);
+		filter: blur(6px);
+	}
+}
+
+@keyframes dissolve {
+	to {
+		opacity: 0;
+	}
+}
+
+@supports (animation-timeline: scroll()) {
+	@media (prefers-reduced-motion: no-preference) {
+		.backdrop,
+		.image {
+			animation-timeline: scroll(root block);
+			animation-range: 0 70vh;
+			animation-fill-mode: both;
+			animation-timing-function: linear;
+		}
+
+		.backdrop {
+			animation-name: dissolve;
+		}
+
+		.image {
+			animation-name: drift;
+		}
+	}
+}
+
+@media (max-width: 56rem) {
+	.backdrop {
+		position: relative;
+		height: auto;
+		aspect-ratio: 16 / 9;
+		mask-image: linear-gradient(to bottom, #000 40%, transparent);
+		animation: none;
+	}
+
+	.image {
+		inset: 0;
+		height: 100%;
+		animation: none;
+	}
+}

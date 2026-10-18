@@ -9,6 +9,7 @@
 		"start:standalone": "node .next/standalone/server.js",
 		"prepare": "husky",
 		"lint": "eslint .",
+		"typecheck": "tsc --noEmit",
 		"format": "prettier --write .",
 		"format:check": "prettier --check .",
 		"generate": "prisma generate",
