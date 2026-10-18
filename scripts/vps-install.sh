@@ -42,6 +42,27 @@ set -a
 . "$env_file"
 set +a
 
+# The SQLite database must live outside the install directory: everything in
+# it except .env and ecosystem.config.cjs is deleted on every release (see
+# the `find ... -exec rm -rf` above). It must also be absolute, because PM2
+# runs the app from standalone/ while Prisma runs from the install root.
+case "${DATABASE_PATH:-}" in
+	"")
+		echo "DATABASE_PATH is not set in $env_file" >&2
+		exit 1
+		;;
+	"$install_dir"/*)
+		echo "DATABASE_PATH ($DATABASE_PATH) must be outside $install_dir, which is wiped on every release" >&2
+		exit 1
+		;;
+	/*) ;;
+	*)
+		echo "DATABASE_PATH ($DATABASE_PATH) must be an absolute path" >&2
+		exit 1
+		;;
+esac
+mkdir -p "$(dirname "$DATABASE_PATH")"
+
 npx prisma migrate deploy
 
 if [[ -f "$install_dir/ecosystem.config.cjs" ]]; then

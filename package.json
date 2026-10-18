@@ -19,15 +19,17 @@
 		"admin:create-initial": "node --import tsx scripts/create-initial-admin.ts"
 	},
 	"dependencies": {
-		"@prisma/adapter-pg": "^7.9.1",
+		"@prisma/adapter-better-sqlite3": "^7.10.0",
 		"@prisma/client": "^7.9.1",
 		"@simplewebauthn/browser": "^14",
 		"@simplewebauthn/server": "^14",
 		"bcryptjs": "^3.0.3",
+		"better-sqlite3": "^12.11.1",
 		"dotenv": "^17.4.2",
 		"marked": "^18",
 		"marked-gfm-heading-id": "^4.1.4",
 		"next": "^16.3.5",
+		"pg": "^8.23.1",
 		"prisma": "^7.9.1",
 		"react": "^19.3.0",
 		"react-dom": "^19.3.0",
@@ -35,6 +37,7 @@
 	},
 	"devDependencies": {
 		"@types/node": "^26.1.2",
+		"@types/pg": "^8.23.1",
 		"@types/react": "^19.3.0",
 		"@types/react-dom": "^19.3.0",
 		"babel-plugin-react-compiler": "^1.0.0",
@@ -65,6 +68,7 @@
 	"allowScripts": {
 		"@prisma/engines@7.10.0": true,
 		"esbuild@0.28.2": true,
-		"prisma@7.10.0": true
+		"prisma@7.10.0": true,
+		"better-sqlite3@12.11.1": true
 	}
 }

@@ -5,7 +5,7 @@ import crypto from "crypto";
 // one-time login URL for it. Run manually against the production database,
 // e.g.:
 //
-//   npm run admin:create-initial | psql "$DATABASE_URL"
+//   npm run admin:create-initial | sqlite3 "$DATABASE_PATH"
 //
 // This intentionally avoids depending on the Prisma generated client, so it
 // works even in environments where only the built app (no `src/generated`)
@@ -46,20 +46,28 @@ function sqlQuote(value: string): string {
 	return `'${value.replace(/'/g, "''")}'`;
 }
 
+// Matches how @prisma/adapter-better-sqlite3 stores DateTime. SQLite's own
+// CURRENT_TIMESTAMP uses a different format ("YYYY-MM-DD HH:MM:SS").
+function sqliteTimestamp(date: Date): string {
+	return date.toISOString().replace("Z", "+00:00");
+}
+
 function main() {
 	const id = crypto.randomUUID();
 	const rawToken = createRawLoginToken();
 	const loginTokenHash = hashLoginToken(rawToken);
 	const loginUrl = `${getAppUrl()}/admin/login?token=${encodeURIComponent(rawToken)}&userId=${encodeURIComponent(id)}`;
 
+	const now = sqlQuote(sqliteTimestamp(new Date()));
+
 	const sql = `INSERT INTO "User" ("id", "loginTokenHash", "name", "createdAt", "updatedAt")
-VALUES (${sqlQuote(id)}, ${sqlQuote(loginTokenHash)}, 'Admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);`;
+VALUES (${sqlQuote(id)}, ${sqlQuote(loginTokenHash)}, 'Admin', ${now}, ${now});`;
 
 	console.log(sql);
 	console.error(""); // blank line separator on stderr, keeps stdout SQL-only
 	console.error(`Login URL (one-time token): ${loginUrl}`);
 	console.error("Run the SQL above against the production database, e.g.:");
-	console.error(`  npm run admin:create-initial | psql "$DATABASE_URL"`);
+	console.error(`  npm run admin:create-initial | sqlite3 "$DATABASE_PATH"`);
 }
 
 main();

@@ -7,6 +7,7 @@ import {
 	clearChallenge,
 	credentialIdFromBase64url,
 	getAndValidateChallenge,
+	serializeTransports,
 } from "@/lib/webauthn";
 
 export async function POST(request: Request) {
@@ -62,7 +63,7 @@ export async function POST(request: Request) {
 				credentialId: credentialIdFromBase64url(body.rawId),
 				credentialPublicKey: Buffer.from(credential.publicKey),
 				counter: credential.counter,
-				transports: body.response.transports || [],
+				transports: serializeTransports(body.response.transports || []),
 			},
 		});
 

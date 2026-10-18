@@ -1,3 +1,4 @@
+import type { AuthenticatorTransport } from "@simplewebauthn/server";
 import { prisma } from "@/lib/db";
 import { nowDate } from "@/lib/temporal";
 import crypto from "crypto";
@@ -28,6 +29,33 @@ export async function storeChallenge(
 			webauthnChallengeExpiresAt: new Date(
 				nowDate().getTime() + CHALLENGE_EXPIRATION_MS,
 			),
+		},
+	});
+}
+
+// At sign-in we don't know which user is signing in until their passkey
+// responds, so the challenge is stored on every user who has a passkey.
+// verify-authenticate then checks it against the passkey owner's copy.
+export async function storeSignInChallenge(challenge: string): Promise<void> {
+	await prisma.user.updateMany({
+		where: { credentials: { some: {} } },
+		data: {
+			webauthnChallenge: challenge,
+			webauthnChallengeExpiresAt: new Date(
+				nowDate().getTime() + CHALLENGE_EXPIRATION_MS,
+			),
+		},
+	});
+}
+
+// Clears a used sign-in challenge from every user it was stored on, so it
+// can't be replayed against another user's passkey.
+export async function clearSignInChallenge(challenge: string): Promise<void> {
+	await prisma.user.updateMany({
+		where: { webauthnChallenge: challenge },
+		data: {
+			webauthnChallenge: null,
+			webauthnChallengeExpiresAt: null,
 		},
 	});
 }
@@ -95,6 +123,16 @@ export function credentialIdFromLegacyBase64urlString(
 	credentialId: string,
 ): Uint8Array<ArrayBuffer> {
 	return toStrictUint8Array(Buffer.from(credentialId, "utf8"));
+}
+
+// WebAuthnCredential.transports is stored as a comma-separated string, since
+// SQLite has no array columns.
+export function serializeTransports(transports: string[]): string {
+	return transports.join(",");
+}
+
+export function parseTransports(transports: string): AuthenticatorTransport[] {
+	return transports.split(",").filter(Boolean) as AuthenticatorTransport[];
 }
 
 function isLikelyBase64url(value: string): boolean {

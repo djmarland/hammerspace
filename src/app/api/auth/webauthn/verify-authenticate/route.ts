@@ -4,10 +4,11 @@ import { NextResponse } from "next/server";
 import { issueAdminSession } from "@/lib/admin-auth";
 import { prisma } from "@/lib/db";
 import {
-	clearChallenge,
+	clearSignInChallenge,
 	credentialIdFromBase64url,
 	credentialIdFromLegacyBase64urlString,
 	getAndValidateChallenge,
+	parseTransports,
 } from "@/lib/webauthn";
 
 export async function POST(request: Request) {
@@ -72,8 +73,8 @@ export async function POST(request: Request) {
 				id: Buffer.from(credential.credentialId).toString("base64url"),
 				publicKey: credential.credentialPublicKey,
 				counter: credential.counter,
-				transports: credential.transports.length
-					? credential.transports
+				transports: credential.transports
+					? parseTransports(credential.transports)
 					: undefined,
 			},
 		});
@@ -92,7 +93,7 @@ export async function POST(request: Request) {
 		});
 
 		// Clear challenge
-		await clearChallenge(credential.user.id);
+		await clearSignInChallenge(storedChallenge);
 
 		// Issue admin session via cookie
 		const response = NextResponse.json({
