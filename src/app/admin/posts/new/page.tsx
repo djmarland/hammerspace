@@ -23,6 +23,7 @@ export default async function NewPostPage() {
 				formAction={createPostFormAction}
 				submitLabel="Create Post"
 				mode="create"
+				draftKey="post-draft:new"
 			/>
 		</div>
 	);

@@ -1,14 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { useActionState, useEffect, useState } from "react";
-import type { ChangeEvent } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { cx } from "@/components/cx";
 import AssetLibraryModal from "@/components/Admin/AssetLibrary/AssetLibraryModal";
 import type { SelectedAsset } from "@/components/Admin/AssetLibrary/AssetLibraryModal";
 import MarkdownContent from "@/components/Blog/MarkdownContent";
 import { useToast } from "@/components/Molecules/Toast/ToastProvider";
 import type { PostFormValues } from "@/lib/post-form";
+import { usePostDraft } from "./usePostDraft";
+import { useUnsavedChangesWarning } from "./useUnsavedChangesWarning";
 import styles from "./PostEditorForm.module.css";
 
 /**
@@ -31,8 +32,13 @@ interface PostEditorFormProps {
 	submitLabel: string;
 	initialValues?: Partial<PostFormValues>;
 	initialCoverAsset?: SelectedAsset | null;
+	/** localStorage key under which the work-in-progress draft is kept. */
+	draftKey: string;
 	mode: "create" | "edit";
 }
+
+const PREVIEW_DELAY_MS = 250;
+const DRAFT_SAVE_DELAY_MS = 500;
 
 // `mode` (in PostEditorFormProps) doesn't currently change any markup in
 // this component - callers vary `submitLabel` instead. It's kept in the
@@ -43,18 +49,110 @@ export default function PostEditorForm({
 	submitLabel,
 	initialValues,
 	initialCoverAsset,
+	draftKey,
 }: PostEditorFormProps) {
+	// Set while a submit is in flight or has succeeded; cleared by any edit.
+	// Create redirects away on success without ever returning a result, so
+	// the draft is also cleared on unmount when this is still set.
+	const savedRef = useRef(false);
+	const {
+		stored: storedDraft,
+		save: saveDraft,
+		clear: clearDraft,
+	} = usePostDraft(draftKey);
+
 	const [state, action, pending] = useActionState<
 		PostFormActionState,
 		FormData
-	>(formAction, null);
+	>(async (prevState, formData) => {
+		savedRef.current = true;
+		const result = await formAction(prevState, formData);
+		if (result?.errors || result?.message) savedRef.current = false;
+		if (result?.saved) clearDraft();
+		return result;
+	}, null);
 
-	const [previewContent, setPreviewContent] = useState(
-		initialValues?.content || "",
-	);
-
+	const [title, setTitle] = useState(initialValues?.title ?? "");
+	const [slug, setSlug] = useState(initialValues?.slug ?? "");
+	const [content, setContent] = useState(initialValues?.content ?? "");
 	const [coverAsset, setCoverAsset] = useState<SelectedAsset | null>(
 		initialCoverAsset ?? null,
+	);
+
+	// The preview re-renders the whole Markdown document, so it trails the
+	// textarea slightly rather than updating on every keystroke.
+	const [previewContent, setPreviewContent] = useState(content);
+	useEffect(() => {
+		const timeout = setTimeout(
+			() => setPreviewContent(content),
+			PREVIEW_DELAY_MS,
+		);
+		return () => clearTimeout(timeout);
+	}, [content]);
+
+	// Edits count as unsaved only until the next action result arrives, so a
+	// successful save clears the warning without resetting state in an effect.
+	const [editedAt, setEditedAt] = useState<{ state: typeof state } | null>(
+		null,
+	);
+	const isDirty = editedAt !== null && editedAt.state === state;
+	const markDirty = () => {
+		savedRef.current = false;
+		setEditedAt((prev) => (prev?.state === state ? prev : { state }));
+	};
+	useUnsavedChangesWarning(isDirty);
+
+	// A draft from an earlier session is offered back until the user answers;
+	// drafts that match what's already saved aren't worth offering.
+	const [draftResolved, setDraftResolved] = useState(false);
+	const pendingDraft =
+		!draftResolved &&
+		storedDraft &&
+		(storedDraft.title !== (initialValues?.title ?? "") ||
+			storedDraft.slug !== (initialValues?.slug ?? "") ||
+			storedDraft.content !== (initialValues?.content ?? "") ||
+			(storedDraft.coverAsset?.id ?? "") !== (initialCoverAsset?.id ?? ""))
+			? storedDraft
+			: null;
+
+	function restoreDraft() {
+		if (!pendingDraft) return;
+		setTitle(pendingDraft.title);
+		setSlug(pendingDraft.slug);
+		setContent(pendingDraft.content);
+		setPreviewContent(pendingDraft.content);
+		setCoverAsset(pendingDraft.coverAsset);
+		markDirty();
+		setDraftResolved(true);
+	}
+
+	function discardDraft() {
+		clearDraft();
+		setDraftResolved(true);
+	}
+
+	// Editing instead of answering the prompt discards the old draft; the
+	// edits are then stored as the new one.
+	function handleEdit() {
+		if (pendingDraft) discardDraft();
+		markDirty();
+	}
+
+	// Don't overwrite the stored draft while it's still waiting to be answered.
+	useEffect(() => {
+		if (!isDirty || pendingDraft) return;
+		const timeout = setTimeout(
+			() => saveDraft({ title, slug, content, coverAsset }),
+			DRAFT_SAVE_DELAY_MS,
+		);
+		return () => clearTimeout(timeout);
+	}, [isDirty, pendingDraft, title, slug, content, coverAsset, saveDraft]);
+
+	useEffect(
+		() => () => {
+			if (savedRef.current) clearDraft();
+		},
+		[clearDraft],
 	);
 
 	const toast = useToast();
@@ -70,12 +168,41 @@ export default function PostEditorForm({
 		}
 	}, [state, toast]);
 
-	function handleContentInput(event: ChangeEvent<HTMLTextAreaElement>) {
-		setPreviewContent(event.currentTarget.value);
-	}
-
 	return (
 		<form className={styles.form} action={action}>
+			{pendingDraft && (
+				<div className="piko-page-container">
+					<div
+						data-state="warning"
+						className="piko-state__box piko-vstack"
+						role="region"
+						aria-label="Unsaved draft"
+					>
+						<h2 className="piko-t-h2">Unsaved draft found</h2>
+						<p>
+							You have unsaved work from{" "}
+							{new Date(pendingDraft.savedAt).toLocaleString()}. Would you like
+							to continue where you left off?
+						</p>
+						<div className="piko-hstack">
+							<button
+								type="button"
+								className="piko-button"
+								onClick={restoreDraft}
+							>
+								Continue editing
+							</button>
+							<button
+								type="button"
+								className="piko-button"
+								onClick={discardDraft}
+							>
+								Discard
+							</button>
+						</div>
+					</div>
+				</div>
+			)}
 			<div className="piko-page-container">
 				<label className={styles.field}>
 					<span>Title</span>
@@ -83,7 +210,11 @@ export default function PostEditorForm({
 						type="text"
 						name="title"
 						required
-						defaultValue={initialValues?.title}
+						value={title}
+						onChange={(event) => {
+							setTitle(event.currentTarget.value);
+							handleEdit();
+						}}
 						aria-invalid={state?.errors?.title ? "true" : "false"}
 					/>
 					{state?.errors?.title && (
@@ -97,7 +228,11 @@ export default function PostEditorForm({
 						type="text"
 						name="slug"
 						required
-						defaultValue={initialValues?.slug}
+						value={slug}
+						onChange={(event) => {
+							setSlug(event.currentTarget.value);
+							handleEdit();
+						}}
 						aria-invalid={state?.errors?.slug ? "true" : "false"}
 					/>
 					{state?.errors?.slug && (
@@ -116,8 +251,11 @@ export default function PostEditorForm({
 						name="content"
 						rows={14}
 						required
-						defaultValue={initialValues?.content}
-						onChange={handleContentInput}
+						value={content}
+						onChange={(event) => {
+							setContent(event.currentTarget.value);
+							handleEdit();
+						}}
 						aria-invalid={state?.errors?.content ? "true" : "false"}
 					/>
 					<section className={styles.preview} aria-label="Markdown preview">
@@ -157,13 +295,19 @@ export default function PostEditorForm({
 								coverAsset ? "Change cover image" : "Choose cover image"
 							}
 							filter="image"
-							onSelect={setCoverAsset}
+							onSelect={(asset) => {
+								setCoverAsset(asset);
+								handleEdit();
+							}}
 						/>
 						{coverAsset && (
 							<button
 								type="button"
 								className="piko-button"
-								onClick={() => setCoverAsset(null)}
+								onClick={() => {
+									setCoverAsset(null);
+									handleEdit();
+								}}
 							>
 								Remove
 							</button>

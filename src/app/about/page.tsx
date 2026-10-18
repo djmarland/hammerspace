@@ -14,7 +14,7 @@ import styles from "./page.module.css";
 export const dynamic = "force-dynamic";
 
 // Slug of the post whose content is rendered on the about page.
-const ABOUT_POST_SLUG = "about-me-10-2026";
+const ABOUT_POST_SLUG = "my-life-in-webdev-10-2026";
 
 export const metadata: Metadata = {
 	title: "About | Hammerspace",

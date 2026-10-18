@@ -1,4 +1,4 @@
-import type { Prisma } from "@/generated/client";
+import { Prisma } from "@/generated/client";
 import { getAdminSessionUser } from "@/lib/admin-auth";
 import {
 	ADMIN_POSTS_PER_PAGE,
@@ -154,23 +154,14 @@ function mapAdminPost(record: AdminPostRecord): AdminPostSummary {
 	};
 }
 
-function buildAdminWhere(
-	filters: AdminPostsResult["filters"],
-): Prisma.PostWhereInput {
-	const clauses: Prisma.PostWhereInput[] = [];
-	if (filters.query) {
-		clauses.push({
-			OR: [
-				{ title: { contains: filters.query } },
-				{ slug: { contains: filters.query } },
-				{ content: { contains: filters.query } },
-			],
-		});
+function buildAdminWhereSql(filters: AdminPostsResult["filters"]): Prisma.Sql {
+	if (!filters.query) {
+		return Prisma.empty;
 	}
-	if (clauses.length === 0) {
-		return {};
-	}
-	return { AND: clauses };
+	const pattern = `%${filters.query.replace(/[\\%_]/g, "\\$&")}%`;
+	return Prisma.sql`WHERE title LIKE ${pattern} ESCAPE '\\'
+		OR slug LIKE ${pattern} ESCAPE '\\'
+		OR content LIKE ${pattern} ESCAPE '\\'`;
 }
 
 async function getPaginatedPublicPosts(
@@ -309,20 +300,31 @@ export async function getAllPostsForAdmin(filters: AdminPostFilters = {}) {
 		query: (filters.query || "").trim(),
 	};
 	const page = parsePageNumber(filters.page);
-	const where = buildAdminWhere(normalizedFilters);
-	const totalCount = await prisma.post.count({ where });
+	const where = buildAdminWhereSql(normalizedFilters);
+	const [{ count }] = await prisma.$queryRaw<[{ count: number }]>`
+		SELECT COUNT(*) AS count FROM "Post" ${where}
+	`;
+	const totalCount = Number(count);
 	const { page: currentPage, totalPages } = clampPage(
 		page,
 		totalCount,
 		ADMIN_POSTS_PER_PAGE,
 	);
-	const posts = await prisma.post.findMany({
-		where,
-		orderBy: [{ updatedAt: "desc" }],
-		skip: (currentPage - 1) * ADMIN_POSTS_PER_PAGE,
-		take: ADMIN_POSTS_PER_PAGE,
+	// Prisma's orderBy can't express COALESCE, so fetch the page's ids with raw
+	// SQL. Dates are stored as fixed-format ISO text, so they sort lexically.
+	const pageRows = await prisma.$queryRaw<{ id: string }[]>`
+		SELECT id FROM "Post" ${where}
+		ORDER BY COALESCE(publishedAt, createdAt) DESC, id DESC
+		LIMIT ${ADMIN_POSTS_PER_PAGE}
+		OFFSET ${(currentPage - 1) * ADMIN_POSTS_PER_PAGE}
+	`;
+	const pageIds = pageRows.map((row) => row.id);
+	const pageRecords = await prisma.post.findMany({
+		where: { id: { in: pageIds } },
 		select: adminPostSelect,
 	});
+	const recordsById = new Map(pageRecords.map((post) => [post.id, post]));
+	const posts = pageIds.flatMap((id) => recordsById.get(id) ?? []);
 
 	return {
 		posts: posts.map(mapAdminPost),

@@ -80,6 +80,7 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
 				formAction={updatePostFormAction.bind(null, post.id)}
 				submitLabel="Update Post"
 				mode="edit"
+				draftKey={`post-draft:${post.id}`}
 				initialValues={{
 					title: post.title,
 					slug: post.slug,
