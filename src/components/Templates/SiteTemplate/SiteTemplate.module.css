@@ -76,7 +76,10 @@
 
 @media (max-width: 56rem) {
 	.siteTemplate {
-		grid-template-columns: 1fr;
+		/* minmax(0, 1fr), not 1fr: a bare 1fr track won't shrink below its
+		   content's min-content width, so one wide child (a long unbroken
+		   string, say) would stretch the header and content past the screen. */
+		grid-template-columns: minmax(0, 1fr);
 		grid-template-rows: auto 1fr;
 	}
 
