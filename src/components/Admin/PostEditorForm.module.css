@@ -42,9 +42,14 @@
 }
 
 .coverPreview {
+	position: relative;
 	max-width: 320px;
-	display: block;
+	aspect-ratio: 16 / 9;
 	margin-block: 0.5rem;
+}
+
+.coverPreviewImage {
+	object-fit: cover;
 }
 
 .helpText {

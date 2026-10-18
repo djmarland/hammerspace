@@ -8,6 +8,7 @@ import {
 	useTransition,
 } from "react";
 import { cx } from "@/components/cx";
+import Image from "next/image";
 import ConfirmDelete from "@/components/ConfirmDelete";
 import Modal from "@/components/Molecules/Modal/Modal";
 import {
@@ -178,11 +179,15 @@ export default function AssetLibraryModal({
 					{visibleAssets.map((asset) => (
 						<div key={asset.id} className={styles.item}>
 							{isImage(asset) ? (
-								<img
-									src={asset.url}
-									alt={asset.alt}
-									className={styles.thumbnail}
-								/>
+								<div className={styles.thumbnail}>
+									<Image
+										src={asset.url}
+										alt={asset.alt}
+										fill
+										sizes="200px"
+										className={styles.thumbnailImage}
+									/>
+								</div>
 							) : (
 								<div className={styles.filePlaceholder}>
 									{asset.mimeType || "file"}

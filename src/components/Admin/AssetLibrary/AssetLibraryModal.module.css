@@ -39,8 +39,12 @@
 }
 
 .thumbnail {
+	position: relative;
 	width: 100%;
 	aspect-ratio: 4 / 3;
+}
+
+.thumbnailImage {
 	object-fit: cover;
 }
 

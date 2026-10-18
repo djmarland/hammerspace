@@ -1,3 +1,4 @@
+import { getImageProps } from "next/image";
 import { Marked } from "marked";
 import { getHeadingList, gfmHeadingId } from "marked-gfm-heading-id";
 
@@ -32,6 +33,25 @@ function addSelfLinksToHeadings(html: string) {
 	);
 }
 
+// Whether renderMarkdown() is currently rewriting images on the assets host
+// to go through next/image's optimiser. Set per-render like headingLinkBase.
+let optimizeImages = false;
+
+// Only images on this host are allowed by images.remotePatterns in
+// next.config.js, so only they can be optimised.
+const OPTIMIZED_IMAGE_HOST = "https://assets.hammerspace.co.uk/";
+
+// Roughly the width of the post content column.
+const IMAGE_SIZES = "(max-width: 56rem) 100vw, 720px";
+
+function escapeAttribute(value: string) {
+	return value
+		.replaceAll("&", "&amp;")
+		.replaceAll("<", "&lt;")
+		.replaceAll(">", "&gt;")
+		.replaceAll('"', "&quot;");
+}
+
 // Create a private Marked instance so extensions/options are scoped to this module.
 // This avoids mutating the global marked instance which can behave differently
 // between server and client (and can be repeatedly applied during HMR/SSR).
@@ -52,6 +72,37 @@ md.use(gfmHeadingId({ prefix: "h-" }), {
 				.join("")}\n</ul></details>\n\n`;
 
 			return addSelfLinksToHeadings(html.replace("<p>[TOC]</p>", toc));
+		},
+	},
+});
+
+// Markdown images can't use the <Image> component, so ask next/image for the
+// props it would use (optimiser URL and srcset) and build the tag by hand.
+// The image's real dimensions aren't known, so width/height are only there to
+// satisfy the API and are not emitted.
+md.use({
+	renderer: {
+		image({ href, title, text }) {
+			if (!optimizeImages || !href.startsWith(OPTIMIZED_IMAGE_HOST)) {
+				return false;
+			}
+			const { props } = getImageProps({
+				src: href,
+				alt: text,
+				width: 1200,
+				height: 800,
+				sizes: IMAGE_SIZES,
+			});
+			const attributes = [
+				`src="${escapeAttribute(String(props.src))}"`,
+				props.srcSet && `srcset="${escapeAttribute(props.srcSet)}"`,
+				props.srcSet && `sizes="${escapeAttribute(IMAGE_SIZES)}"`,
+				`alt="${escapeAttribute(text)}"`,
+				title && `title="${escapeAttribute(title)}"`,
+				'loading="lazy"',
+				'decoding="async"',
+			];
+			return `<img ${attributes.filter(Boolean).join(" ")}>`;
 		},
 	},
 });
@@ -79,6 +130,10 @@ interface RenderMarkdownOptions {
 	// rendering the content somewhere other than its own page (e.g. a
 	// preview listed on the homepage).
 	headingLinkBase?: string;
+	// Serve images from the assets host through next/image's optimiser
+	// (resized, modern formats, cached) instead of as-is. Leave off for
+	// output that leaves the site, such as the RSS feed.
+	optimizeImages?: boolean;
 }
 
 export function renderMarkdown(
@@ -86,9 +141,11 @@ export function renderMarkdown(
 	{
 		headingOffset = 0,
 		headingLinkBase: linkBase = "",
+		optimizeImages: optimize = false,
 	}: RenderMarkdownOptions = {},
 ) {
 	headingLinkBase = linkBase;
+	optimizeImages = optimize;
 	// parse is synchronous by default unless async is enabled in options/extensions
 	const html = md.parse(content, { async: false }) as string;
 	return shiftHeadingLevels(html, headingOffset);

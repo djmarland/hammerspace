@@ -28,6 +28,7 @@ export default function MarkdownContent({
 		html = renderMarkdown(content, {
 			headingOffset: demoteHeadings ? 1 : 0,
 			headingLinkBase,
+			optimizeImages: true,
 		});
 	} catch (error) {
 		console.error("Markdown rendering error:", error);

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useActionState, useState } from "react";
 import type { ChangeEvent } from "react";
 import { cx } from "@/components/cx";
@@ -132,11 +133,15 @@ export default function PostEditorForm({
 						value={coverAsset?.id || ""}
 					/>
 					{coverAsset && (
-						<img
-							src={coverAsset.url}
-							alt={coverAsset.alt}
-							className={styles.coverPreview}
-						/>
+						<div className={styles.coverPreview}>
+							<Image
+								src={coverAsset.url}
+								alt={coverAsset.alt}
+								fill
+								sizes="320px"
+								className={styles.coverPreviewImage}
+							/>
+						</div>
 					)}
 					<div className="piko-hstack">
 						<AssetLibraryModal

@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import MarkdownContent from "@/components/Blog/MarkdownContent";
 import SidePageHeader from "@/components/Blog/SidePageHeader";
 import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate";
 import Socials from "@/components/Molecules/Socials/Socials";
 import { isPostPublic } from "@/lib/blog";
 import { getPostBySlug } from "@/lib/posts";
+import profileImage from "./profile.jpeg";
 import styles from "./page.module.css";
 
 // Reads the DB on every request: a static prerender would query it at build
@@ -31,9 +33,10 @@ export default async function AboutPage() {
 		<SiteTemplate
 			header={
 				<SidePageHeader title="About">
-					<img
+					<Image
 						className={styles.profile}
-						src="/profile.jpeg"
+						src={profileImage}
+						sizes="140px"
 						alt="David, wearing sunglasses, a hat and white shirt"
 					/>
 				</SidePageHeader>

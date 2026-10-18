@@ -17,11 +17,12 @@
 .image {
 	position: absolute;
 	inset: -25vh 0 0 0;
-	display: block;
-	width: 100%;
 	height: calc(100% + 25vh);
-	object-fit: cover;
 	transform-origin: 50% 0;
+}
+
+.fit {
+	object-fit: cover;
 }
 
 @keyframes drift {

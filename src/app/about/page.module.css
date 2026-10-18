@@ -4,4 +4,5 @@
 	height: auto;
 	border-radius: 200px;
 	aspect-ratio: 1;
+	object-fit: cover;
 }

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { PublicPostSummary } from "@/lib/posts";
 import styles from "./CoverBackdrop.module.css";
 
@@ -12,7 +13,16 @@ interface CoverBackdropProps {
 export default function CoverBackdrop({ coverAsset }: CoverBackdropProps) {
 	return (
 		<div className={styles.backdrop} aria-hidden="true">
-			<img src={coverAsset.url} alt="" className={styles.image} />
+			<div className={styles.image}>
+				<Image
+					src={coverAsset.url}
+					alt=""
+					fill
+					preload
+					sizes="(max-width: 56rem) 100vw, 66vw"
+					className={styles.fit}
+				/>
+			</div>
 		</div>
 	);
 }

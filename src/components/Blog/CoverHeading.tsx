@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { ElementType, ReactNode } from "react";
 import { cx } from "@/components/cx";
 import type { PublicPostSummary } from "@/lib/posts";
@@ -34,11 +35,12 @@ export default function CoverHeading({
 			)}
 		>
 			{coverAsset && (
-				<img
+				<Image
 					src={coverAsset.url}
 					alt=""
 					aria-hidden="true"
-					loading="lazy"
+					fill
+					sizes="(max-width: 56rem) 100vw, min(66vw, 720px)"
 					className={styles.cover}
 				/>
 			)}
