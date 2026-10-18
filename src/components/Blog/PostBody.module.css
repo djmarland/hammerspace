@@ -1,4 +1,14 @@
 .body {
 	display: grid;
+	/* A bare 1fr track won't shrink below its content's min-content width,
+	   so a long unbroken string would stretch the whole column. */
+	grid-template-columns: minmax(0, 1fr);
 	gap: 1.25rem;
+}
+
+/* Break words (e.g. long URLs) that can't wrap otherwise. "anywhere", unlike
+   Piko's "break-word", also lowers the min-content size, so it stops
+   ancestors growing wider than the viewport. */
+.body :global(.piko-prose) {
+	overflow-wrap: anywhere;
 }
