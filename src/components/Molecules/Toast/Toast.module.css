@@ -1,0 +1,40 @@
+.viewport {
+	position: fixed;
+	inset-inline: 0;
+	/* Clears the fixed save bar on the post editor. */
+	inset-block-end: calc(var(--piko-unit-quad) + var(--piko-unit-double));
+	z-index: 100;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--piko-gap-stack);
+	padding-inline: var(--piko-page-gutter);
+	/* Let clicks through the empty areas around the toasts. */
+	pointer-events: none;
+}
+
+.toast {
+	display: flex;
+	align-items: center;
+	gap: var(--piko-unit);
+	max-inline-size: min(100%, 32rem);
+	pointer-events: auto;
+	box-shadow: 0 2px 8px rgb(from var(--piko-palette-black) r g b / 0.3);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.toast {
+		animation: toast-in 150ms ease-out;
+	}
+}
+
+@keyframes toast-in {
+	from {
+		opacity: 0;
+		transform: translateY(var(--piko-unit-half));
+	}
+}
+
+.message {
+	margin: 0;
+}

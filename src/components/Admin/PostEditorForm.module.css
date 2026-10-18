@@ -58,12 +58,6 @@
 	font-size: 0.95rem;
 }
 
-.error {
-	margin: 0;
-	color: #c10f0f;
-	font-weight: 600;
-}
-
 .actions {
 	position: fixed;
 	bottom: 0;

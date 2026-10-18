@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { getAdminSessionUser } from "@/lib/admin-auth";
 import Masthead from "@/components/Organisms/Masthead/Masthead";
+import { ToastProvider } from "@/components/Molecules/Toast/ToastProvider";
 import styles from "./layout.module.css";
 
 /**
@@ -21,9 +22,11 @@ export default async function AdminLayout({
 	const user = await getAdminSessionUser();
 
 	return (
-		<div className={styles.adminShell}>
-			<Masthead isAuthenticated={Boolean(user)} />
-			{children}
-		</div>
+		<ToastProvider>
+			<div className={styles.adminShell}>
+				<Masthead isAuthenticated={Boolean(user)} />
+				{children}
+			</div>
+		</ToastProvider>
 	);
 }

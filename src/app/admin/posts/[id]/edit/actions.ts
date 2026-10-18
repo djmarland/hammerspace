@@ -48,9 +48,9 @@ export async function updatePostFormAction(
 		return { message: errorMessage(error, "Failed to update post.") };
 	}
 
-	// Stay on the edit page after a successful save instead of redirecting,
-	// so the form reflects the freshly saved values.
-	return null;
+	// Stay on the edit page after a successful save instead of redirecting;
+	// `saved` lets the form show a confirmation toast.
+	return { saved: true };
 }
 
 /**

@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import { cx } from "@/components/cx";
 import styles from "./Modal.module.css";
 import { CloseIcon } from "@/components/Icons/CloseIcon.tsx";
+import { useToastHost } from "@/components/Molecules/Toast/ToastProvider";
 
 interface ModalProps {
 	title: string;
@@ -34,6 +35,8 @@ export default function Modal({
 	const titleId = useId();
 	const [mounted, setMounted] = useState(false);
 	const localRef = useRef<HTMLDialogElement | null>(null);
+	const toastSlotRef = useRef<HTMLDivElement | null>(null);
+	const toastHost = useToastHost();
 
 	useEffect(() => {
 		// eslint-disable-next-line react-hooks/set-state-in-effect -- one-off mount flag; document isn't available during SSR/first render
@@ -49,6 +52,23 @@ export default function Modal({
 		dialog.addEventListener("close", handleClose);
 		return () => dialog.removeEventListener("close", handleClose);
 	}, [onClose]);
+
+	// While open, a modal dialog makes the rest of the page inert, so hand it
+	// the toast viewport to keep toasts (and their dismiss buttons) usable.
+	useEffect(() => {
+		const dialog = localRef.current;
+		const slot = toastSlotRef.current;
+		if (!dialog || !slot || !toastHost) return;
+		const sync = () =>
+			dialog.open ? toastHost.claim(slot) : toastHost.release(slot);
+		const observer = new MutationObserver(sync);
+		observer.observe(dialog, { attributes: true, attributeFilter: ["open"] });
+		sync();
+		return () => {
+			observer.disconnect();
+			toastHost.release(slot);
+		};
+	}, [mounted, toastHost]);
 
 	if (!mounted) {
 		return null;

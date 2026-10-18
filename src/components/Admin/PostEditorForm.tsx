@@ -1,12 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import type { ChangeEvent } from "react";
 import { cx } from "@/components/cx";
 import AssetLibraryModal from "@/components/Admin/AssetLibrary/AssetLibraryModal";
 import type { SelectedAsset } from "@/components/Admin/AssetLibrary/AssetLibraryModal";
 import MarkdownContent from "@/components/Blog/MarkdownContent";
+import { useToast } from "@/components/Molecules/Toast/ToastProvider";
 import type { PostFormValues } from "@/lib/post-form";
 import styles from "./PostEditorForm.module.css";
 
@@ -18,6 +19,8 @@ import styles from "./PostEditorForm.module.css";
 export type PostFormActionState = {
 	errors?: Record<string, string[]>;
 	message?: string;
+	/** Set when an update succeeded without leaving the page. */
+	saved?: boolean;
 } | null;
 
 interface PostEditorFormProps {
@@ -54,7 +57,18 @@ export default function PostEditorForm({
 		initialCoverAsset ?? null,
 	);
 
-	const allErrors = state?.errors ? Object.values(state.errors).flat() : [];
+	const toast = useToast();
+
+	useEffect(() => {
+		if (!state) return;
+		if (state.saved) {
+			toast.success("Post saved");
+		} else if (state.message) {
+			toast.error(state.message);
+		} else if (state.errors) {
+			toast.error("Please fix the highlighted fields.");
+		}
+	}, [state, toast]);
 
 	function handleContentInput(event: ChangeEvent<HTMLTextAreaElement>) {
 		setPreviewContent(event.currentTarget.value);
@@ -63,12 +77,6 @@ export default function PostEditorForm({
 	return (
 		<form className={styles.form} action={action}>
 			<div className="piko-page-container">
-				{state?.message ? (
-					<p className={styles.error}>{state.message}</p>
-				) : allErrors.length > 0 ? (
-					<p className={styles.error}>Please fix the highlighted fields.</p>
-				) : null}
-
 				<label className={styles.field}>
 					<span>Title</span>
 					<input

@@ -11,6 +11,7 @@ import { cx } from "@/components/cx";
 import Image from "next/image";
 import ConfirmDelete from "@/components/ConfirmDelete";
 import Modal from "@/components/Molecules/Modal/Modal";
+import { useToast } from "@/components/Molecules/Toast/ToastProvider";
 import {
 	createAssetAction,
 	deleteAssetAction,
@@ -64,7 +65,7 @@ export default function AssetLibraryModal({
 		createAssetAction,
 		null,
 	);
-	const [copiedId, setCopiedId] = useState<string | null>(null);
+	const toast = useToast();
 	const [editingId, setEditingId] = useState<string | null>(null);
 
 	function refresh() {
@@ -77,8 +78,14 @@ export default function AssetLibraryModal({
 		if (uploadState?.success) {
 			uploadFormRef.current?.reset();
 			refresh();
+		} else if (uploadState?.message) {
+			toast.error(uploadState.message);
+		} else if (uploadState?.errors) {
+			for (const messages of Object.values(uploadState.errors)) {
+				toast.error(messages[0]);
+			}
 		}
-	}, [uploadState]);
+	}, [uploadState, toast]);
 
 	function openDialog() {
 		dialogRef.current?.showModal();
@@ -96,27 +103,28 @@ export default function AssetLibraryModal({
 		dialogRef.current?.close();
 	}
 
-	async function copyMarkdown(asset: AssetSummary) {
-		await navigator.clipboard.writeText(buildMarkdownSnippet(asset));
-		setCopiedId(asset.id);
-		setTimeout(
-			() => setCopiedId((current) => (current === asset.id ? null : current)),
-			1500,
-		);
-	}
-
-	async function copyURL(asset: AssetSummary) {
-		await navigator.clipboard.writeText(asset.url);
-		setCopiedId(asset.id);
-		setTimeout(
-			() => setCopiedId((current) => (current === asset.id ? null : current)),
-			1500,
-		);
+	async function copyToClipboard(text: string) {
+		try {
+			await navigator.clipboard.writeText(text);
+		} catch {
+			toast.error("Couldn't copy to the clipboard.");
+			return;
+		}
+		toast.success("Copied");
+		dialogRef.current?.close();
+		// Closing returns focus to the nav trigger. When the post editor is on
+		// the page, send it back to the textarea instead; the browser keeps its
+		// caret, so you land at the original insert point, ready to paste.
+		document.getElementById("content")?.focus();
 	}
 
 	function saveMeta(asset: AssetSummary, title: string, alt: string) {
 		startTransition(async () => {
-			await updateAssetMetaAction(asset.id, { title, alt });
+			const result = await updateAssetMetaAction(asset.id, { title, alt });
+			if (result?.message) {
+				toast.error(result.message);
+				return;
+			}
 			setEditingId(null);
 			refresh();
 		});
@@ -139,33 +147,15 @@ export default function AssetLibraryModal({
 					<label className={styles.field}>
 						<span>File</span>
 						<input type="file" name="file" required />
-						{uploadState?.errors?.file && (
-							<span className={styles.fieldError}>
-								{uploadState.errors.file[0]}
-							</span>
-						)}
 					</label>
 					<label className={styles.field}>
 						<span>Title</span>
 						<input type="text" name="title" required />
-						{uploadState?.errors?.title && (
-							<span className={styles.fieldError}>
-								{uploadState.errors.title[0]}
-							</span>
-						)}
 					</label>
 					<label className={styles.field}>
 						<span>Alt text</span>
 						<input type="text" name="alt" required />
-						{uploadState?.errors?.alt && (
-							<span className={styles.fieldError}>
-								{uploadState.errors.alt[0]}
-							</span>
-						)}
 					</label>
-					{uploadState?.message && (
-						<p className={styles.error}>{uploadState.message}</p>
-					)}
 					<button
 						type="submit"
 						className="piko-button--primary"
@@ -218,16 +208,18 @@ export default function AssetLibraryModal({
 												<button
 													type="button"
 													className="piko-button"
-													onClick={() => copyMarkdown(asset)}
+													onClick={() =>
+														copyToClipboard(buildMarkdownSnippet(asset))
+													}
 												>
-													{copiedId === asset.id ? "Copied!" : "Copy markdown"}
+													Copy markdown
 												</button>
 												<button
 													type="button"
 													className="piko-button"
-													onClick={() => copyURL(asset)}
+													onClick={() => copyToClipboard(asset.url)}
 												>
-													{copiedId === asset.id ? "Copied!" : "Copy URL"}
+													Copy URL
 												</button>
 											</>
 										)}
