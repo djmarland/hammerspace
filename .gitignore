@@ -7,7 +7,3 @@ next-env.d.ts
 node_modules
 src/generated
 build/
-*.db
-*.db-journal
-*.db-wal
-*.db-shm
