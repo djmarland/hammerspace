@@ -17,7 +17,7 @@ export default function SiteTemplate({
 }: SiteTemplateProps) {
 	return (
 		<div className={styles.siteTemplate}>
-			<header>
+			<header data-theme="dark">
 				<ViewTransition name="site-header-content">
 					<div className={styles.headerContent}>{header}</div>
 				</ViewTransition>
