@@ -9,11 +9,14 @@ fi
 release_tarball_url="$1"
 install_dir="$2"
 pm2_app_name="$3"
-tmp_dir="$(mktemp -d)"
+tmp_dir="/tmp/hammerspace-install-$pm2_app_name"
 tarball_path="$tmp_dir/release.tar.gz"
+rm -rf "$tmp_dir"
+trap 'rm -rf "$tmp_dir"' EXIT
+mkdir -p "$tmp_dir/unpacked"
 
 curl -fsSL "$release_tarball_url" -o "$tarball_path"
-mkdir -p "$install_dir" "$tmp_dir/unpacked"
+mkdir -p "$install_dir"
 install_dir="$(cd "$install_dir" && pwd)"
 env_file="${4:-$install_dir/.env}"
 tar -xzf "$tarball_path" -C "$tmp_dir/unpacked"
@@ -63,7 +66,17 @@ case "${DATABASE_PATH:-}" in
 esac
 mkdir -p "$(dirname "$DATABASE_PATH")"
 
-npx prisma migrate deploy
+for attempt in {1..5}; do
+	if npx prisma migrate deploy 2>&1 | tee "$tmp_dir/migrate.log"; then
+		break
+	fi
+	if [[ $attempt -eq 5 ]] || ! grep -q "database is locked" "$tmp_dir/migrate.log"; then
+		exit 1
+	fi
+	echo "Database is locked; stopping $pm2_app_name and retrying in 5 seconds..." >&2
+	pm2 stop "$pm2_app_name" >/dev/null 2>&1 || true
+	sleep 5
+done
 
 if [[ -f "$install_dir/ecosystem.config.cjs" ]]; then
 	pm2 restart "$pm2_app_name" --update-env || pm2 start ecosystem.config.cjs --only "$pm2_app_name"
@@ -73,5 +86,3 @@ else
 	# <install-dir>/standalone/server.js (see scripts/package-release.sh).
 	pm2 restart "$pm2_app_name" --update-env || pm2 start node --name "$pm2_app_name" --cwd "$install_dir/standalone" -- server.js
 fi
-
-rm -rf "$tmp_dir"

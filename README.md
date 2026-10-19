@@ -199,14 +199,37 @@ Everything else in the install directory is deleted on every release, so each en
    pm2 startup
    ```
 
-### Update an existing VPS install
+### Deploying a release
+
+From a local checkout:
+
+```bash
+npm run deploy
+```
+
+This asks for the environment (`beta` or `www`; or pass it, `npm run deploy -- beta`), then deploys the head of `origin/main`, or a given commit with `npm run deploy -- www <commit>`. It waits for the release build if it is still running, lists the commits going out since the currently installed release, and after you confirm, runs `/var/www/deploy.sh <env> <sha>` on the VPS as `webapp` over `ssh hammerspace` (set `HAMMERSPACE_SSH_HOST` to use another host alias). It needs the GitHub CLI (`gh`).
+
+On the VPS, `/var/www/deploy.sh` (`scripts/vps-deploy.sh`) can also be run directly as `webapp`: with no arguments it asks for the environment and deploys the latest GitHub release. It downloads the release, runs `scripts/vps-install.sh`, then checks the app responds on its port.
+
+It runs the `vps-install.sh` next to it, so install both, owned by root so `webapp` can run but not change them:
+
+```bash
+scp scripts/vps-deploy.sh scripts/vps-install.sh hammerspace:
+ssh hammerspace
+sudo install -m 755 vps-deploy.sh /var/www/deploy.sh
+sudo install -m 755 vps-install.sh /var/www/vps-install.sh
+```
+
+Repeat this when either script changes. Until `/var/www/deploy.sh` exists, `npm run deploy` runs the target environment's installed `scripts/vps-install.sh` instead.
+
+### Update an existing VPS install by hand
 
 ```bash
 bash scripts/vps-install.sh <release-zip-url> /var/www/beta.hammerspace.co.uk beta-hammerspace /var/www/beta.hammerspace.co.uk/.env
 bash scripts/vps-install.sh <release-zip-url> /var/www/www.hammerspace.co.uk www-hammerspace /var/www/www.hammerspace.co.uk/.env
 ```
 
-This replaces the release contents (keeping `.env` and `ecosystem.config.cjs`), runs `prisma migrate deploy`, and restarts PM2 with the new environment.
+This replaces the release contents (keeping `.env` and `ecosystem.config.cjs`), runs `prisma migrate deploy`, and restarts PM2 with the new environment. The release is downloaded and unpacked in `/tmp/hammerspace-install-<pm2-app-name>`, which is deleted when the script exits and, in case a failed run left it behind, before each run starts.
 
 ### nginx
 

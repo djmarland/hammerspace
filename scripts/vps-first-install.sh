@@ -9,11 +9,14 @@ fi
 release_tarball_url="$1"
 install_dir="$2"
 pm2_app_name="$3"
-tmp_dir="$(mktemp -d)"
+tmp_dir="/tmp/hammerspace-install-$pm2_app_name"
 tarball_path="$tmp_dir/release.tar.gz"
+rm -rf "$tmp_dir"
+trap 'rm -rf "$tmp_dir"' EXIT
+mkdir -p "$tmp_dir/unpacked"
 
 curl -fsSL "$release_tarball_url" -o "$tarball_path"
-mkdir -p "$install_dir" "$tmp_dir/unpacked"
+mkdir -p "$install_dir"
 install_dir="$(cd "$install_dir" && pwd)"
 env_file="${4:-$install_dir/.env}"
 tar -xzf "$tarball_path" -C "$tmp_dir/unpacked"
@@ -68,5 +71,3 @@ else
 	# <install-dir>/standalone/server.js (see scripts/package-release.sh).
 	pm2 start node --name "$pm2_app_name" --cwd "$install_dir/standalone" -- server.js
 fi
-
-rm -rf "$tmp_dir"
