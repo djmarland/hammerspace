@@ -10,7 +10,7 @@
 		"deploy": "bash scripts/deploy.sh",
 		"prepare": "husky",
 		"lint": "eslint .",
-		"typecheck": "tsc --noEmit",
+		"typecheck": "next typegen && tsc --noEmit",
 		"format": "prettier --write .",
 		"format:check": "prettier --check .",
 		"generate": "prisma generate",

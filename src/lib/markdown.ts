@@ -1,5 +1,5 @@
 import { getImageProps } from "next/image";
-import { Marked } from "marked";
+import { Marked, type Token, type Tokens } from "marked";
 import { getHeadingList, gfmHeadingId } from "marked-gfm-heading-id";
 
 // Base URL (e.g. the canonical post page) that heading self-links and TOC
@@ -105,6 +105,66 @@ md.use({
 			return `<img ${attributes.filter(Boolean).join(" ")}>`;
 		},
 	},
+});
+
+const ADMONITION_STATES: Record<string, string> = {
+	info: "info",
+	note: "info",
+	success: "success",
+	tip: "success",
+	warning: "warning",
+	error: "error",
+	danger: "error",
+	caution: "error",
+};
+
+const ADMONITION_PATTERN =
+	/^:::[ \t]*(\w+)[ \t]*([^\n]*)\n([\s\S]*?)\n:::[ \t]*(?:\n+|$)/;
+
+interface AdmonitionToken extends Tokens.Generic {
+	state: string;
+	title: Token[];
+	tokens: Token[];
+}
+
+// Container blocks such as:
+//
+//   ::: warning Optional title
+//   Body, as any other Markdown.
+//   :::
+//
+// rendered as a Piko state box.
+md.use({
+	extensions: [
+		{
+			name: "admonition",
+			level: "block",
+			start(src) {
+				return src.match(/^:::/m)?.index;
+			},
+			tokenizer(src) {
+				const match = ADMONITION_PATTERN.exec(src);
+				const state = match && ADMONITION_STATES[match[1].toLowerCase()];
+				if (!match || !state) return;
+
+				const [raw, , title, body] = match;
+				return {
+					type: "admonition",
+					raw,
+					state,
+					title: this.lexer.inlineTokens(title.trim()),
+					tokens: this.lexer.blockTokens(body),
+				} satisfies AdmonitionToken;
+			},
+			renderer(token) {
+				const { state, title, tokens } = token as AdmonitionToken;
+				const heading = title.length
+					? `<p class="admonition__title">${this.parser.parseInline(title)}</p>`
+					: "";
+				return `<div class="piko-prose__block piko-state__box admonition" data-state="${state}" role="note">${heading}${this.parser.parse(tokens)}</div>\n`;
+			},
+		},
+	],
 });
 
 // Shifts every heading tag (<h1>-<h6>) and the table-of-contents "h1"-"h6"
