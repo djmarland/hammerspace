@@ -96,9 +96,9 @@ Copy `.env.example` and set these values for both development and production:
 - `PUBLIC_ASSETS_URL` (public base URL those files are served from - the
   local dev nginx's `/uploaded/` location, or `https://assets.hammerspace.co.uk/uploaded`
   in production/beta)
-- `TWEETS_DATABASE_PATH` (optional; the read-only tweet archive built by
-  `scripts/convert-twitter-archive.ts`, e.g. `/var/lib/hammerspace/tweets.db`.
-  Without it `/tweets` says the archive isn't available)
+- `TWEETS_DATABASE_PATH` (optional; the read-only tweet archive database,
+  e.g. `/var/lib/hammerspace/tweets.db`. Without it `/tweets` says the archive
+  isn't available)
 - `TWEETS_MEDIA_URL` (public base URL of the archive's media folder -
   `http://localhost/tweet-media` locally, `https://assets.hammerspace.co.uk/tweets`
   in production/beta)
@@ -285,29 +285,14 @@ only one assets vhost) while keeping separate databases - each environment's
 
 ### Tweet archive
 
-`/tweets` serves an old Twitter archive from its own read-only SQLite file, separate from the blog database, plus a folder of media served by the assets vhost. Neither is in git. Build them on your Mac from the archive export (this runs on the host, not in Docker, and needs only Node 26):
-
-```bash
-npm run tweets:convert -- "/path/to/twitter-archive-2023-05-12"
-```
-
-That writes `build/tweets/tweets.db` and `build/tweets/media/`. It also downloads photos that tweets only linked to (twitpic, Flickr, Instagram and direct image links, where they still exist) and embeds them in place of the link. Downloads are cached in `build/tweets/linked-cache/`, so later runs only fetch new links; delete that folder to retry ones that came back empty. Local Docker picks the output up straight away (see `docker-compose.yml`), after `docker compose restart node`. To put them on the VPS:
-
-```bash
-ssh hammerspace 'mkdir -p /var/lib/hammerspace /var/www/assets.hammerspace.co.uk/tweets'
-scp build/tweets/tweets.db hammerspace:/var/lib/hammerspace/tweets.db.new
-ssh hammerspace 'mv /var/lib/hammerspace/tweets.db.new /var/lib/hammerspace/tweets.db'
-scp -r build/tweets/media/. hammerspace:/var/www/assets.hammerspace.co.uk/tweets/
-```
-
-Uploading to `.new` and then moving it means a running app never reads a half-copied database. Then add these to **both** `/var/www/beta.hammerspace.co.uk/.env` and `/var/www/www.hammerspace.co.uk/.env`, and deploy (or source the `.env` and `pm2 restart <app> --update-env`):
+`/tweets` serves an old Twitter archive from its own read-only SQLite file, separate from the blog database, plus a folder of media served by the assets vhost. Neither is in git; both were built once from the archive export. On the VPS they live at `/var/lib/hammerspace/tweets.db` and `/var/www/assets.hammerspace.co.uk/tweets/`, shared by beta and www, and **both** `.env` files set:
 
 ```bash
 TWEETS_DATABASE_PATH=/var/lib/hammerspace/tweets.db
 TWEETS_MEDIA_URL=https://assets.hammerspace.co.uk/tweets
 ```
 
-The app's user needs read access to `tweets.db`, and nginx's user to the media files. Re-running the conversion and upload replaces everything; restart the apps afterwards so they open the new file.
+Locally, Docker reads them from `build/tweets/tweets.db` and `build/tweets/media/` (see `docker-compose.yml`). If either file is replaced, restart the app so it opens the new database.
 
 ### PM2
 
