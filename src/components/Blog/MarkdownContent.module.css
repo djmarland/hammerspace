@@ -22,3 +22,7 @@
 .markdownContent :global(.heading-anchor):hover {
 	text-decoration: underline;
 }
+
+.markdownContent :global(.admonition__title) {
+	font-weight: bold;
+}
