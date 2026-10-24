@@ -107,9 +107,6 @@ md.use({
 	},
 });
 
-// Maps each admonition type to its Piko state. Besides the four states
-// themselves, accepts the type names VitePress and Docusaurus use, so content
-// written for either renders the same here.
 const ADMONITION_STATES: Record<string, string> = {
 	info: "info",
 	note: "info",
