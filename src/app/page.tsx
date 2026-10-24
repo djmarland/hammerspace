@@ -56,7 +56,7 @@ export default async function HomePage() {
 							<article key={post.id} className={styles.post}>
 								<CoverHeading
 									coverAsset={post.coverAsset}
-									className={styles.postHeader}
+									className="piko-vstack--small"
 								>
 									<h2 className={`${styles.postTitle} piko-t-h2`}>
 										<Link href={`/posts/${post.slug}`}>{post.title}</Link>

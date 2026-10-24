@@ -55,7 +55,7 @@
 	height: 100vh;
 	width: min(100%, 480px);
 	margin-left: auto;
-	padding: var(--piko-unit-double);
+	padding: var(--piko-unit-double) var(--piko-page-gutter);
 	display: grid;
 	align-content: center;
 }
@@ -71,7 +71,7 @@
 	position: relative;
 	z-index: 1;
 	max-width: 75ch;
-	padding: var(--piko-unit-double);
+	padding: var(--piko-page-gutter);
 }
 
 @media (max-width: 56rem) {
