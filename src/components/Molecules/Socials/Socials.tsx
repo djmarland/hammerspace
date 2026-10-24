@@ -12,7 +12,11 @@ export default function Socials() {
 					<Fragment key={social.name}>
 						<dt>{social.name}:</dt>
 						<dd>
-							<a href={social.href} target="_blank" rel="noopener noreferrer">
+							<a
+								href={social.href}
+								target="_blank"
+								rel="me noopener noreferrer"
+							>
 								{social.handle}
 							</a>
 						</dd>

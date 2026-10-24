@@ -6,7 +6,7 @@ export const socials = [
 	},
 	{
 		name: "Bluesky",
-		href: "https://bsky.app/profile/djmarland.bsky.social",
-		handle: "@djmarland.bsky.social",
+		href: "https://bsky.app/profile/djmarland.hammerspace.co.uk",
+		handle: "@djmarland.hammerspace.co.uk",
 	},
 ];

@@ -43,6 +43,10 @@ export default async function AboutPage() {
 			}
 		>
 			<div className="piko-prose">
+				<p>
+					Hello. My name is David Marland. I am a Web Developer, and have been
+					pushing pixels around since 1999.
+				</p>
 				{publicPost && (
 					<>
 						<Socials />
