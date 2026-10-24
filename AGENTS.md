@@ -26,4 +26,6 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## Running locally
 
+- The app runs in Docker, never directly on the host. From a fresh checkout: `cp .env.example .env.local`, then `docker compose up --build`. The app is at http://localhost:3000 and nginx at http://localhost. Do not run `npm run dev` on the host: the container has Linux builds of native modules such as `better-sqlite3`, plus the nginx proxy and the uploads volume.
+- Run npm scripts inside the container, e.g. `docker compose exec node npm run db:push`.
 - For design changes, check the homepage, `/posts` and a post page in light and dark mode, and at a narrow (stacked, below 56rem) width.

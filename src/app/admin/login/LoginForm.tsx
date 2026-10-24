@@ -138,6 +138,7 @@ export default function LoginForm() {
 			);
 			// See the token-login redirect above for why this is a hard
 			// navigation rather than router.push.
+			// eslint-disable-next-line @next/next/no-location-assign-relative-destination -- hard navigation is intentional
 			window.location.href = "/admin";
 		} catch (err) {
 			console.error("Passkey login failed", err);

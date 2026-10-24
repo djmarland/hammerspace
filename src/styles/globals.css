@@ -292,6 +292,9 @@
 						--piko-color-state-info-background
 					);
 					--piko-color-state-border: var(--piko-color-state-info-border);
+
+					/*--piko-color-state-link: var(--piko-color-state-info-text);*/
+					/*--piko-color-link-hover: red;*/
 				}
 				[data-state="success"] {
 					--piko-color-state-text: var(--piko-color-state-success-text);
@@ -1241,6 +1244,37 @@
 				accent-color: var(--piko-color-accent);
 			}
 
+			/* https://github.com/w3c/csswg-drafts/issues/14251#issuecomment-6322674357 */
+			select,
+			option,
+			input[type="checkbox"],
+			input[type="radio"],
+			button,
+			input[type="button"],
+			input[type="submit"],
+			input[type="reset"],
+			input[type="color"],
+			input[type="image"],
+			::file-selector-button {
+				cursor: pointer;
+			}
+			input[type="range"] {
+				cursor: grab;
+			}
+			input[type="range"]:active {
+				cursor: grabbing;
+			}
+			:is(select, input, input[type], textarea, button, option):disabled,
+			:disabled::file-selector-button {
+				cursor: not-allowed;
+			}
+			select[readonly],
+			optgroup,
+			input[readonly],
+			textarea[readonly] {
+				cursor: default;
+			}
+
 			input:not([type]),
 			input[type="text"],
 			input[type="email"],
@@ -1413,6 +1447,33 @@
 				border: solid 1px var(--piko-color-state-border);
 				padding: calc(var(--piko-space-panel-padding) / 2)
 					var(--piko-space-panel-padding);
+
+				a,
+				a:visited {
+					color: currentColor;
+					&:hover,
+					&:focus {
+						color: color-mix(in srgb, currentColor 75%, transparent);
+						/*color: color-mix(currentColor var(--piko-color-state-hover));*/
+					}
+				}
+				button {
+					color: currentColor;
+					background: color-mix(
+						in srgb,
+						currentColor 20%,
+						var(--piko-color-state-background)
+					);
+					&:hover,
+					&:focus {
+						color: currentColor;
+						background: color-mix(
+							in srgb,
+							currentColor 30%,
+							var(--piko-color-state-background)
+						);
+					}
+				}
 			}
 			.piko-state__text {
 				color: var(--piko-color-state-text);

@@ -391,6 +391,8 @@ export default function PikoPage() {
 											<p className="piko-state__box">
 												<strong>{state}</strong>: boxed mode using{" "}
 												<PikoToken token=".piko-state__box" />
+												with a <a href="/">Link</a> and a{" "}
+												<button>Button</button>
 											</p>
 										</div>
 									</div>

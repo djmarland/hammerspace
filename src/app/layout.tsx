@@ -39,6 +39,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					rel="stylesheet"
 					href="https://cdn.jsdelivr.net/npm/microlighter@2.1.0/dist/themes/github.css"
 				/>
+				{/* eslint-disable-next-line @next/next/no-css-tags -- /hue.css is a dynamic route handler with its own daily cache, so it can't be imported */}
 				<link rel="stylesheet" href="/hue.css" />
 			</head>
 			<body data-syntax-theme="github">
