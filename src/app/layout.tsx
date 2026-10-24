@@ -1,8 +1,50 @@
 import type { ReactNode } from "react";
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
+import localFont from "next/font/local";
 import { site } from "@/lib/site";
 import "@/styles/globals.css";
+
+const firaSans = localFont({
+	src: [
+		{
+			path: "../fonts/fira-sans/fira-sans-latin-300-normal.woff2",
+			weight: "300",
+			style: "normal",
+		},
+		{
+			path: "../fonts/fira-sans/fira-sans-latin-400-normal.woff2",
+			weight: "400",
+			style: "normal",
+		},
+		{
+			path: "../fonts/fira-sans/fira-sans-latin-400-italic.woff2",
+			weight: "400",
+			style: "italic",
+		},
+		{
+			path: "../fonts/fira-sans/fira-sans-latin-500-normal.woff2",
+			weight: "500",
+			style: "normal",
+		},
+		{
+			path: "../fonts/fira-sans/fira-sans-latin-600-normal.woff2",
+			weight: "600",
+			style: "normal",
+		},
+		{
+			path: "../fonts/fira-sans/fira-sans-latin-700-normal.woff2",
+			weight: "700",
+			style: "normal",
+		},
+		{
+			path: "../fonts/fira-sans/fira-sans-latin-700-italic.woff2",
+			weight: "700",
+			style: "italic",
+		},
+	],
+	variable: "--piko-font-sans",
+});
 
 export const metadata: Metadata = {
 	metadataBase: new URL(site.url),
@@ -34,7 +76,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
-		<html lang="en">
+		<html lang="en" className={firaSans.variable}>
 			<head>
 				<link
 					rel="stylesheet"

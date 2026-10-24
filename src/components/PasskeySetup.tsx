@@ -7,7 +7,6 @@ import {
 	startRegistration,
 	verifyRegistration,
 } from "@/lib/webauthn-client";
-import styles from "./PasskeySetup.module.css";
 
 interface PasskeySetupProps {
 	hasPasskey: boolean;
@@ -49,35 +48,39 @@ export default function PasskeySetup({ hasPasskey }: PasskeySetupProps) {
 		return null;
 	}
 
+	if (!supported) {
+		return (
+			<p className="piko-state__box" data-state="warning">
+				WebAuthn is not supported on this device or browser.
+			</p>
+		);
+	}
+
 	return (
-		<div className={styles.container}>
-			{!supported ? (
-				<div className={styles.warning}>
-					<p>WebAuthn is not supported on this device or browser.</p>
-				</div>
-			) : (
-				<div className={styles.card}>
-					<h2>Secure Your Account with a Passkey</h2>
-					<p>
-						You can now secure your account with a passkey instead of a
-						password. This is more secure and easier to use.
-					</p>
+		<section className="piko-card piko-vstack">
+			<h2 className="piko-t-h2">Secure Your Account with a Passkey</h2>
+			<p>
+				You can now secure your account with a passkey instead of a password.
+				This is more secure and easier to use.
+			</p>
 
-					{error && <div className={styles.error}>{error}</div>}
-
-					<button
-						onClick={handleRegisterPasskey}
-						disabled={loading}
-						className={styles.button}
-					>
-						{loading ? "Setting up passkey..." : "Add Passkey"}
-					</button>
-
-					<p className={styles.skip}>
-						You can skip this for now, but we recommend setting up a passkey.
-					</p>
-				</div>
+			{error && (
+				<p className="piko-state__box" data-state="error">
+					{error}
+				</p>
 			)}
-		</div>
+
+			<button
+				onClick={handleRegisterPasskey}
+				disabled={loading}
+				className="piko-button--primary"
+			>
+				{loading ? "Setting up passkey..." : "Add Passkey"}
+			</button>
+
+			<p className="piko-t-meta">
+				You can skip this for now, but we recommend setting up a passkey.
+			</p>
+		</section>
 	);
 }

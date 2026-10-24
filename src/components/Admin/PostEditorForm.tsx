@@ -359,7 +359,7 @@ export default function PostEditorForm({
 					<div className={cx("piko-page-container", styles.actionsInner)}>
 						<button
 							type="submit"
-							className={styles.submitButton}
+							className="piko-button--primary"
 							disabled={pending}
 						>
 							{pending ? "Saving..." : submitLabel}

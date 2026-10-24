@@ -70,7 +70,7 @@
 .contentColumn > main {
 	position: relative;
 	z-index: 1;
-	max-width: 75ch;
+	max-width: 95ch;
 	padding: var(--piko-page-gutter);
 }
 

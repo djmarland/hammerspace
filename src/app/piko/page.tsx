@@ -634,10 +634,10 @@ export default function PikoPage() {
 									</div>
 								</fieldset>
 								<div className="piko-form-actions">
-									<button type="submit" className="button primary">
+									<button type="submit" className="piko-button--primary">
 										Save changes
 									</button>
-									<button type="reset" className="button secondary">
+									<button type="reset" className="piko-button">
 										Cancel
 									</button>
 								</div>

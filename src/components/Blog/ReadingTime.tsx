@@ -215,11 +215,7 @@ export default function ReadingTime({
 				<span className={styles.readingTime}>
 					<span>{wordCount.toLocaleString()} words</span>
 					<span> (</span>
-					<button
-						type="button"
-						className={styles.readingTimeButton}
-						onClick={openDialog}
-					>
+					<button type="button" className="piko-link" onClick={openDialog}>
 						{readingMinutes} min read
 					</button>
 					<span>)</span>
@@ -291,7 +287,7 @@ export default function ReadingTime({
 				<div className={styles.footerAction}>
 					<button
 						type="button"
-						className={styles.footerStopButton}
+						className="piko-button"
 						onClick={openFooterStopDialog}
 					>
 						Stop Reading Timer

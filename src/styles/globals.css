@@ -412,6 +412,12 @@
 					--piko-button-disabled-color-background
 				);
 
+				--piko-button-gradient-hue-shift: 35;
+				--piko-button-tertiary-color-border: light-dark(
+					var(--piko-palette-dynamic-5),
+					var(--piko-palette-dynamic-6)
+				);
+
 				/* Typography */
 				--piko-t-body: var(--piko-fontsize-0);
 				--piko-t-body-small: var(--piko-fontsize--1);
@@ -668,6 +674,7 @@
 			html {
 				color-scheme: light dark;
 				font-family:
+					var(--piko-font-sans),
 					ui-sans-serif,
 					system-ui,
 					sans-serif,
@@ -842,6 +849,7 @@
 				font-size: var(--piko-t-h1);
 				line-height: 1.1;
 				font-weight: lighter;
+				letter-spacing: -2px;
 			}
 
 			.piko-t-h2,
@@ -850,6 +858,7 @@
 				font-size: var(--piko-t-h2);
 				line-height: 1.15;
 				font-weight: lighter;
+				letter-spacing: -1px;
 			}
 
 			.piko-t-h3,
@@ -998,6 +1007,12 @@
 		}
 
 		@layer buttons {
+			@property --_piko-button-surface {
+				syntax: "<color>";
+				inherits: false;
+				initial-value: transparent;
+			}
+
 			button:-moz-focusring,
 			[type="button"]:-moz-focusring,
 			[type="reset"]:-moz-focusring,
@@ -1026,6 +1041,22 @@
 				--_piko-button-active-background: var(
 					--piko-button-secondary-color-background-active
 				);
+				--_piko-button-surface: var(--_piko-button-color-background);
+				--_piko-button-bevel: linear-gradient(
+					to bottom,
+					oklch(100% 0 0 / 0.16),
+					oklch(100% 0 0 / 0) 60%,
+					oklch(0% 0 0 / 0.08)
+				);
+				--_piko-button-drift: linear-gradient(
+					120deg,
+					var(--_piko-button-surface),
+					oklch(
+						from var(--_piko-button-surface) l c
+							calc(h + var(--piko-button-gradient-hue-shift))
+					),
+					var(--_piko-button-surface)
+				);
 				-webkit-appearance: none;
 				appearance: none;
 				align-items: center;
@@ -1041,14 +1072,38 @@
 				line-height: inherit;
 				font-weight: inherit;
 				color: var(--_piko-button-color-text);
-				background: var(--_piko-button-color-background);
+				background-color: var(--_piko-button-surface);
+				background-image: var(--_piko-button-bevel), var(--_piko-button-drift);
+				background-size:
+					100% 100%,
+					220% 100%;
+				background-position:
+					0 0,
+					0 0;
+				box-shadow:
+					inset 0 1px 0 oklch(100% 0 0 / 0.25),
+					inset 0 -1px 0 oklch(0% 0 0 / 0.12),
+					0 1px 2px oklch(from var(--_piko-button-surface) 25% c h / 0.35);
+				transition:
+					--_piko-button-surface 150ms,
+					color 150ms,
+					box-shadow 150ms;
 				border-radius: 4px;
 				flex-shrink: 0;
 				text-decoration: none;
 				display: inline-flex;
+				position: relative;
 
 				&:has(> .piko-icon:only-child) {
 					padding-inline: var(--piko-space-control-padding-y);
+				}
+
+				@media (prefers-reduced-motion: no-preference) {
+					transition:
+						--_piko-button-surface 150ms,
+						color 150ms,
+						box-shadow 150ms,
+						background-position 400ms ease-out;
 				}
 			}
 
@@ -1086,8 +1141,11 @@
 			a.piko-button:not(:disabled, .piko-disabled):not(
 					:where(.piko-neutral, .piko-link)
 				):focus-visible {
+				--_piko-button-surface: var(--_piko-button-hover-background);
 				color: var(--_piko-button-hover-text);
-				background: var(--_piko-button-hover-background);
+				background-position:
+					0 0,
+					100% 0;
 			}
 
 			button:not(:disabled, .piko-disabled):not(
@@ -1108,8 +1166,17 @@
 			a.piko-button:not(:disabled, .piko-disabled):not(
 					:where(.piko-neutral, .piko-link)
 				).piko-active {
+				--_piko-button-surface: var(--_piko-button-active-background);
+				--_piko-button-bevel: linear-gradient(
+					to top,
+					oklch(100% 0 0 / 0.1),
+					oklch(100% 0 0 / 0) 60%
+				);
 				color: var(--_piko-button-active-text);
-				background: var(--_piko-button-active-background);
+				background-position:
+					0 0,
+					100% 0;
+				box-shadow: inset 0 2px 3px oklch(0% 0 0 / 0.2);
 			}
 
 			.piko-button--primary,
@@ -1146,6 +1213,29 @@
 				--_piko-button-active-background: var(
 					--piko-button-tertiary-color-background-active
 				);
+				background-image: none;
+				box-shadow: none;
+
+				&::before {
+					content: "";
+					position: absolute;
+					inset: 0;
+					border: 1px solid transparent;
+					border-radius: inherit;
+					background: linear-gradient(
+							120deg,
+							var(--piko-button-tertiary-color-border),
+							oklch(
+								from var(--piko-button-tertiary-color-border) l c
+									calc(h + var(--piko-button-gradient-hue-shift))
+							)
+						)
+						border-box;
+					mask:
+						linear-gradient(#000 0 0) padding-box exclude,
+						linear-gradient(#000 0 0);
+					pointer-events: none;
+				}
 			}
 
 			.piko-button--danger,
@@ -1209,6 +1299,18 @@
 				--_piko-button-color-background: transparent;
 				--_piko-button-hover-background: transparent;
 				--_piko-button-active-background: transparent;
+
+				&::before {
+					display: none;
+				}
+			}
+
+			:is(button, .piko-button, [class*="piko-button-"]):is(
+				:disabled,
+				.piko-disabled
+			) {
+				background-image: none;
+				box-shadow: none;
 			}
 
 			.piko-button--destruction.piko-disabled,
