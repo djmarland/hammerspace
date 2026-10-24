@@ -1,0 +1,18 @@
+.list {
+	display: grid;
+	grid-template-columns: repeat(
+		auto-fill,
+		minmax(calc(var(--piko-unit-quad) * 2), 1fr)
+	);
+	gap: var(--piko-unit-half);
+}
+
+.link {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: var(--piko-unit-half);
+	padding: var(--piko-unit-half) var(--piko-space-panel-padding);
+	background: var(--piko-color-background-secondary);
+	border: solid 1px var(--piko-color-border);
+}

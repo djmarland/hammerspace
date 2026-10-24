@@ -13,6 +13,8 @@ services:
       PORT: ${APP_PORT:-3000}
       UPLOAD_DIR: /var/www/assets.hammerspace.co.uk/uploaded
       PUBLIC_ASSETS_URL: ${PUBLIC_ASSETS_URL:-http://localhost/uploaded}
+      TWEETS_DATABASE_PATH: /app/build/tweets/tweets.db
+      TWEETS_MEDIA_URL: ${TWEETS_MEDIA_URL:-http://localhost/tweet-media}
     ports:
       - "${APP_PORT:-3000}:3000"
     volumes:
@@ -35,6 +37,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - assets_data:/var/www/assets.hammerspace.co.uk
+      - ./build/tweets/media:/var/www/tweet-media:ro
     depends_on:
       - node
     networks:
