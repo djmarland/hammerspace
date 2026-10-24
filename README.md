@@ -96,6 +96,12 @@ Copy `.env.example` and set these values for both development and production:
 - `PUBLIC_ASSETS_URL` (public base URL those files are served from - the
   local dev nginx's `/uploaded/` location, or `https://assets.hammerspace.co.uk/uploaded`
   in production/beta)
+- `TWEETS_DATABASE_PATH` (optional; the read-only tweet archive database,
+  e.g. `/var/lib/hammerspace/tweets.db`. Without it `/tweets` says the archive
+  isn't available)
+- `TWEETS_MEDIA_URL` (public base URL of the archive's media folder -
+  `http://localhost/tweet-media` locally, `https://assets.hammerspace.co.uk/tweets`
+  in production/beta)
 
 Generate secrets with:
 
@@ -276,6 +282,17 @@ Set `UPLOAD_DIR=/var/www/assets.hammerspace.co.uk/uploaded` and
 The two environments intentionally share this one physical directory (there's
 only one assets vhost) while keeping separate databases - each environment's
 `Asset` rows only ever reference files it wrote itself.
+
+### Tweet archive
+
+`/tweets` serves an old Twitter archive from its own read-only SQLite file, separate from the blog database, plus a folder of media served by the assets vhost. Neither is in git; both were built once from the archive export. On the VPS they live at `/var/lib/hammerspace/tweets.db` and `/var/www/assets.hammerspace.co.uk/tweets/`, shared by beta and www, and **both** `.env` files set:
+
+```bash
+TWEETS_DATABASE_PATH=/var/lib/hammerspace/tweets.db
+TWEETS_MEDIA_URL=https://assets.hammerspace.co.uk/tweets
+```
+
+Locally, Docker reads them from `build/tweets/tweets.db` and `build/tweets/media/` (see `docker-compose.yml`). If either file is replaced, restart the app so it opens the new database.
 
 ### PM2
 

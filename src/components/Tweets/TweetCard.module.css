@@ -1,0 +1,35 @@
+.card {
+	display: grid;
+	gap: var(--piko-gap-text);
+}
+
+.card p {
+	margin: 0;
+}
+
+.highlighted {
+	border-color: var(--piko-color-accent);
+	box-shadow: inset var(--piko-unit-quarter) 0 0 var(--piko-color-accent);
+}
+
+.author {
+	display: flex;
+	align-items: center;
+	gap: var(--piko-unit-half);
+}
+
+.avatar {
+	border-radius: 50%;
+	width: var(--piko-unit-triple);
+	height: var(--piko-unit-triple);
+}
+
+.byline {
+	display: grid;
+	justify-items: start;
+}
+
+.text {
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+}

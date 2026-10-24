@@ -1,0 +1,32 @@
+.grid {
+	display: grid;
+	gap: var(--piko-unit-half);
+}
+
+.multiple {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.item {
+	display: block;
+	width: 100%;
+	height: auto;
+	max-height: 80vh;
+	object-fit: contain;
+	background: var(--piko-color-background);
+	border: solid 1px var(--piko-color-border-subtle);
+}
+
+.item img {
+	display: block;
+	width: 100%;
+	height: auto;
+	max-height: 80vh;
+	object-fit: contain;
+}
+
+.multiple .item,
+.multiple .item img {
+	aspect-ratio: 1;
+	object-fit: cover;
+}
