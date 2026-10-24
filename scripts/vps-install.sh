@@ -66,6 +66,18 @@ case "${DATABASE_PATH:-}" in
 esac
 mkdir -p "$(dirname "$DATABASE_PATH")"
 
+# Back up before migrating, with SQLite's online backup so writes still in the
+# WAL file are included. The last 2 backups per database are kept.
+if [[ -f "$DATABASE_PATH" ]]; then
+	backup_dir="$(dirname "$DATABASE_PATH")/backups"
+	db_name="$(basename "$DATABASE_PATH" .db)"
+	backup_path="$backup_dir/$db_name-$(date -u +%Y%m%dT%H%M%SZ).db"
+	mkdir -p "$backup_dir"
+	sqlite3 "$DATABASE_PATH" ".backup '$backup_path'"
+	echo "Backed up $DATABASE_PATH to $backup_path"
+	ls -1t "$backup_dir/$db_name"-*.db | tail -n +3 | xargs -r rm --
+fi
+
 for attempt in {1..5}; do
 	if npx prisma migrate deploy 2>&1 | tee "$tmp_dir/migrate.log"; then
 		break

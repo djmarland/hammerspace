@@ -7,6 +7,10 @@
 	gap: var(--piko-gap-grid);
 }
 
+.editorGrid textarea {
+	field-sizing: fixed;
+}
+
 @media (min-width: 800px) {
 	.editorGrid {
 		grid-template-columns: 1fr 1fr;

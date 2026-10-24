@@ -415,8 +415,8 @@
 				/* Typography */
 				--piko-t-body: var(--piko-fontsize-0);
 				--piko-t-body-small: var(--piko-fontsize--1);
-				--piko-t-small: var(--piko-fontsize--2);
-				--piko-t-caption: var(--piko-fontsize--2);
+				--piko-t-small: var(--piko-fontsize--1);
+				--piko-t-caption: var(--piko-fontsize--1);
 				--piko-t-h1: var(--piko-fontsize-5);
 				--piko-t-h2: var(--piko-fontsize-4);
 				--piko-t-h3: var(--piko-fontsize-3);
@@ -1302,6 +1302,11 @@
 					var(--piko-space-control-padding-x);
 				border-radius: 0;
 				display: block;
+			}
+
+			textarea {
+				field-sizing: content;
+				min-block-size: calc(3lh + 2 * var(--piko-space-control-padding-y));
 			}
 
 			:is(

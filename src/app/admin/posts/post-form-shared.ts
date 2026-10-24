@@ -19,6 +19,7 @@ export function parsePostFormData(formData: FormData) {
 	return postSchema.safeParse({
 		title: getString(formData, "title"),
 		slug: getString(formData, "slug"),
+		summary: getString(formData, "summary"),
 		content: getString(formData, "content"),
 		coverAssetId: getString(formData, "coverAssetId"),
 	});

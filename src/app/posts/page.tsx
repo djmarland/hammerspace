@@ -5,7 +5,6 @@ import SidePageHeader from "@/components/Blog/SidePageHeader";
 import PaginationNav from "@/components/PaginationNav";
 import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate";
 import { getPublicArchive } from "@/lib/posts";
-import styles from "./page.module.css";
 import { RssIcon } from "@/components/Icons/RssIcon.tsx";
 
 export const revalidate = 600;
@@ -37,11 +36,11 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
 				</SidePageHeader>
 			}
 		>
-			<div className={styles.content}>
-				<p className={styles.filterMeta}>
+			<div className="piko-vstack">
+				<p>
 					Showing {archive.posts.length} of {archive.totalCount} posts.
 				</p>
-				<ol className={styles.list}>
+				<ol className="piko-vstack">
 					{archive.posts.map((post) => (
 						<li key={post.id}>
 							<PostCard post={post} />

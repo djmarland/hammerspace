@@ -56,6 +56,7 @@ export async function GET(request: Request) {
 	<title>${escapeXml(post.title)}</title>
 	<link>${postUrl}</link>
 	<guid isPermaLink="true">${postUrl}</guid>
+	<description>${escapeXml(post.summary)}</description>
 	<content:encoded>${wrapCdata((post.coverAsset ? renderCoverHtml(post.coverAsset) : "") + renderMarkdown(post.content) + socialsHtml)}</content:encoded>
 	<pubDate>${post.publishedAt!.toUTCString()}</pubDate>${post.coverAsset ? renderCoverXml(post.coverAsset) : ""}
 </item>`;

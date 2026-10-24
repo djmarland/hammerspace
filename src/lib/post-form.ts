@@ -19,6 +19,7 @@ export const postSchema = z.object({
 			slugRegex,
 			"Slug must use lowercase letters, numbers, and hyphens only.",
 		),
+	summary: z.string().trim().min(1, "Summary is required."),
 	content: z.string().trim().min(1, "Content is required."),
 	// References an existing Asset's id, chosen via the AssetLibraryModal
 	// picker in PostEditorForm. Existence is checked server-side, not here.

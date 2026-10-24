@@ -84,6 +84,7 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
 				initialValues={{
 					title: post.title,
 					slug: post.slug,
+					summary: post.summary,
 					content: post.content,
 					coverAssetId: post.coverAssetId || "",
 				}}

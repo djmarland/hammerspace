@@ -9,6 +9,7 @@ import SiteTemplate from "@/components/Templates/SiteTemplate/SiteTemplate";
 import { isPostPublic } from "@/lib/blog";
 import { getPostBySlug } from "@/lib/posts";
 import { absoluteUrl, site } from "@/lib/site";
+import { socialImageUrl } from "@/lib/social-image";
 import styles from "./page.module.css";
 import { PostNavigator } from "@/components/Organisms/PostNavigator/PostNavigator.tsx";
 import { PublicationDate } from "@/components/Atoms/PublicationDate.tsx";
@@ -38,15 +39,22 @@ export async function generateMetadata({
 	// A child segment's openGraph/twitter replace the parent's wholesale, so
 	// everything wanted in the tags has to be set here.
 	const images = post.coverAsset
-		? [{ url: post.coverAsset.url, alt: post.coverAsset.alt || post.title }]
+		? [
+				{
+					url: socialImageUrl(post.coverAsset.url),
+					alt: post.coverAsset.alt || post.title,
+				},
+			]
 		: undefined;
 
 	return {
 		title: `${post.title} | Hammerspace`,
+		description: post.summary,
 		alternates: { canonical: url },
 		openGraph: {
 			type: "article",
 			title: post.title,
+			description: post.summary,
 			url,
 			siteName: site.name,
 			publishedTime: post.publishedAt?.toISOString(),
@@ -55,6 +63,7 @@ export async function generateMetadata({
 		twitter: {
 			card: images ? "summary_large_image" : "summary",
 			title: post.title,
+			description: post.summary,
 			images,
 		},
 	};

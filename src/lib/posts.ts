@@ -30,6 +30,7 @@ export interface PublicPostSummary {
 	id: string;
 	title: string;
 	slug: string;
+	summary: string;
 	content: string;
 	status: "DRAFT" | "PUBLISHED";
 	statusLabel: string;
@@ -85,6 +86,7 @@ const publicPostSelect = {
 	id: true,
 	title: true,
 	slug: true,
+	summary: true,
 	content: true,
 	publishedAt: true,
 	coverAsset: {
@@ -124,6 +126,7 @@ function mapPublicPost(record: PublicPostRecord): PublicPostSummary {
 		id: record.id,
 		title: record.title,
 		slug: record.slug,
+		summary: record.summary,
 		content: record.content,
 		status,
 		statusLabel: formatPostStatus(status),
@@ -368,6 +371,7 @@ export async function getPostById(postId: string) {
 			id: true,
 			title: true,
 			slug: true,
+			summary: true,
 			content: true,
 			publishedAt: true,
 			createdAt: true,

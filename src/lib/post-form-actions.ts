@@ -50,6 +50,7 @@ function buildPostWriteData(values: PostFormValues) {
 	return {
 		title: values.title,
 		slug: values.slug,
+		summary: values.summary,
 		content: values.content,
 		coverAssetId: values.coverAssetId || null,
 	};

@@ -37,11 +37,12 @@ export default function PostCard({ post, headingLevel = "h2" }: PostCardProps) {
 				{" · "}
 				{post.readingTimeMinutes} min read
 			</p>
-			<Heading>
+			<Heading className="piko-t-h4">
 				<Link href={`/posts/${post.slug}`} className={styles.link}>
 					{post.title}
 				</Link>
 			</Heading>
+			<small>{post.summary}</small>
 		</CoverHeading>
 	);
 }

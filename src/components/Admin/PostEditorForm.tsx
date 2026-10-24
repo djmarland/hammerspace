@@ -74,6 +74,7 @@ export default function PostEditorForm({
 
 	const [title, setTitle] = useState(initialValues?.title ?? "");
 	const [slug, setSlug] = useState(initialValues?.slug ?? "");
+	const [summary, setSummary] = useState(initialValues?.summary ?? "");
 	const [content, setContent] = useState(initialValues?.content ?? "");
 	const [coverAsset, setCoverAsset] = useState<SelectedAsset | null>(
 		initialCoverAsset ?? null,
@@ -110,6 +111,7 @@ export default function PostEditorForm({
 		storedDraft &&
 		(storedDraft.title !== (initialValues?.title ?? "") ||
 			storedDraft.slug !== (initialValues?.slug ?? "") ||
+			storedDraft.summary !== (initialValues?.summary ?? "") ||
 			storedDraft.content !== (initialValues?.content ?? "") ||
 			(storedDraft.coverAsset?.id ?? "") !== (initialCoverAsset?.id ?? ""))
 			? storedDraft
@@ -119,6 +121,7 @@ export default function PostEditorForm({
 		if (!pendingDraft) return;
 		setTitle(pendingDraft.title);
 		setSlug(pendingDraft.slug);
+		setSummary(pendingDraft.summary);
 		setContent(pendingDraft.content);
 		setPreviewContent(pendingDraft.content);
 		setCoverAsset(pendingDraft.coverAsset);
@@ -142,11 +145,20 @@ export default function PostEditorForm({
 	useEffect(() => {
 		if (!isDirty || pendingDraft) return;
 		const timeout = setTimeout(
-			() => saveDraft({ title, slug, content, coverAsset }),
+			() => saveDraft({ title, slug, summary, content, coverAsset }),
 			DRAFT_SAVE_DELAY_MS,
 		);
 		return () => clearTimeout(timeout);
-	}, [isDirty, pendingDraft, title, slug, content, coverAsset, saveDraft]);
+	}, [
+		isDirty,
+		pendingDraft,
+		title,
+		slug,
+		summary,
+		content,
+		coverAsset,
+		saveDraft,
+	]);
 
 	useEffect(
 		() => () => {
@@ -237,6 +249,29 @@ export default function PostEditorForm({
 					/>
 					{state?.errors?.slug && (
 						<span className={styles.fieldError}>{state.errors.slug[0]}</span>
+					)}
+				</label>
+
+				<label className={styles.field}>
+					<span>Summary</span>
+					<textarea
+						name="summary"
+						rows={3}
+						required
+						value={summary}
+						onChange={(event) => {
+							setSummary(event.currentTarget.value);
+							handleEdit();
+						}}
+						aria-describedby="summary-help"
+						aria-invalid={state?.errors?.summary ? "true" : "false"}
+					/>
+					<span id="summary-help" className={styles.helpText}>
+						Used for search results and link previews. Aim for under 160
+						characters ({summary.trim().length} so far).
+					</span>
+					{state?.errors?.summary && (
+						<span className={styles.fieldError}>{state.errors.summary[0]}</span>
 					)}
 				</label>
 			</div>

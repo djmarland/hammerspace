@@ -229,7 +229,7 @@ bash scripts/vps-install.sh <release-zip-url> /var/www/beta.hammerspace.co.uk be
 bash scripts/vps-install.sh <release-zip-url> /var/www/www.hammerspace.co.uk www-hammerspace /var/www/www.hammerspace.co.uk/.env
 ```
 
-This replaces the release contents (keeping `.env` and `ecosystem.config.cjs`), runs `prisma migrate deploy`, and restarts PM2 with the new environment. The release is downloaded and unpacked in `/tmp/hammerspace-install-<pm2-app-name>`, which is deleted when the script exits and, in case a failed run left it behind, before each run starts.
+This replaces the release contents (keeping `.env` and `ecosystem.config.cjs`), backs up the database (see [Backups](#backups)), runs `prisma migrate deploy`, and restarts PM2 with the new environment. The release is downloaded and unpacked in `/tmp/hammerspace-install-<pm2-app-name>`, which is deleted when the script exits and, in case a failed run left it behind, before each run starts.
 
 ### nginx
 
@@ -307,6 +307,8 @@ Each environment's whole database is the one file at `DATABASE_PATH`. Don't just
 ```bash
 sqlite3 /var/lib/hammerspace/www.db ".backup '/var/backups/hammerspace/www-$(date +%F).db'"
 ```
+
+`scripts/vps-install.sh` also takes one of these online backups before every `prisma migrate deploy`, into a `backups/` directory next to the database (e.g. `/var/lib/hammerspace/backups/www-20261024T180000Z.db`), and keeps the 2 most recent per database. To roll back a release whose migration went wrong, stop the app with PM2 and copy the latest backup over `DATABASE_PATH`, deleting any `-wal` and `-shm` files next to it.
 
 ### Postgres → SQLite cutover (one-off)
 

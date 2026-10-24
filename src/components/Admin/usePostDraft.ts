@@ -6,6 +6,7 @@ import type { SelectedAsset } from "@/components/Admin/AssetLibrary/AssetLibrary
 export interface PostDraftFields {
 	title: string;
 	slug: string;
+	summary: string;
 	content: string;
 	coverAsset: SelectedAsset | null;
 }
@@ -51,6 +52,7 @@ function parse(raw: string | null): PostDraft | null {
 			return {
 				title: value.title,
 				slug: value.slug,
+				summary: typeof value.summary === "string" ? value.summary : "",
 				content: value.content,
 				coverAsset: value.coverAsset ?? null,
 				savedAt: value.savedAt,
