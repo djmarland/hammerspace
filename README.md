@@ -210,7 +210,7 @@ Everything else in the install directory is deleted on every release, so each en
    - The install scripts symlink the environment file to `<install-dir>/standalone/.env`, which is PM2's working directory. Next.js loads it at startup, so the app gets its configuration even if PM2 passes none. Values already in the process environment win, so this only fills gaps and never overrides `PORT` from `ecosystem.config.cjs`.
    - The install scripts run `pm2 save` after every start or restart, so the snapshot keeps up with what was last deployed. After restarting an app by hand with `--update-env`, run `pm2 save` too.
 
-   Without the symlink, a reboot that resurrects a stale snapshot takes the site down: every page that reads the database returns 500, while static pages such as `/admin/login` keep working and `/tweets` shows its "archive isn't available" fallback.
+   Without the symlink, a reboot that resurrects a stale snapshot leaves the app with no database configuration, so anything that reads from the database fails while the rest of the site carries on.
 
 ### Deploying a release
 
@@ -242,7 +242,7 @@ bash scripts/vps-install.sh <release-zip-url> /var/www/beta.hammerspace.co.uk be
 bash scripts/vps-install.sh <release-zip-url> /var/www/www.hammerspace.co.uk www-hammerspace /var/www/www.hammerspace.co.uk/.env
 ```
 
-This replaces the release contents (keeping `.env` and `ecosystem.config.cjs`), backs up the database (see [Backups](#backups)), runs `prisma migrate deploy`, restarts PM2 with the new environment, and saves it with `pm2 save` so a reboot restores it. The release is downloaded and unpacked in `/tmp/hammerspace-install-<pm2-app-name>`, which is deleted when the script exits and, in case a failed run left it behind, before each run starts.
+This replaces the release contents (keeping `.env` and `ecosystem.config.cjs`), backs up the database (see [Backups](#backups)), applies any pending migrations (see [Database migrations](#database-migrations)), restarts PM2 with the new environment, and saves it with `pm2 save` so a reboot restores it. The release is downloaded and unpacked in `/tmp/hammerspace-install-<pm2-app-name>`, which is deleted when the script exits and, in case a failed run left it behind, before each run starts.
 
 ### nginx
 
@@ -322,7 +322,11 @@ pm2 startup
 - Development: `npm run db:migrate`
 - Production: `npx prisma migrate deploy`
 
-Run migrations during every release install before restarting the app.
+`scripts/vps-install.sh` runs `prisma migrate status` first and only calls `migrate deploy` when something is pending.
+
+This is worth the extra step because `migrate deploy` writes to `_prisma_migrations`, and the app's SQLite connection blocks that write even in WAL mode. It fails with `database is locked` while the app is running, and the retry loop recovers by stopping the app — so a release with no new migrations would stop the app to apply nothing. `migrate status` needs no such lock and reads cleanly while the app serves.
+
+`migrate status` also exits non-zero on a connection error, not just on pending migrations, so anything unexpected falls through to `migrate deploy` and its retry loop rather than being skipped.
 
 ### Backups
 

@@ -80,17 +80,21 @@ if [[ -f "$DATABASE_PATH" ]]; then
 	ls -1t "$backup_dir/$db_name"-*.db | tail -n +3 | xargs -r rm --
 fi
 
-for attempt in {1..5}; do
-	if npx prisma migrate deploy 2>&1 | tee "$tmp_dir/migrate.log"; then
-		break
-	fi
-	if [[ $attempt -eq 5 ]] || ! grep -q "database is locked" "$tmp_dir/migrate.log"; then
-		exit 1
-	fi
-	echo "Database is locked; stopping $pm2_app_name and retrying in 5 seconds..." >&2
-	pm2 stop "$pm2_app_name" >/dev/null 2>&1 || true
-	sleep 5
-done
+if npx prisma migrate status > "$tmp_dir/status.log" 2>&1; then
+	echo "Database schema is up to date; no migrations to apply."
+else
+	for attempt in {1..5}; do
+		if npx prisma migrate deploy 2>&1 | tee "$tmp_dir/migrate.log"; then
+			break
+		fi
+		if [[ $attempt -eq 5 ]] || ! grep -q "database is locked" "$tmp_dir/migrate.log"; then
+			exit 1
+		fi
+		echo "Database is locked; stopping $pm2_app_name and retrying in 5 seconds..." >&2
+		pm2 stop "$pm2_app_name" >/dev/null 2>&1 || true
+		sleep 5
+	done
+fi
 
 if [[ -f "$install_dir/ecosystem.config.cjs" ]]; then
 	pm2 restart "$pm2_app_name" --update-env || pm2 start ecosystem.config.cjs --only "$pm2_app_name"
