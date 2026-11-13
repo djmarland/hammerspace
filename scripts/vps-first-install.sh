@@ -36,6 +36,8 @@ if [[ ! -f "$env_file" ]]; then
 	exit 1
 fi
 
+ln -sfn "$(readlink -f "$env_file")" "$install_dir/standalone/.env"
+
 set -a
 . "$env_file"
 set +a
@@ -71,3 +73,5 @@ else
 	# <install-dir>/standalone/server.js (see scripts/package-release.sh).
 	pm2 start node --name "$pm2_app_name" --cwd "$install_dir/standalone" -- server.js
 fi
+
+pm2 save
