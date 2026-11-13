@@ -152,6 +152,7 @@ Each release unpacks flat into its install directory, so an installed environmen
 ```text
 /var/www/beta.hammerspace.co.uk/
 ├── standalone/          # Next.js standalone server (server.js, .next/, its own node_modules/, public/) — what PM2 runs
+│   └── .env             # symlink to the environment file, recreated by the install scripts
 ├── prisma/              # schema + migrations
 ├── node_modules/        # pruned prod deps, present only for the `prisma` CLI (`npx prisma migrate deploy`)
 ├── package.json, package-lock.json, prisma.config.ts
@@ -198,12 +199,18 @@ Everything else in the install directory is deleted on every release, so each en
    sqlite3 /var/lib/hammerspace/www.db 'PRAGMA journal_mode=WAL;'
    ```
 
-7. Persist PM2 across reboots:
+7. Start PM2 at boot (run the `sudo` command it prints):
 
    ```bash
-   pm2 save
    pm2 startup
    ```
+
+   At boot, `pm2 resurrect` restores each app with the environment captured by the last `pm2 save`, not from `.env`. Two things guard against that snapshot going stale:
+
+   - The install scripts symlink the environment file to `<install-dir>/standalone/.env`, which is PM2's working directory. Next.js loads it at startup, so the app gets its configuration even if PM2 passes none. Values already in the process environment win, so this only fills gaps and never overrides `PORT` from `ecosystem.config.cjs`.
+   - The install scripts run `pm2 save` after every start or restart, so the snapshot keeps up with what was last deployed. After restarting an app by hand with `--update-env`, run `pm2 save` too.
+
+   Without the symlink, a reboot that resurrects a stale snapshot takes the site down: every page that reads the database returns 500, while static pages such as `/admin/login` keep working and `/tweets` shows its "archive isn't available" fallback.
 
 ### Deploying a release
 
@@ -235,7 +242,7 @@ bash scripts/vps-install.sh <release-zip-url> /var/www/beta.hammerspace.co.uk be
 bash scripts/vps-install.sh <release-zip-url> /var/www/www.hammerspace.co.uk www-hammerspace /var/www/www.hammerspace.co.uk/.env
 ```
 
-This replaces the release contents (keeping `.env` and `ecosystem.config.cjs`), backs up the database (see [Backups](#backups)), runs `prisma migrate deploy`, and restarts PM2 with the new environment. The release is downloaded and unpacked in `/tmp/hammerspace-install-<pm2-app-name>`, which is deleted when the script exits and, in case a failed run left it behind, before each run starts.
+This replaces the release contents (keeping `.env` and `ecosystem.config.cjs`), backs up the database (see [Backups](#backups)), runs `prisma migrate deploy`, restarts PM2 with the new environment, and saves it with `pm2 save` so a reboot restores it. The release is downloaded and unpacked in `/tmp/hammerspace-install-<pm2-app-name>`, which is deleted when the script exits and, in case a failed run left it behind, before each run starts.
 
 ### nginx
 
