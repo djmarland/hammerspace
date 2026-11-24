@@ -1,0 +1,5 @@
+# Installed at /etc/cron.d/hammerspace-backup. Writes consistent SQLite
+# snapshots to /var/www/db/snapshots for off-site backups to collect.
+SHELL=/bin/bash
+PATH=/usr/local/bin:/usr/bin:/bin
+15 1 * * * webapp /var/www/vps-backup-snapshot.sh >/dev/null
